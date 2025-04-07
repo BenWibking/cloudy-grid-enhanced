@@ -582,10 +582,11 @@ inline double hmrate4( double a, double b, double c, double te )
 	if (b >0.)	
 		te = min(te, 5000.);
 	if(b <0.)
-		te = max(te, 10.);
-
-	if( b == 0. && c == 0. )
-		return a;
+        te = max(te, 10.);
+    if( c < 0. )
+        te = max(te,10.);
+    if( b == 0. && c == 0. )
+        return a;
 	else if( c == 0. )
 		return a*pow(te/300.,b);
 	else if( b == 0. )
