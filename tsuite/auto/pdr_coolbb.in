@@ -18,8 +18,8 @@ grains 1.0
 metals and grains 0.1
 #
 # other commands for details     =========
-# CO heating sets dr on second iteration, need many zones
-set nend 1600
+print line column
+print line sort wavelength
 # set background cosmic rays to allow chemistry 
 cosmic ray background
 # we need iterate to convergence here, but that doesn't work for now... 
@@ -324,6 +324,29 @@ monitor "SiO " 238.551m  -2.680  line intensity
 ## >>chng 24 apr 21, from -2.705 to -2.757, GS updates chemistry
 ## >>chng 24 jun 08, from -2.757 to -2.705, GS rm 3 TiO reactions
 monitor "SiO " 209.779m  -2.705  line intensity
+## >>chng 25 apr 22, from -4.13 to -4.055, GS add Ti chemistry, TiO emission
+monitor "TiO"                 631.387m   -4.055 line luminosity
+## >>chng 25 apr 22, from -4.052 to -3.977, GS add Ti chemistry, TiO emission
+monitor "TiO"                 676.454m   -3.977 line luminosity
+## >>chng 25 apr 22, from -4.061 to -3.988, GS add Ti chemistry, TiO emission
+monitor "TiO"                 728.456m   -3.988 line luminosity
+## >>chng 25 apr 22, from -4.104 to -4.035, GS add Ti chemistry, TiO emission
+monitor "TiO"                 789.133m   -4.035 line luminosity
+## >>chng 25 apr 22, from -4.161 to -4.097, GS add Ti chemistry, TiO emission
+monitor "TiO"                 860.847m   -4.097 line luminosity
+## >>chng 25 apr 22, from -4.457 to -4.413, GS add Ti chemistry, TiO emission
+monitor "TiO"                 1183.56m   -4.413  line luminosity
+monitor column density "HNTi"      -20.568   
+monitor column density "HNTi+"       4.932   
+monitor column density "TiNC+"       7.784   
+monitor column density "TiO"        14.895   
+monitor column density "TiO+"        6.923
+monitor column density "TiOH+"      11.3097
+monitor column density "TiO2"       14.993   
+monitor column density "TiF+"        9.368   
+monitor column density "TiS"         9.172   
+monitor column density "TiS+"        6.648   
+monitor column density "HTiS+"       6.797
 ##
 ## >>chng 24 apr 21 GS add TiO
 ## >>chng 25 jan 26, from 14.05 to 14, merge master updated cham"

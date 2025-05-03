@@ -220,15 +220,18 @@ namespace {
 		te = phycon.te+noneq_offset(rate);
 		/* UMIST rates are simple temperature power laws that
 	 	 * can become large at the high temperatures Cloudy
-	 	 * may encounter. Do not extrapolate to above T>2.5e3K */ 
+	 	 * may encounter. Do not extrapolate to above T>5e3K */
 		/* rate-b is the power beta in (T/300)^beta, positive beta
 		 * can diverge at high temperatures */
 		/* THIS CODE MUST BE KEPT PARALLEL WITH HMRATE4 IN MOLE.H */ 
 		if( rate->b > 0.)	
-			te = min(te, 2500.);
+			te = min(te, 5000.);
+		if(rate->b <0.)
+			te = max(te, 10.);
+
 		/* rate->c is gamma in expontntial */
 		if( rate->c < 0. )
-			ASSERT( -rate->c/te < 10. );
+			te = max(te,10.);
 
 		double r = 1.;
 		if( rate->b != 0. )
@@ -1863,10 +1866,8 @@ void mole_create_react( void )
 	read_data("mole_deuterium.dat",parse_base);
 
 	/* 23 mar 01, GS adding TiO */
-	#if 0
 	source = ti;
 	read_data("mole_ti.dat",parse_base);
-	#endif
 	
 	source = misc;
 	read_data("mole_misc.dat",parse_base);
@@ -3282,8 +3283,8 @@ STATIC void mole_h2_grain_form(void)
 				gv.bin[nd].rate_h2_form_grains_ELRD= 0.;
 
 				if( gv.bin[nd].matType == MAT_CAR || gv.bin[nd].matType == MAT_CAR2 ||
-				    gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
-				    gv.bin[nd].matType == MAT_PAH2 )
+					gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
+					gv.bin[nd].matType == MAT_PAH2 )
 				{
 					for( k=0; k < qnbin; k++ )
 					{
@@ -3346,8 +3347,8 @@ STATIC void mole_h2_grain_form(void)
 				gv.bin[nd].rate_h2_form_grains_ELRD= 0.;
 
 				if( gv.bin[nd].matType == MAT_CAR || gv.bin[nd].matType == MAT_CAR2 ||
-				    gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
-				    gv.bin[nd].matType == MAT_PAH2 )
+					gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
+					gv.bin[nd].matType == MAT_PAH2 )
 				{
 					Td = gv.bin[nd].tedust;
 
@@ -4432,7 +4433,7 @@ double t_mole_local::chem_heat(void) const
 		}
 
 		/* this is the chemical heating rate. */
-	       	/** \todo  Once the H chem is merged with the C chem, then
+		/** \todo  Once the H chem is merged with the C chem, then
 		 * we will have the chemical heating rate for all reactions.
 		 * This is only a subset and, thusfar, not actually used in
 		 * getting the total heating.  Tests with pdr_leiden_hack_f1.in
