@@ -1,4 +1,4 @@
-/* This file is part of Cloudy and is copyright (C)1978-2023 by Gary J. Ferland and
+/* This file is part of Cloudy and is copyright (C)1978-2025 by Gary J. Ferland and
  * others.  For conditions of distribution and use see copyright notice in license.txt */
 
 #ifndef SERVICE_H_
@@ -96,6 +96,20 @@ inline bool FindAndErase(std::string& str,
 			 const std::string& substr)
 {
 	return FindAndReplace( str, substr, "" );
+}
+
+// remove leading and trailing whitespace from a string
+inline string StripWhitespace(const string& str)
+{
+	if( str.empty() )
+		return string();
+	size_t p1 = 0;
+	while( p1 < str.length() && isspace(str[p1]) )
+		++p1;
+	size_t p2 = str.length()-1;
+	while( p2 > p1 && isspace(str[p2]) )
+		--p2;
+	return ( p2 >= p1 ) ? str.substr(p1, p2-p1+1) : string();
 }
 
 void service(double tau, double a, double beta);

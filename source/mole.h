@@ -1,4 +1,4 @@
-/* This file is part of Cloudy and is copyright (C)1978-2023 by Gary J. Ferland and
+/* This file is part of Cloudy and is copyright (C)1978-2025 by Gary J. Ferland and
  * others.  For conditions of distribution and use see copyright notice in license.txt */
 
 #ifndef MOLE_H_
@@ -573,12 +573,18 @@ bool parse_species_label( const char mylab[], ChemNuclideList &atomsLeftToRight,
 /* hmrate4 is clone of hmrate but takes a, b, c and te as explicit arguments */
 inline double hmrate4( double a, double b, double c, double te )
 {
-	/* UMIST rates are simple temperaturr power laws that
+	/* UMIST rates are simple temperature power laws that
 	 * can become large at the high temperatures Cloudy
-	 * may encounter. Do not extrapolate rates above T>2.5e3K 
+	 * may encounter. Similarly they were not intended for very low temperatures.
+	 * Do not extrapolate rates far from the ~100 kK temperatures
+	 * UMIST was designed for.
 	 * THIS CODE MUST BE KEPT PARALLEL WITH HMRATE IN MOLE_REACTIONS.CPP */ 
 	if (b >0.)	
-		te = min(te, 2500.);	
+		te = min(te, 5000.);
+	if(b <0.)
+		te = max(te, 10.);
+	if( c < 0. )
+		te = max(te,10.);
 	if( b == 0. && c == 0. )
 		return a;
 	else if( c == 0. )

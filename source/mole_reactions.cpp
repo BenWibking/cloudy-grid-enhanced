@@ -1,4 +1,4 @@
-/* This file is part of Cloudy and is copyright (C)1978-2023 by Gary J. Ferland and
+/* This file is part of Cloudy and is copyright (C)1978-2025 by Gary J. Ferland and
  * others.  For conditions of distribution and use see copyright notice in license.txt */
 #include "cdstd.h"
 #include "cddefines.h"
@@ -220,15 +220,18 @@ namespace {
 		te = phycon.te+noneq_offset(rate);
 		/* UMIST rates are simple temperature power laws that
 	 	 * can become large at the high temperatures Cloudy
-	 	 * may encounter. Do not extrapolate to above T>2.5e3K */ 
+	 	 * may encounter. Do not extrapolate to above T>5e3K */
 		/* rate-b is the power beta in (T/300)^beta, positive beta
 		 * can diverge at high temperatures */
 		/* THIS CODE MUST BE KEPT PARALLEL WITH HMRATE4 IN MOLE.H */ 
 		if( rate->b > 0.)	
-			te = min(te, 2500.);
+			te = min(te, 5000.);
+		if(rate->b <0.)
+			te = max(te, 10.);
+
 		/* rate->c is gamma in expontntial */
 		if( rate->c < 0. )
-			ASSERT( -rate->c/te < 10. );
+			te = max(te,10.);
 
 		double r = 1.;
 		if( rate->b != 0. )
@@ -1861,11 +1864,10 @@ void mole_create_react( void )
 	
 	source = deuterium;
 	read_data("mole_deuterium.dat",parse_base);
-	
-#if 0
+
+	/* 23 mar 01, GS adding TiO */
 	source = ti;
 	read_data("mole_ti.dat",parse_base);
-#endif
 	
 	source = misc;
 	read_data("mole_misc.dat",parse_base);
@@ -2430,6 +2432,7 @@ STATIC void newreact(const char label[], const char fun[], double a, double b, d
 
 	const char *rateLabelPtr = rate->label.c_str();
 	
+	/* conservation check uses data in chem_species.dat */
 	ASSERT(lgReactBalance(rate)); /* Verify rate conserves particles and charge */
 	
 	rate->udfastate = ABSENT;
@@ -2775,7 +2778,9 @@ STATIC bool lgReactBalance(const shared_ptr<mole_reaction> &rate)
 	{
 		fprintf(stderr,"Reaction %s charge out of balance by %d\n",
 				  rate->label.c_str(),dcharge);
-		lgOK = false;
+		fprintf(ioQQQ,"Reaction %s charge out of balance by %d\n",
+			rate->label.c_str(),dcharge);
+		  lgOK = false;
 	}
 	
 	for( nNucs_i it = nel.begin(); it != nel.end(); ++it )
@@ -2790,7 +2795,11 @@ STATIC bool lgReactBalance(const shared_ptr<mole_reaction> &rate)
 					  rate->label.c_str(),sign==1?"destroys":"creates",
 					  sign*it->second,
 					  it->first->label().c_str() );
-			lgOK = false;
+			fprintf(ioQQQ,"Error: reaction %s %s %d of element %s\n",
+					rate->label.c_str(),sign==1?"destroys":"creates",
+					sign*it->second,
+					it->first->label().c_str() );
+			  lgOK = false;
 		}
 	}
 	return lgOK;
@@ -3274,8 +3283,8 @@ STATIC void mole_h2_grain_form(void)
 				gv.bin[nd].rate_h2_form_grains_ELRD= 0.;
 
 				if( gv.bin[nd].matType == MAT_CAR || gv.bin[nd].matType == MAT_CAR2 ||
-				    gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
-				    gv.bin[nd].matType == MAT_PAH2 )
+					gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
+					gv.bin[nd].matType == MAT_PAH2 )
 				{
 					for( k=0; k < qnbin; k++ )
 					{
@@ -3338,8 +3347,8 @@ STATIC void mole_h2_grain_form(void)
 				gv.bin[nd].rate_h2_form_grains_ELRD= 0.;
 
 				if( gv.bin[nd].matType == MAT_CAR || gv.bin[nd].matType == MAT_CAR2 ||
-				    gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
-				    gv.bin[nd].matType == MAT_PAH2 )
+					gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
+					gv.bin[nd].matType == MAT_PAH2 )
 				{
 					Td = gv.bin[nd].tedust;
 
@@ -4424,7 +4433,7 @@ double t_mole_local::chem_heat(void) const
 		}
 
 		/* this is the chemical heating rate. */
-	       	/** \todo  Once the H chem is merged with the C chem, then
+		/** \todo  Once the H chem is merged with the C chem, then
 		 * we will have the chemical heating rate for all reactions.
 		 * This is only a subset and, thusfar, not actually used in
 		 * getting the total heating.  Tests with pdr_leiden_hack_f1.in

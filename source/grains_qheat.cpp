@@ -1,4 +1,4 @@
-/* This file is part of Cloudy and is copyright (C)1978-2023 by Gary J. Ferland and
+/* This file is part of Cloudy and is copyright (C)1978-2025 by Gary J. Ferland and
  * others.  For conditions of distribution and use see copyright notice in license.txt */
 /*GrainMakeDiffuse main routine for generating the grain diffuse emission, called by RT_diffuse */
 #include "cddefines.h"
@@ -245,11 +245,13 @@ void GrainMakeDiffuse()
 		/* >>chng 04 nov 09, do not evaluate quantum heating if abundance is negligible, PvH
 		 * this prevents PAH's deep inside molecular regions from failing if GrnVryDepth is used */
 		/* >>chng 04 dec 31, introduced separate thresholds near I-front and in molecular region, PvH */
+		/* >>chng 24 oct 12, replace dstAbund with GrnDpth in test below to avoid false negatives
+		 * in low-metallicity models, also test for fractional surface area in the current bin, PvH */
 		realnum threshold = ( dense.xIonDense[ipHYDROGEN][0]+dense.xIonDense[ipHYDROGEN][1] > hmi.H2_total ) ?
 			gv.dstAbundThresholdNear : gv.dstAbundThresholdFar;
 		long qnbin=-200;
 
-		if( lgLocalQHeat && gv.bin[nd].dstAbund >= threshold )
+		if( lgLocalQHeat && gv.bin[nd].GrnDpth >= threshold && gv.bin[nd].dustp[5] > 1.e-12 )
 		{
 			qheat(qtemp,qprob,&qnbin,nd);
 
@@ -948,7 +950,11 @@ STATIC void qheat_init(size_t nd,
 					xx = -xx;
 					sign = -1.;
 				}
-				long ipLo = rfield.ipointC( max(xx,rfield.emm()) );
+				/* the call to min() is needed because in extreme circumstances it can
+				 * happen that ratio*cool1 is so large that -xx > anu(qnflux-1). In that
+				 * case the contribution to phiTilde would not be counted, which can lead
+				 * to spurious failures of the energy conservation test */
+				long ipLo = rfield.ipointC( min(max(xx,rfield.emm()),rfield.anu(i)) );
 				/* for grains in hard X-ray environments, the coarseness of the grid can
 				 * lead to inaccuracies in the integral over phiTilde that would trip the
 				 * sanity check in qheat(), here we correct for the energy mismatch */
