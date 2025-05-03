@@ -231,7 +231,7 @@ namespace {
 
 		/* rate->c is gamma in expontntial */
 		if( rate->c < 0. )
-		   te = max(te,10.);
+			te = max(te,10.);
 
 		double r = 1.;
 		if( rate->b != 0. )
@@ -3283,8 +3283,8 @@ STATIC void mole_h2_grain_form(void)
 				gv.bin[nd].rate_h2_form_grains_ELRD= 0.;
 
 				if( gv.bin[nd].matType == MAT_CAR || gv.bin[nd].matType == MAT_CAR2 ||
-				    gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
-				    gv.bin[nd].matType == MAT_PAH2 )
+					gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
+					gv.bin[nd].matType == MAT_PAH2 )
 				{
 					for( k=0; k < qnbin; k++ )
 					{
@@ -3347,8 +3347,8 @@ STATIC void mole_h2_grain_form(void)
 				gv.bin[nd].rate_h2_form_grains_ELRD= 0.;
 
 				if( gv.bin[nd].matType == MAT_CAR || gv.bin[nd].matType == MAT_CAR2 ||
-				    gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
-				    gv.bin[nd].matType == MAT_PAH2 )
+					gv.bin[nd].matType == MAT_SIC || gv.bin[nd].matType == MAT_PAH ||
+					gv.bin[nd].matType == MAT_PAH2 )
 				{
 					Td = gv.bin[nd].tedust;
 
@@ -4433,7 +4433,7 @@ double t_mole_local::chem_heat(void) const
 		}
 
 		/* this is the chemical heating rate. */
-	       	/** \todo  Once the H chem is merged with the C chem, then
+		/** \todo  Once the H chem is merged with the C chem, then
 		 * we will have the chemical heating rate for all reactions.
 		 * This is only a subset and, thusfar, not actually used in
 		 * getting the total heating.  Tests with pdr_leiden_hack_f1.in
