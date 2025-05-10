@@ -240,6 +240,11 @@ parse_crashdo.${OBJEXT}: ${SRCDIR}/parse_crashdo.cpp ${CLDCONFIG} ${preobjects}
 	${CXX} ${CXXFLAGSNOOPT} ${DEBUGOPT} -c -o $@ $<
 	${SRCDIR}/make_depend.pl "${DEPCMD} $<" ${presource} ${substname} ${CLDCONFIG} ${@:.${OBJEXT}=.d}
 
+# the same goes for random_crash.cpp
+random_crash.${OBJEXT}: ${SRCDIR}/random_crash.cpp ${CLDCONFIG} ${preobjects}
+	${CXX} ${CXXFLAGSNOOPT} ${DEBUGOPT} -c -o $@ $<
+	${SRCDIR}/make_depend.pl "${DEPCMD} $<" ${presource} ${substname} ${CLDCONFIG} ${@:.${OBJEXT}=.d}
+
 # vectorize_reduce.cpp needs more agressive optimization to enable vectorization of the loops in this file
 vectorize_reduce.${OBJEXT}: ${SRCDIR}/vectorize_reduce.cpp ${CLDCONFIG} ${preobjects}
 	${CXX} ${CXXFLAGSVECT} -c -o $@ $<
