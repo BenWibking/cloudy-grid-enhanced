@@ -37,6 +37,7 @@
 
 #include "cdstd.h"
 #include <cstdarg>	/* ANSI variable arg macros */
+#include <filesystem>
 #include "cddefines.h"
 #include "service.h"
 #include "cddrive.h"
@@ -58,6 +59,8 @@
 #include "prt.h"
 #include "integrate.h"
 #include "ran.h"
+
+namespace fs = std::filesystem;
 
 #ifdef __CYGWIN__
 extern "C" { int vsnprintf(char*, size_t, const char*, va_list); }
@@ -1881,5 +1884,18 @@ istream& SafeGetline(istream& is, string& t)
 		default:
 			t += (char)c;
 		}
+	}
+}
+
+size_t FileSize(const string& fpath)
+{
+	try
+	{
+		fs::path fsp = fpath;
+		return fs::file_size(fsp);
+	}
+	catch( ... )
+	{
+		return FS_UNKNOWN;
 	}
 }
