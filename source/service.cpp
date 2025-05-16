@@ -1887,15 +1887,9 @@ istream& SafeGetline(istream& is, string& t)
 	}
 }
 
-size_t FileSize(const string& fpath)
+uintmax_t FileSize(const string& fpath)
 {
-	try
-	{
-		fs::path fsp = fpath;
-		return fs::file_size(fsp);
-	}
-	catch( ... )
-	{
-		return FS_UNKNOWN;
-	}
+	fs::path fsp = fpath;
+	error_code ec;
+	return fs::file_size(fsp, ec);
 }

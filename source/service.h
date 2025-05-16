@@ -147,9 +147,9 @@ inline void rd_block(void *ptr,
 }
 
 /** the routine FileSize() returns FS_UNKNOWN if the file size could not be determined */
-const size_t FS_UNKNOWN(-1);
+const uintmax_t FS_UNKNOWN = static_cast<uintmax_t>(-1);
 
 /** FileSize: portable and reliable way to get the size of a file */
-size_t FileSize(const string& fpath);
+uintmax_t FileSize(const string& fpath);
 
 #endif /* SERVICE_ */
