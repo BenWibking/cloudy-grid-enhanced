@@ -83,7 +83,7 @@ void load_balance::init( unsigned int nJobs, unsigned int nCPU )
 			p_jobs[i] = i;
 
 		if( p_ncpu > 1 )
-			random_shuffle( p_jobs.begin(), p_jobs.end(), [](int n){ return int((ran.i63()>>7)%n); } );
+			shuffle( p_jobs.begin(), p_jobs.end(), ran_u32() );
 	}
 	// now broadcast the random sequence to the other ranks...
 	if( lgMPI )
