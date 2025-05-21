@@ -117,7 +117,8 @@ if( $ret != 0 )
 	}
 	else
 	{
-		die "This compiler ($ARGV[0]) does not support C++17, please upgrade to a newer version.\n";
+		# Makefile depends on the wording of this error message, it picks up on the word "upgrade"
+		$res = "This compiler ($ARGV[0]) does not support C++17, please upgrade to a newer version\n";
 	}
 }
 unlink "tmp_cloudyconfig.cpp";

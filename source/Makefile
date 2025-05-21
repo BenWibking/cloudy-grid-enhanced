@@ -55,8 +55,9 @@ CXXDEPEND = $(DEFCXX)
 
 # check compiler capabilities
 CAPABILITIES := $(shell $(SRCDIR)/capabilities.pl $(CXX))
-ifneq ($(.SHELLSTATUS),0)
-  $(error determining compiler capabilities failed!)
+FAILURE := $(filter upgrade,$(CAPABILITIES))
+ifneq ($(FAILURE),)
+  $(error $(CAPABILITIES))
 endif
 PRECOMPILE := $(filter precompile,$(CAPABILITIES))
 VECTORIZE := $(filter vectorize,$(CAPABILITIES))
