@@ -115,6 +115,10 @@ if( $ret != 0 )
 	{
 		$res .= "need_stdc++fs "
 	}
+	else
+	{
+		die "This compiler ($ARGV[0]) does not support C++17, please upgrade to a newer version.\n";
+	}
 }
 unlink "tmp_cloudyconfig.cpp";
 unlink "tmp_cloudyconfig.exe";

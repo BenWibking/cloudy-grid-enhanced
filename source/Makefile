@@ -55,6 +55,9 @@ CXXDEPEND = $(DEFCXX)
 
 # check compiler capabilities
 CAPABILITIES := $(shell $(SRCDIR)/capabilities.pl $(CXX))
+ifneq ($(.SHELLSTATUS),0)
+  $(error determining compiler capabilities failed!)
+endif
 PRECOMPILE := $(filter precompile,$(CAPABILITIES))
 VECTORIZE := $(filter vectorize,$(CAPABILITIES))
 NATIVE := $(filter native,$(CAPABILITIES))
