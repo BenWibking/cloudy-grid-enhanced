@@ -25,7 +25,8 @@ SRCDIR = .
 OBJEXT = o
 LIBEXT = a
 
-.PHONY: all default data debug testclean clean distclean debug-test test valgrind-test depend echo-cxx echo-cxxflags
+.PHONY: all default data debug testclean clean distclean debug-test test valgrind-test depend \
+        echo-cxx echo-cxxflags echo-ldlibs
 
 # Default rule comes first -- having this implement 'make all' is standard
 all: default
@@ -311,7 +312,10 @@ echo-cxx:
 	@echo "$(CXX)"
 
 echo-cxxflags:
-	@echo "$(CXXFLAGS) ${LDLIBS}"
+	@echo "$(CXXFLAGS)"
+
+echo-ldlibs:
+	@echo "${LDLIBS}"
 
 # only include dependencies when we really need them, this prevents unnecessary builds of the dependencies
 # the way we create dependency files is discussed in http://scottmcpeak.com/autodepend/autodepend.html
