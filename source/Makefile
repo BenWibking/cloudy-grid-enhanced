@@ -106,6 +106,7 @@ endif
 
 ifneq ($(NEEDFSLIB),)
   FSLIB = -lstdc++fs
+  LDLIBS += $(FSLIB)
 endif
 
 CXXDEFINES = ${filter -D%,${CXXFLAGS}}
@@ -198,7 +199,7 @@ debug: default
 default: $(DEFAULT)
 
 cloudy.exe: ${preobjects} maincl.${OBJEXT} libcloudy.${LIBEXT}
-	${CXX} ${LDFLAGS} -o cloudy.exe maincl.${OBJEXT} -L. -lcloudy ${LDLIBS} ${FSLIB}
+	${CXX} ${LDFLAGS} -o cloudy.exe maincl.${OBJEXT} -L. -lcloudy ${LDLIBS}
 
 libcloudy.${LIBEXT}: ${libobjects}
 	ar cr libcloudy.${LIBEXT} $^
@@ -310,7 +311,7 @@ echo-cxx:
 	@echo "$(CXX)"
 
 echo-cxxflags:
-	@echo "$(CXXFLAGS)"
+	@echo "$(CXXFLAGS) ${LDLIBS}"
 
 # only include dependencies when we really need them, this prevents unnecessary builds of the dependencies
 # the way we create dependency files is discussed in http://scottmcpeak.com/autodepend/autodepend.html
