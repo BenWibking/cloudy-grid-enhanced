@@ -275,6 +275,7 @@ const ios_base::openmode UNUSED mode_apb = mode_ap | ios_base::binary;
 
 #include "mpi_utilities.h"
 
+void getFileList(vector<string>& results, const string& pattern, bool lgStrip=true);
 FILE* open_data( const string& fname, const string& mode, access_scheme scheme=AS_DEFAULT, string* rpath=nullptr );
 void open_data( fstream& stream, const string& fname, ios_base::openmode mode, access_scheme scheme=AS_DEFAULT,
 				string* rpath=nullptr );
@@ -396,6 +397,7 @@ public:
 	const string& chExitStatus(exit_type s) const { return p_exit_status[s]; }
 
 	void initPath();
+	friend void getFileList(vector<string>& results, const string& pattern, bool lgStrip);
 	friend FILE* open_data( const string& fname, const string& mode, access_scheme scheme, string* rpath );
 	friend void open_data( fstream& stream, const string& fname, ios_base::openmode mode, access_scheme scheme,
 						   string* rpath );

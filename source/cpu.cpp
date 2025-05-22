@@ -4,6 +4,9 @@
 
 #include "cdstd.h"
 #include <locale.h>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 #if defined(__ia64) && defined(__INTEL_COMPILER)
 extern "C" unsigned long fpgetmask();
@@ -719,6 +722,75 @@ STATIC string check_mult_path( const string& fname, const vector<string>& PathLi
 	return ( PathSuccess.size() > 0 ) ? PathSuccess[0] : "";
 }
 
+STATIC void getFileListSub(vector<string>& fpaths, fs::path fspath, const string& pattern,
+						   const string& basePath, bool lgStrip)
+{
+	DEBUG_ENTRY( "getFileListSub()" );
+
+	try
+	{
+		if( fs::status(fspath).type() != fs::file_type::directory )
+			return;
+
+		for( const auto& entry : fs::directory_iterator(fspath) )
+		{
+			fs::path spath = entry.path();
+			fs::file_status stat = fs::status(spath);
+			if( stat.type() == fs::file_type::regular )
+			{
+				string name = entry.path();
+				if( lgStrip )
+					FindAndReplace(name, basePath, ""s);
+				if( !pattern.empty() )
+				{
+					regex fnam_expr(pattern);
+					smatch what;
+					if( regex_match(name, what, fnam_expr) )
+						fpaths.emplace_back(name);
+				}
+				else
+				{
+					fpaths.emplace_back(name);
+				}
+			}
+		}
+	}
+	catch( fs::filesystem_error& )
+	{
+		// quietly ignore all errors...
+		(void)0;
+	}
+}
+
+void getFileList(vector<string>& results, const string& pattern, bool lgStrip)
+{
+	DEBUG_ENTRY( "getFileList()" );
+
+	if( !cpu.i().lgPathInitialized )
+		return;
+
+	auto ptr = pattern.rfind(cpu.i().p_chDirSeparator);
+	string filepattern, subdir;
+	if( ptr != string::npos )
+	{
+		subdir = pattern.substr(0, ptr);
+		filepattern = pattern.substr(++ptr);
+	}
+	else
+		filepattern = pattern;
+
+	for( const string& path1 : cpu.i().chSearchPath )
+	{
+		fs::path fspath{path1};
+		if( !subdir.empty() )
+		{
+			fs::path fspath_sub{path1 + subdir};
+			getFileListSub(results, fspath_sub, filepattern, path1, lgStrip);
+		}
+		getFileListSub(results, fspath, filepattern, path1, lgStrip);
+	}
+}
+	
 FILE* open_data( const string& fname, const string& mode, access_scheme scheme, string* rpath )
 {
 	DEBUG_ENTRY( "open_data()" );
