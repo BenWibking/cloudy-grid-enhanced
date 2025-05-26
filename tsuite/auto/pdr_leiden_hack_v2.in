@@ -70,7 +70,8 @@ monitor CO column density 17.53 error 0.1
 ## >>chng 21 sep 11, from 15.12 to 14.89, LAMDA update
 ## >>chng 21 nov 04, from 14.89 to 15.19, update mole co data
 ## >>chng 25 jan 26, from 15.19 to 15.28, merge master updated cham"
-monitor O2 column density 15.28 error 0.1
+## >>chng 25 may 25, from 15.28 to 15.66, limit to UMIST Te extrapolation
+monitor O2 column density 15.66 error 0.1
 ##
 ## >>chng 05 aug 03, from 15.40 to 15.61, NA update CO, H chem net
 ## >>chng 05 aug 08, from 15.61 to 15.39, readd grain-gas coll energy exchange
@@ -84,7 +85,8 @@ monitor O2 column density 15.28 error 0.1
 ## >>chng 20 aug 03, from 15.3 to 15.6, update H3+ rates Indriola+ 2012
 ## >>chng 21 sep 11, from 15.6 to 15.54, LAMDA update
 ## >>chng 21 nov 04, from 15.54 to 15.61, update mole co data
-monitor OH column density 15.61 error 0.1
+## >>chng 25 may 25, from 15.61 to 15.52, limit to UMIST Te extrapolation
+monitor OH column density 15.52 error 0.1
 ## 
 ## >>chng 04 dec 08, from 258 to 282, co-ion feedback, check converg
 ## >>chng 05 mar 25, from 282 to 264 renorm H pops in level solver
@@ -170,7 +172,8 @@ monitor nzone 583
 ## >>chng 13 jul 24, wl from 538.1m to 538.142m, increased wl precision to 6 sig. fig.
 ## >>chng 13 nov 20, from -8.315 to -8.369, include H,H2+=>H+,H2 even when H2* is disabled
 ## >>chng 20 aug 03, from -8.369 to -8.297, update H3+ rates Indriola+ 2012
-monitor "H2O " 538.142m line intensity -8.297
+## >>chng 25 may 25, from -8.297 to -8.171, limit to UMIST Te extrapolation
+monitor "H2O " 538.142m line intensity -8.171
 ## >>chng 13 jun 27, from -7.288 to -7.382, add line intensities of some molecules with strong emissions
 ## >>chng 13 jul 24, wl from 2600m to 2600.05m, increased wl precision to 6 sig. fig.
 ## >>chng 13 nov 20, from -7.382 to -7.414, include H,H2+=>H+,H2 even when H2* is disabled
