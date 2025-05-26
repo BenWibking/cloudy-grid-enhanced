@@ -305,24 +305,8 @@ void ParsePrint(
 	{
 		string pattern;
 		p.GetQuote(pattern);
-		if( pattern.empty() )
-		{
-			/* print the path */
-			cpu.i().printDataPath();
-		}
-		else
-		{
-			vector<string> results;
-			getFileList(results, pattern, false);
-			if( results.size() == 0 )
-				fprintf( ioQQQ, "No files matched the pattern\n" );
-			else
-			{
-				fprintf( ioQQQ, "These files matched the pattern\n" );
-				for( const auto& f : results )
-					fprintf( ioQQQ, "   ==%s==\n", f.c_str() );
-			}
-		}
+		/* print the path, the case where the quoted string is absent will be handled in printDataPath() */
+		cpu.i().printDataPath(pattern);
 	}
 
 	/*else if( p.nMatch("H-LI"))*/

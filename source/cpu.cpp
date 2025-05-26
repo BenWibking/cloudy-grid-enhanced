@@ -302,7 +302,7 @@ void t_cpu_i::initPath()
 
 	lgPathInitialized = true;
 
-	getchecksums( "checksums.dat" );
+	p_getchecksums( "checksums.dat" );
 }
 
 void t_cpu_i::p_assertValidPath()
@@ -547,20 +547,36 @@ void t_cpu_i::signal_handler(int sig, siginfo_t*, void* ptr)
 }
 
 
-void t_cpu_i::printDataPath() const
+void t_cpu_i::printDataPath(const string& pattern) const
 {
-	if( lgPathInitialized )
+	if( !lgPathInitialized )
+		return;
+
+	if( pattern.empty() )
 	{
 		fprintf(ioQQQ, "The path is:\n");
 		for( vector<string>::size_type i=0; i < chSearchPath.size(); ++i )
 			fprintf( ioQQQ, "   ==%s==\n", chSearchPath[i].c_str() );
 	}
+	else
+	{
+		vector<string> results;
+		p_getFileList(results, pattern, false);
+		if( results.size() == 0 )
+			fprintf( ioQQQ, "No files matched the pattern\n" );
+		else
+		{
+			fprintf( ioQQQ, "These files matched the pattern\n" );
+			for( const auto& f : results )
+				fprintf( ioQQQ, "   ==%s==\n", f.c_str() );
+		}
+	}
 }
 
 // this routine generates a list of all full paths to the locations where we should look for the file
-void t_cpu_i::getPathList( const string& fname, vector<string>& PathList, access_scheme scheme, bool lgRead ) const
+void t_cpu_i::p_getPathList( const string& fname, vector<string>& PathList, access_scheme scheme, bool lgRead ) const
 {
-	DEBUG_ENTRY( "getPathList()" );
+	DEBUG_ENTRY( "p_getPathList()" );
 
 	PathList.clear();
 	string FileName( fname );
@@ -588,9 +604,9 @@ void t_cpu_i::getPathList( const string& fname, vector<string>& PathList, access
 	}
 }
 
-void t_cpu_i::getchecksums( const string& fname )
+void t_cpu_i::p_getchecksums( const string& fname )
 {
-	DEBUG_ENTRY( "getchecksums()" );
+	DEBUG_ENTRY( "p_getchecksums()" );
 
 	// this routine reads a file with expected checksum values for all Cloudy data files
 	// they will be stored in the map checksum_expct[] and can be used to compare to the
@@ -654,7 +670,7 @@ STATIC void ErrorMessage( const string& fname, const vector<string>& PathList, a
 			fprintf( ioQQQ, "variable CLOUDY_DATA_PATH to define the data directory search path\n");
 			fprintf( ioQQQ, "using the shell command \nexport CLOUDY_DATA_PATH=\"<search path>\"\n");
 			fprintf( ioQQQ, "from a bash command prompt.\n\n");
-			cpu.i().printDataPath();
+			cpu.i().printDataPath("");
 		}
 		else
 		{
@@ -722,7 +738,7 @@ STATIC string check_mult_path( const string& fname, const vector<string>& PathLi
 	return ( PathSuccess.size() > 0 ) ? PathSuccess[0] : "";
 }
 
-STATIC void getFileListSub(vector<string>& fpaths, fs::path fspath, const string& pattern,
+STATIC void getFileListSub(vector<string>& results, fs::path fspath, const string& pattern,
 						   const string& basePath, bool lgStrip)
 {
 	DEBUG_ENTRY( "getFileListSub()" );
@@ -746,11 +762,11 @@ STATIC void getFileListSub(vector<string>& fpaths, fs::path fspath, const string
 					regex fnam_expr(pattern);
 					smatch what;
 					if( regex_match(name, what, fnam_expr) )
-						fpaths.emplace_back(name);
+						results.emplace_back(name);
 				}
 				else
 				{
-					fpaths.emplace_back(name);
+					results.emplace_back(name);
 				}
 			}
 		}
@@ -762,24 +778,20 @@ STATIC void getFileListSub(vector<string>& fpaths, fs::path fspath, const string
 	}
 }
 
-void getFileList(vector<string>& results, const string& pattern, bool lgStrip)
+void t_cpu_i::p_getFileList(vector<string>& results, const string& pattern, bool lgStrip) const
 {
-	DEBUG_ENTRY( "getFileList()" );
+	DEBUG_ENTRY( "p_getFileList()" );
 
-	if( !cpu.i().lgPathInitialized )
-		return;
-
-	auto ptr = pattern.rfind(cpu.i().p_chDirSeparator);
-	string filepattern, subdir;
-	if( ptr != string::npos )
+	if( !lgPathInitialized )
 	{
-		subdir = pattern.substr(0, ptr);
-		filepattern = pattern.substr(++ptr);
+		results.clear();
+		return;
 	}
-	else
-		filepattern = pattern;
 
-	for( const string& path1 : cpu.i().chSearchPath )
+	string filepattern, subdir;
+	p_splitPath(pattern, subdir, filepattern);
+
+	for( const string& path1 : chSearchPath )
 	{
 		fs::path fspath{path1};
 		if( !subdir.empty() )
@@ -791,6 +803,11 @@ void getFileList(vector<string>& results, const string& pattern, bool lgStrip)
 	}
 }
 	
+void getFileList(vector<string>& results, const string& pattern)
+{
+	cpu.i().p_getFileList(results, pattern, true);
+}
+
 FILE* open_data( const string& fname, const string& mode, access_scheme scheme, string* rpath )
 {
 	DEBUG_ENTRY( "open_data()" );
@@ -804,7 +821,7 @@ FILE* open_data( const string& fname, const string& mode, access_scheme scheme, 
 	bool lgMessage = ( scheme == AS_DEFAULT || scheme == AS_OPTIONAL || scheme == AS_LOCAL_ONLY );
 
 	vector<string> PathList;
-	cpu.i().getPathList( fname, PathList, scheme, lgRead );
+	cpu.i().p_getPathList( fname, PathList, scheme, lgRead );
 
 	FILE* handle = NULL;
 	string path = check_mult_path( fname, PathList, scheme, lgRead );
@@ -842,7 +859,7 @@ void open_data( fstream& stream, const string& fname, ios_base::openmode mode, a
 	bool lgMessage = ( scheme == AS_DEFAULT || scheme == AS_OPTIONAL || scheme == AS_LOCAL_ONLY );
 
 	vector<string> PathList;
-	cpu.i().getPathList( fname, PathList, scheme, lgRead );
+	cpu.i().p_getPathList( fname, PathList, scheme, lgRead );
 
 	ASSERT( !stream.is_open() );
 	string path = check_mult_path( fname, PathList, scheme, lgRead );
@@ -878,7 +895,7 @@ MPI_File open_data( const string& fname, int mode, access_scheme scheme, string*
 	bool lgMessage = ( scheme == AS_DEFAULT || scheme == AS_OPTIONAL || scheme == AS_LOCAL_ONLY );
 
 	vector<string> PathList;
-	cpu.i().getPathList( fname, PathList, scheme, lgRead );
+	cpu.i().p_getPathList( fname, PathList, scheme, lgRead );
 
 	int err = MPI_ERR_INTERN;
 	MPI_File fh = MPI_FILE_NULL;
