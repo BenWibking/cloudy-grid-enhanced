@@ -144,34 +144,44 @@ void DumpLine(const TransitionProxy& t)
 	/* routine to print contents of line arrays */
 	string chLbl = "DEBUG "+chLineLbl(t);
 
+	realnum WLprt = t.WLangVac();
+	char chUnit = 'A';
+	if( WLprt>1e4 )
+	{
+		WLprt /= 1e4;
+		chUnit = 'm';
+	}
 	fprintf( ioQQQ, 
-		"%10.10s Te%.6e eden%.6e CS%.6e Aul%.6e Tex%.6e cool%.6e\n",
-          chLbl.c_str(),
-          phycon.te,
-          dense.eden,
-          t.Coll().col_str(),
-          t.Emis().Aul(),
-          TexcLine(t),
-          t.Coll().cool() );
+		"%10.10s %.2f%c Te%.6e eden%.6e CS%.6e Aul%.6e Tex%.6e cool%.6e\n",
+		  chLbl.c_str(),
+		  //t.WLangVac(),
+		  WLprt,
+		  chUnit,
+		  phycon.te,
+		  dense.eden,
+		  t.Coll().col_str(),
+		  t.Emis().Aul(),
+		  TexcLine(t),
+		  t.Coll().cool() );
 
-        fprintf( ioQQQ,
-                "het%.6e conopc%.6e albdo%.6e Tin%.6e Tout%.6e Esc%.6e eEsc%.6e\n",
-          t.Coll().heat(),
-          opac.opacity_abs[t.ipCont()-1],
-          opac.albedo[t.ipCont()-1],
-	  t.Emis().TauIn(),
-          t.Emis().TauTot(),
-          t.Emis().Pesc(),
-          t.Emis().Pelec_esc() );
+		fprintf( ioQQQ,
+		  "het%.6e conopc%.6e albdo%.6e Tin%.6e Tout%.6e Esc%.6e eEsc%.6e\n",
+		  t.Coll().heat(),
+		  opac.opacity_abs[t.ipCont()-1],
+		  opac.albedo[t.ipCont()-1],
+		  t.Emis().TauIn(),
+		  t.Emis().TauTot(),
+		  t.Emis().Pesc(),
+		  t.Emis().Pelec_esc() );
 
 	fprintf( ioQQQ,
-                "DesP%.6e Pump%.6e OTS%.6e PopL,U %.6e %.6e PopOpc%.6e\n",
-          t.Emis().Pdest(),
-          t.Emis().pump(),
-          t.Emis().ots(),
-          (*t.Lo()).Pop(),
-          (*t.Hi()).Pop(),
-          t.Emis().PopOpc() );
+		"DesP%.6e Pump%.6e OTS%.6e PopL,U %.6e %.6e PopOpc%.6e\n",
+		t.Emis().Pdest(),
+		t.Emis().pump(),
+		t.Emis().ots(),
+		(*t.Lo()).Pop(),
+		(*t.Hi()).Pop(),
+		t.Emis().PopOpc() );
 
 	return;
 }
