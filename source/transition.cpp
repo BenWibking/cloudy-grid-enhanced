@@ -144,19 +144,8 @@ void DumpLine(const TransitionProxy& t)
 	/* routine to print contents of line arrays */
 	string chLbl = "DEBUG "+chLineLbl(t);
 
-	realnum WLprt = t.WLangVac();
-	char chUnit = 'A';
-	if( WLprt>1e4 )
-	{
-		WLprt /= 1e4;
-		chUnit = 'm';
-	}
-	fprintf( ioQQQ, 
-		"%10.10s %.2f%c Te%.6e eden%.6e CS%.6e Aul%.6e Tex%.6e cool%.6e\n",
-		  chLbl.c_str(),
-		  //t.WLangVac(),
-		  WLprt,
-		  chUnit,
+	dprintf( ioQQQ, "%s Te%.6e eden%.6e CS%.6e Aul%.6e Tex%.6e cool%.6e\n",
+		  t.chLabel().c_str(),
 		  phycon.te,
 		  dense.eden,
 		  t.Coll().col_str(),
