@@ -141,9 +141,6 @@ void DumpLine(const TransitionProxy& t)
 
 	ASSERT( t.ipCont() > 0 );
 
-	/* routine to print contents of line arrays */
-	string chLbl = "DEBUG "+chLineLbl(t);
-
 	dprintf( ioQQQ, "%s Te%.6e eden%.6e CS%.6e Aul%.6e Tex%.6e cool%.6e\n",
 		  t.chLabel().c_str(),
 		  phycon.te,
