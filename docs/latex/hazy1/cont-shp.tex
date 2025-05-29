@@ -1422,15 +1422,17 @@ various grids that are supported can be found on our
 
 To list all the grids that have already been installed on your system, you can
 use the \cdCommand{table star available} command. This will list all the
-standard grids that were installed from the webpage above (including their
-parameters), but not the custom grids that you created yourself.
-The output will also list the \cdCommand{table HM05}
-and \cdCommand{table HM12} commands. They are not strictly part of the
+grids that were installed, including the custom grids that you created yourself.
+This list is created by simply matching all files with names ending in \cdFilename{.ascii}.
+Some basic information about each file will be printed, including the syntax of
+the command needed to use that grid in a \Cloudy\ script.
+The output will also list the files used by the \cdCommand{table HM05},
+\cdCommand{table HM12}, and \cdCommand{table KS19} commands. They are not strictly part of the
 \cdCommand{table star} family of commands, but they internally use the stellar
 grid infrastructure to do their work.
 
 To list all the SEDs that are contained in a single stellar atmosphere
-grid, you can use the \cdCommand{table star $<$grid$>$ list} command. For more
+grid, you can use the \cdCommand{table star "some-name.ascii" list} command. For more
 details see our webpage listed above.
 
 \subsection{High-energy component}

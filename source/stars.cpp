@@ -153,6 +153,7 @@ STATIC void WriteASCIIData(FILE*,const vector<double>&,long,const char*,int);
 STATIC bool lgReadAtmosphereHead(stellar_grid*);
 STATIC bool lgReadAtmosphereTail(stellar_grid*,const realnum[],long,const vector<long>&,FILE*,bool);
 STATIC bool lgCompileAtmosphere(const string&,process_counter&);
+STATIC void PrintGridInfo(const string&);
 STATIC void InitGrid(stellar_grid*,bool);
 STATIC bool lgValidIdxFile(const string&,process_counter&);
 STATIC bool lgValidASCIIFile(const string&);
@@ -199,189 +200,16 @@ void AtmospheresAvail()
 	DEBUG_ENTRY( "AtmospheresAvail()" );
 
 	/* This routine makes a list of all the stellar atmosphere grids that are valid,
-	 * giving the parameters for use in the input script as well. It is simply a long
-	 * list of if-statements, so if any grid is added to Cloudy, it should be added in
-	 * this routine as well.
-	 *
-	 * NB NB NB -- test this routine regularly to see if the list is still complete! */
+	 * giving some basic info and the parameters for use in the input script as well.
+	 * All files matching the template *.ascii along the search path will be listed. */
 
 	fprintf( ioQQQ, "\n I will now list all stellar atmosphere grids that are ready to be used (if any).\n" );
-	fprintf( ioQQQ, " User-defined stellar atmosphere grids will not be included in this list.\n\n" );
 
-	if( lgValidASCIIFile( "atlas_fp10k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z+1.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fp05k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z+0.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fp03k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z+0.3 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fp02k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z+0.2 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fp01k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z+0.1 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fp00k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z+0.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm01k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-0.1 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm02k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-0.2 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm03k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-0.3 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm05k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-0.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm10k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-1.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm15k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-1.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm20k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-2.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm25k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-2.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm30k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-3.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm35k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-3.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm40k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-4.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm45k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-4.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm50k2.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas Z-5.0 <Teff> [ <log(g)> ]\n" );
-
-	if( lgValidASCIIFile( "atlas_fp05k2_odfnew.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas odfnew Z+0.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fp02k2_odfnew.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas odfnew Z+0.2 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fp00k2_odfnew.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas odfnew Z+0.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm05k2_odfnew.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas odfnew Z-0.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm10k2_odfnew.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas odfnew Z-1.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm15k2_odfnew.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas odfnew Z-1.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm20k2_odfnew.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas odfnew Z-2.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "atlas_fm25k2_odfnew.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas odfnew Z-2.5 <Teff> [ <log(g)> ]\n" );
-
-	if( lgValidASCIIFile( "atlas_3d.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas 3-dim <Teff> <log(g)> <log(Z)>\n" );
-
-	if( lgValidASCIIFile( "atlas_3d_odfnew.ascii" ) )
-		fprintf( ioQQQ, "   table star atlas odfnew 3-dim <Teff> <log(g)> <log(Z)>\n" );
-
-	if( lgValidASCIIFile( "Sc1_costar_solar.ascii" ) )
-		fprintf( ioQQQ, "   table star costar solar (see Hazy for parameters)\n" );
-	if( lgValidASCIIFile( "Sc1_costar_halo.ascii" ) )
-		fprintf( ioQQQ, "   table star costar halo (see Hazy for parameters)\n" );
-
-	if( lgValidASCIIFile( "kurucz79.ascii" ) )
-		fprintf( ioQQQ, "   table star kurucz79 <Teff>\n" );
-
-	if( lgValidASCIIFile( "mihalas.ascii" ) )
-		fprintf( ioQQQ, "   table star mihalas <Teff>\n" );
-
-	if( lgValidASCIIFile( "rauch_h-ca_solar.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch H-Ca solar <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "rauch_h-ca_halo.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch H-Ca halo <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "rauch_h-ca_3d.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch H-Ca 3-dim <Teff> <log(g)> <log(Z)>\n" );
-
-	if( lgValidASCIIFile( "rauch_h-ni_solar.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch H-Ni solar <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "rauch_h-ni_halo.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch H-Ni halo <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "rauch_h-ni_3d.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch H-Ni 3-dim <Teff> <log(g)> <log(Z)>\n" );
-
-	if( lgValidASCIIFile( "rauch_pg1159.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch pg1159 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "rauch_cowd.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch co wd <Teff>\n" );
-
-	if( lgValidASCIIFile( "rauch_hydr.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch hydrogen <Teff> [ <log(g)> ]\n" );
-
-	if( lgValidASCIIFile( "rauch_helium.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch helium <Teff> [ <log(g)> ]\n" );
-
-	if( lgValidASCIIFile( "rauch_h+he_3d.ascii" ) )
-		fprintf( ioQQQ, "   table star rauch H+He <Teff> <log(g)> <frac(He)>\n" );
-
-	if( lgValidASCIIFile( "starburst99.ascii" ) )
-		fprintf( ioQQQ, "   table star \"starburst99.ascii\" <age>\n" );
-	if( lgValidASCIIFile( "starburst99_2d.ascii" ) )
-		fprintf( ioQQQ, "   table star \"starburst99_2d.ascii\" <age> <Z>\n" );
-
-	if( lgValidASCIIFile( "obstar_merged_p03.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty OBstar Z+0.3 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "obstar_merged_p00.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty OBstar Z+0.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "obstar_merged_m03.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty OBstar Z-0.3 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "obstar_merged_m07.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty OBstar Z-0.7 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "obstar_merged_m10.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty OBstar Z-1.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "obstar_merged_m99.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty OBstar Z-inf <Teff> [ <log(g)> ]\n" );
-
-	if( lgValidASCIIFile( "obstar_merged_3d.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty OBstar 3-dim <Teff> <log(g)> <log(Z)>\n" );
-
-	if( lgValidASCIIFile( "bstar2006_p03.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Bstar Z+0.3 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "bstar2006_p00.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Bstar Z+0.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "bstar2006_m03.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Bstar Z-0.3 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "bstar2006_m07.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Bstar Z-0.7 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "bstar2006_m10.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Bstar Z-1.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "bstar2006_m99.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Bstar Z-inf <Teff> [ <log(g)> ]\n" );
-
-	if( lgValidASCIIFile( "bstar2006_3d.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Bstar 3-dim <Teff> <log(g)> <log(Z)>\n" );
-
-	if( lgValidASCIIFile( "ostar2002_p03.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z+0.3 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "ostar2002_p00.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z+0.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "ostar2002_m03.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z-0.3 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "ostar2002_m07.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z-0.7 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "ostar2002_m10.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z-1.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "ostar2002_m15.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z-1.5 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "ostar2002_m17.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z-1.7 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "ostar2002_m20.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z-2.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "ostar2002_m30.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z-3.0 <Teff> [ <log(g)> ]\n" );
-	if( lgValidASCIIFile( "ostar2002_m99.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar Z-inf <Teff> [ <log(g)> ]\n" );
-
-	if( lgValidASCIIFile( "ostar2002_3d.ascii" ) )
-		fprintf( ioQQQ, "   table star tlusty Ostar 3-dim <Teff> <log(g)> <log(Z)>\n" );
-
-	if( lgValidASCIIFile( "kwerner.ascii" ) )
-		fprintf( ioQQQ, "   table star werner <Teff> [ <log(g)> ]\n" );
-
-	if( lgValidASCIIFile( "wmbasic.ascii" ) )
-		fprintf( ioQQQ, "   table star wmbasic <Teff> <log(g)> <log(Z)>\n" );
-
-	if( lgValidASCIIFile( "hm05_galaxy.ascii" ) )
-		fprintf( ioQQQ, "   table HM05 <z> [ <factor> ]\n" );
-	if( lgValidASCIIFile( "hm05_quasar.ascii" ) )
-		fprintf( ioQQQ, "   table HM05 quasar <z> [ <factor> ]\n" );
-	if( lgValidASCIIFile( "hm12_galaxy.ascii" ) )
-		fprintf( ioQQQ, "   table HM12 <z> [ <factor> ]\n" );
+	vector<string> matches;
+	getFileList(matches, ".*\\.ascii");
+	sort(matches.begin(), matches.end());
+	for( string fnam : matches )
+		PrintGridInfo(fnam);
 }
 
 /* AtlasCompile rebin Kurucz stellar models to match energy grid of code */
@@ -2868,6 +2696,40 @@ STATIC bool lgCompileAtmosphere(const string& Name,
 	return false;
 }
 
+STATIC void PrintGridInfo(const string& fnam)
+{
+	DEBUG_ENTRY( "PrintGridInfo()" );
+
+	fprintf( ioQQQ, "File name: %s: ", fnam.c_str() );
+	if( lgValidASCIIFile( fnam ) )
+		fprintf( ioQQQ, "valid\n" );
+	else
+	{
+		fprintf( ioQQQ, "not a valid *.ascii file\n\n" );
+		return;
+	}
+
+	stellar_grid grid;
+	grid.ioIN = open_data( fnam, "r" );
+	if( !lgReadAtmosphereHead(&grid) )
+	{
+		grid.lgIsTeffLoggGrid = ( grid.ndim == 2 &&
+								  strcmp( grid.names[0], "Teff" ) == 0 &&
+								  strcmp( grid.names[1], "log(g)" ) == 0 );
+
+		fprintf( ioQQQ, "Grid parameters: ndim: %d  npar: %d  nmods %d\n", grid.ndim, grid.npar, grid.nmods );
+		string command = "table star \""s + fnam + "\""s;
+		if( grid.lgIsTeffLoggGrid )
+			command += "  <Teff> [ <log(g)> ]"s;
+		else
+		{
+			for( int32 i=0; i < grid.ndim; ++i )
+				command += " <"s + string(grid.names[i]) + ">"s;
+		}
+		fprintf( ioQQQ, "Cloudy command: %s\n\n", command.c_str() );
+	}
+}
+
 STATIC void InitGrid(stellar_grid *grid,
 		     bool lgList)
 {
@@ -2900,7 +2762,7 @@ STATIC void InitGrid(stellar_grid *grid,
 	grid->val.alloc(grid->ndim,grid->nmods);
 	grid->nval.resize(grid->ndim);
 
-	grid->lgIsTeffLoggGrid = ( grid->ndim >= 2 &&
+	grid->lgIsTeffLoggGrid = ( grid->ndim == 2 &&
 				   strcmp( grid->names[0], "Teff" ) == 0 &&
 				   strcmp( grid->names[1], "log(g)" ) == 0 );
 
