@@ -208,90 +208,8 @@ void AtmospheresAvail()
 	vector<string> matches;
 	getFileList(matches, ".*\\.ascii");
 	sort(matches.begin(), matches.end());
-	for( string fnam : matches )
+	for( const string& fnam : matches )
 		PrintGridInfo(fnam);
-}
-
-/* AtlasCompile rebin Kurucz stellar models to match energy grid of code */
-/* >>chng 05 nov 16, added return value to indicate success (0) or failure (1) */
-bool AtlasCompile(process_counter& pc)
-{
-	DEBUG_ENTRY( "AtlasCompile()" );
-
-	/* This is a program to re-bin the Kurucz stellar models spectrum to match the 
-	 * CLOUDY grid.  For wavelengths shorter than supplied in the Kurucz files,
-	 * the flux will be set to zero.  At long wavelengths a Rayleigh-Jeans
-	 * extrapolation will be used. */
-
-	/* This version uses power-law interpolation between the points of the stellar
-	 * model.*/
-
-	fprintf( ioQQQ, " AtlasCompile on the job.\n" );
-
-	/* >>chng 05 nov 19, add support for non-solar metalicities as well as odfnew models, PvH */
-	bool lgFail = false;
-	if( lgFileReadable( "atlas_fp10k2.ascii", pc ) && !lgValidIdxFile( "atlas_fp10k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fp10k2", pc );
-	if( lgFileReadable( "atlas_fp05k2.ascii", pc ) && !lgValidIdxFile( "atlas_fp05k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fp05k2", pc );
-	if( lgFileReadable( "atlas_fp03k2.ascii", pc ) && !lgValidIdxFile( "atlas_fp03k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fp03k2", pc );
-	if( lgFileReadable( "atlas_fp02k2.ascii", pc ) && !lgValidIdxFile( "atlas_fp02k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fp02k2", pc );
-	if( lgFileReadable( "atlas_fp01k2.ascii", pc ) && !lgValidIdxFile( "atlas_fp01k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fp01k2", pc );
-	if( lgFileReadable( "atlas_fp00k2.ascii", pc ) && !lgValidIdxFile( "atlas_fp00k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fp00k2", pc );
-	if( lgFileReadable( "atlas_fm01k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm01k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm01k2", pc );
-	if( lgFileReadable( "atlas_fm02k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm02k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm02k2", pc );
-	if( lgFileReadable( "atlas_fm03k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm03k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm03k2", pc );
-	if( lgFileReadable( "atlas_fm05k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm05k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm05k2", pc );
-	if( lgFileReadable( "atlas_fm10k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm10k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm10k2", pc );
-	if( lgFileReadable( "atlas_fm15k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm15k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm15k2", pc );
-	if( lgFileReadable( "atlas_fm20k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm20k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm20k2", pc );
-	if( lgFileReadable( "atlas_fm25k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm25k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm25k2", pc );
-	if( lgFileReadable( "atlas_fm30k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm30k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm30k2", pc );
-	if( lgFileReadable( "atlas_fm35k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm35k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm35k2", pc );
-	if( lgFileReadable( "atlas_fm40k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm40k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm40k2", pc );
-	if( lgFileReadable( "atlas_fm45k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm45k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm45k2", pc );
-	if( lgFileReadable( "atlas_fm50k2.ascii", pc ) && !lgValidIdxFile( "atlas_fm50k2.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm50k2", pc );
-
-	if( lgFileReadable( "atlas_fp05k2_odfnew.ascii", pc ) && !lgValidIdxFile( "atlas_fp05k2_odfnew.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fp05k2_odfnew", pc );
-	if( lgFileReadable( "atlas_fp02k2_odfnew.ascii", pc ) && !lgValidIdxFile( "atlas_fp02k2_odfnew.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fp02k2_odfnew", pc );
-	if( lgFileReadable( "atlas_fp00k2_odfnew.ascii", pc ) && !lgValidIdxFile( "atlas_fp00k2_odfnew.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fp00k2_odfnew", pc );
-	if( lgFileReadable( "atlas_fm05k2_odfnew.ascii", pc ) && !lgValidIdxFile( "atlas_fm05k2_odfnew.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm05k2_odfnew", pc );
-	if( lgFileReadable( "atlas_fm10k2_odfnew.ascii", pc ) && !lgValidIdxFile( "atlas_fm10k2_odfnew.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm10k2_odfnew", pc );
-	if( lgFileReadable( "atlas_fm15k2_odfnew.ascii", pc ) && !lgValidIdxFile( "atlas_fm15k2_odfnew.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm15k2_odfnew", pc );
-	if( lgFileReadable( "atlas_fm20k2_odfnew.ascii", pc ) && !lgValidIdxFile( "atlas_fm20k2_odfnew.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm20k2_odfnew", pc );
-	if( lgFileReadable( "atlas_fm25k2_odfnew.ascii", pc ) && !lgValidIdxFile( "atlas_fm25k2_odfnew.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_fm25k2_odfnew", pc );
-
-	if( lgFileReadable( "atlas_3d.ascii", pc ) && !lgValidIdxFile( "atlas_3d.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_3d", pc );
-
-	if( lgFileReadable( "atlas_3d_odfnew.ascii", pc ) && !lgValidIdxFile( "atlas_3d_odfnew.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "atlas_3d_odfnew", pc );
-	return lgFail;
 }
 
 /* AtlasInterpolate read in and interpolate on Kurucz grid of atmospheres, originally by K Volk */
@@ -355,29 +273,25 @@ long AtlasInterpolate(double val[], /* val[nval] */
 }
 
 /* CoStarCompile rebin costar stellar models to match energy grid of code*/
-bool CoStarCompile(process_counter& pc)
+bool CoStarCompile()
 {
 	DEBUG_ENTRY( "CoStarCompile()" );
 
 	fprintf( ioQQQ, " CoStarCompile on the job.\n" );
 
+	process_counter dum;
+
 	bool lgFail = false;
-	if( lgFileReadable( "Sc1_costar_z020_lb.fluxes", pc ) && !lgValidASCIIFile( "Sc1_costar_solar.ascii" ) )
+	if( lgFileReadable( "Sc1_costar_z020_lb.fluxes", dum ) && !lgValidASCIIFile( "Sc1_costar_solar.ascii" ) )
 	{
 		fprintf( ioQQQ, " Creating Sc1_costar_solar.ascii....\n" );
 		lgFail = lgFail || CoStarInitialize( "Sc1_costar_z020_lb.fluxes", "Sc1_costar_solar.ascii" );
 	}
-	if( lgFileReadable( "Sc1_costar_z004_lb.fluxes", pc ) && !lgValidASCIIFile( "Sc1_costar_halo.ascii" ) )
+	if( lgFileReadable( "Sc1_costar_z004_lb.fluxes", dum ) && !lgValidASCIIFile( "Sc1_costar_halo.ascii" ) )
 	{
 		fprintf( ioQQQ, " Creating Sc1_costar_halo.ascii....\n" );
 		lgFail = lgFail || CoStarInitialize( "Sc1_costar_z004_lb.fluxes", "Sc1_costar_halo.ascii" );
 	}
-
-	if( lgFileReadable( "Sc1_costar_solar.ascii", pc ) && !lgValidIdxFile( "Sc1_costar_solar.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "Sc1_costar_solar", pc );
-	if( lgFileReadable( "Sc1_costar_halo.ascii", pc ) && !lgValidIdxFile( "Sc1_costar_halo.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "Sc1_costar_halo", pc );
-
 	return lgFail;
 }
 
@@ -462,6 +376,24 @@ bool GridCompile(const string& InName)
 	return lgCompileAtmosphere( Name, dum );
 }
 
+bool GridCompile(const string& fnam, process_counter& pc)
+{
+	DEBUG_ENTRY( "GridCompile()" );
+
+	if( !lgFileReadable(fnam, pc) || !lgValidASCIIFile(fnam) )
+	{
+		fprintf(ioQQQ, " GridCompile: %s: not a valid atmosphere grid file\n", fnam.c_str());
+		return true;
+	}
+
+	string basenam = fnam.substr(0, fnam.length()-6);
+	string outnam = basenam + ".idx"s;
+	if( !lgValidIdxFile(outnam, pc) )
+		return lgCompileAtmosphere(basenam, pc);
+	else
+		return false;
+}
+
 /* GridInterpolate read in and interpolate on user supplied grid of atmospheres */
 long GridInterpolate(double val[], /* val[nval] */
 		     long *nval,
@@ -494,23 +426,6 @@ long GridInterpolate(double val[], /* val[nval] */
 	InterpolateRectGrid( &grid, val, Tlow, Thigh );
 
 	return rfield.nflux_with_check;
-}
-
-/* HaardtMadauCompile compile Haardt & Madau SEDs */
-bool HaardtMadauCompile(process_counter& pc)
-{
-	DEBUG_ENTRY( "HaardtMadauCompile()" );
-
-	fprintf( ioQQQ, " HaardtMadauCompile on the job.\n" );
-
-	bool lgFail = false;
-	if( lgFileReadable( "hm05_galaxy.ascii", pc ) && !lgValidIdxFile( "hm05_galaxy.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "hm05_galaxy", pc );
-	if( lgFileReadable( "hm05_quasar.ascii", pc ) && !lgValidIdxFile( "hm05_quasar.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "hm05_quasar", pc );
-	if( lgFileReadable( "hm12_galaxy.ascii", pc ) && !lgValidIdxFile( "hm12_galaxy.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "hm12_galaxy", pc );
-	return lgFail;
 }
 
 /* HaardtMadauInterpolate read in and interpolate on Haardt & Madau SEDs */
@@ -587,31 +502,6 @@ long HaardtMadauInterpolate(double val,
 	return rfield.nflux_with_check;
 }
 
-/* KhaireSrianandCompile compile Khaire & Srianand SEDs */
-bool KhaireSrianandCompile(process_counter& pc)
-{
-	DEBUG_ENTRY( "KhaireSrianandCompile()" );
-
-	fprintf( ioQQQ, " KhaireSrianandCompile on the job.\n" );
-
-	bool lgFail = false;
-	if( lgFileReadable( "ks19_q14.ascii", pc ) && !lgValidIdxFile( "ks19_q14.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ks19_q14", pc );
-	if( lgFileReadable( "ks19_q15.ascii", pc ) && !lgValidIdxFile( "ks19_q15.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ks19_q15", pc );
-	if( lgFileReadable( "ks19_q16.ascii", pc ) && !lgValidIdxFile( "ks19_q16.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ks19_q16", pc );
-	if( lgFileReadable( "ks19_q17.ascii", pc ) && !lgValidIdxFile( "ks19_q17.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ks19_q17", pc );
-	if( lgFileReadable( "ks19_q18.ascii", pc ) && !lgValidIdxFile( "ks19_q18.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ks19_q18", pc );
-	if( lgFileReadable( "ks19_q19.ascii", pc ) && !lgValidIdxFile( "ks19_q19.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ks19_q19", pc );
-	if( lgFileReadable( "ks19_q20.ascii", pc ) && !lgValidIdxFile( "ks19_q20.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ks19_q20", pc );
-	return lgFail;
-}
-
 /* KhaireSrianandInterpolate read in and interpolate on Khaire & Srianand SEDs */
 long KhaireSrianandInterpolate(double val,
 			       int Q,
@@ -643,22 +533,6 @@ long KhaireSrianandInterpolate(double val,
 	return rfield.nflux_with_check;
 }
 
-/* Kurucz79Compile rebin Kurucz 1979 stellar models to match energy grid of code */
-bool Kurucz79Compile(process_counter& pc)
-{
-	DEBUG_ENTRY( "Kurucz79Compile()" );
-
-	fprintf( ioQQQ, " Kurucz79Compile on the job.\n" );
-
-	/* following atmospheres LTE from Kurucz 1979, Ap.J. Sup 40, 1. and
-	 * Kurucz (1989) private communication, newer opacities */
-
-	bool lgFail = false;
-	if( lgFileReadable( "kurucz79.ascii", pc ) && !lgValidIdxFile( "kurucz79.idx", pc ) )
-		lgFail = lgCompileAtmosphere( "kurucz79", pc );
-	return lgFail;
-}
-
 /* Kurucz79Interpolate read in and interpolate on Kurucz79 grid of atmospheres */
 long Kurucz79Interpolate(double val[], /* val[nval] */
 			 long *nval,
@@ -682,21 +556,6 @@ long Kurucz79Interpolate(double val[], /* val[nval] */
 	InterpolateRectGrid( &grid, val, Tlow, Thigh );
 
 	return rfield.nflux_with_check;
-}
-
-/* MihalasCompile rebin Mihalas stellar models to match energy grid of code */
-bool MihalasCompile(process_counter& pc)
-{
-	DEBUG_ENTRY( "MihalasCompile()" );
-
-	fprintf( ioQQQ, " MihalasCompile on the job.\n" );
-
-	/* following atmospheres NLTE from Mihalas, NCAR-TN/STR-76 */
-
-	bool lgFail = false;
-	if( lgFileReadable( "mihalas.ascii", pc ) && !lgValidIdxFile( "mihalas.idx", pc ) )
-		lgFail = lgCompileAtmosphere( "mihalas", pc );
-	return lgFail;
 }
 
 /* MihalasInterpolate read in and interpolate on Mihalas grid of atmospheres */
@@ -732,7 +591,7 @@ long MihalasInterpolate(double val[], /* val[nval] */
 }
 
 /* RauchCompile create ascii and mod files for Rauch atmospheres */
-bool RauchCompile(process_counter& pc)
+bool RauchCompile()
 {
 	DEBUG_ENTRY( "RauchCompile()" );
 
@@ -866,34 +725,6 @@ bool RauchCompile(process_counter& pc)
 		lgFail = lgFail || RauchInitialize( "rauch_h+he_3d.ascii", "_H+He_0.000_1.000_00005-02000A.bin_0.1",
 						    telg6, NMODS_HpHE, 11, 11, par3, 2 );
 	}
-
-	if( lgFileReadable( "rauch_h-ca_solar.ascii", pc ) && !lgValidIdxFile( "rauch_h-ca_solar.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_h-ca_solar", pc );
-	if( lgFileReadable( "rauch_h-ca_halo.ascii", pc ) && !lgValidIdxFile( "rauch_h-ca_halo.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_h-ca_halo", pc );
-	if( lgFileReadable( "rauch_h-ca_3d.ascii", pc ) && !lgValidIdxFile( "rauch_h-ca_3d.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_h-ca_3d", pc );
-
-	if( lgFileReadable( "rauch_h-ni_solar.ascii", pc ) && !lgValidIdxFile( "rauch_h-ni_solar.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_h-ni_solar", pc );
-	if( lgFileReadable( "rauch_h-ni_halo.ascii", pc ) && !lgValidIdxFile( "rauch_h-ni_halo.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_h-ni_halo", pc );
-	if( lgFileReadable( "rauch_h-ni_3d.ascii", pc ) && !lgValidIdxFile( "rauch_h-ni_3d.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_h-ni_3d", pc );
-
-	if( lgFileReadable( "rauch_pg1159.ascii", pc ) && !lgValidIdxFile( "rauch_pg1159.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_pg1159", pc );
-	if( lgFileReadable( "rauch_cowd.ascii", pc ) && !lgValidIdxFile( "rauch_cowd.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_cowd", pc );
-
-	if( lgFileReadable( "rauch_hydr.ascii", pc ) && !lgValidIdxFile( "rauch_hydr.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_hydr", pc );
-
-	if( lgFileReadable( "rauch_helium.ascii", pc ) && !lgValidIdxFile( "rauch_helium.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_helium", pc );
-
-	if( lgFileReadable( "rauch_h+he_3d.ascii", pc ) && !lgValidIdxFile( "rauch_h+he_3d.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "rauch_h+he_3d", pc );
 	return lgFail;
 }
 
@@ -1202,7 +1033,7 @@ bool StarburstInitialize(const string& chInName,
 }
 
 /* StarburstCompile, rebin Starburst99 model output to match energy grid of code */
-bool StarburstCompile(process_counter& pc)
+bool StarburstCompile()
 {
 	DEBUG_ENTRY( "StarburstCompile()" );
 
@@ -1216,77 +1047,6 @@ bool StarburstCompile(process_counter& pc)
 		fprintf( ioQQQ, " Creating starburst99.ascii....\n" );		
 		lgFail = lgFail || StarburstInitialize( "starburst99.stb99", "starburst99.ascii", SB_TOTAL );
 	}
-	if( lgFileReadable( "starburst99.ascii", pc ) && !lgValidIdxFile( "starburst99.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "starburst99", pc );
-
-	if( lgFileReadable( "starburst99_2d.ascii", pc ) && !lgValidIdxFile( "starburst99_2d.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "starburst99_2d", pc );
-	return lgFail;
-}
-
-/* TlustyCompile rebin Tlusty BSTAR2006/OSTAR2002 stellar models to match energy grid of code */
-bool TlustyCompile(process_counter& pc)
-{
-	DEBUG_ENTRY( "TlustyCompile()" );
-
-	fprintf( ioQQQ, " TlustyCompile on the job.\n" );
-
-	bool lgFail = false;
-	if( lgFileReadable( "obstar_merged_p03.ascii", pc ) && !lgValidIdxFile( "obstar_merged_p03.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "obstar_merged_p03", pc );
-	if( lgFileReadable( "obstar_merged_p00.ascii", pc ) && !lgValidIdxFile( "obstar_merged_p00.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "obstar_merged_p00", pc );
-	if( lgFileReadable( "obstar_merged_m03.ascii", pc ) && !lgValidIdxFile( "obstar_merged_m03.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "obstar_merged_m03", pc );
-	if( lgFileReadable( "obstar_merged_m07.ascii", pc ) && !lgValidIdxFile( "obstar_merged_m07.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "obstar_merged_m07", pc );
-	if( lgFileReadable( "obstar_merged_m10.ascii", pc ) && !lgValidIdxFile( "obstar_merged_m10.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "obstar_merged_m10", pc );
-	if( lgFileReadable( "obstar_merged_m99.ascii", pc ) && !lgValidIdxFile( "obstar_merged_m99.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "obstar_merged_m99", pc );
-
-	if( lgFileReadable( "obstar_merged_3d.ascii", pc ) && !lgValidIdxFile( "obstar_merged_3d.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "obstar_merged_3d", pc );
-
-	if( lgFileReadable( "bstar2006_p03.ascii", pc ) && !lgValidIdxFile( "bstar2006_p03.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "bstar2006_p03", pc );
-	if( lgFileReadable( "bstar2006_p00.ascii", pc ) && !lgValidIdxFile( "bstar2006_p00.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "bstar2006_p00", pc );
-	if( lgFileReadable( "bstar2006_m03.ascii", pc ) && !lgValidIdxFile( "bstar2006_m03.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "bstar2006_m03", pc );
-	if( lgFileReadable( "bstar2006_m07.ascii", pc ) && !lgValidIdxFile( "bstar2006_m07.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "bstar2006_m07", pc );
-	if( lgFileReadable( "bstar2006_m10.ascii", pc ) && !lgValidIdxFile( "bstar2006_m10.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "bstar2006_m10", pc );
-	if( lgFileReadable( "bstar2006_m99.ascii", pc ) && !lgValidIdxFile( "bstar2006_m99.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "bstar2006_m99", pc );
-
-	if( lgFileReadable( "bstar2006_3d.ascii", pc ) && !lgValidIdxFile( "bstar2006_3d.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "bstar2006_3d", pc );
-
-	if( lgFileReadable( "ostar2002_p03.ascii", pc ) && !lgValidIdxFile( "ostar2002_p03.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_p03", pc );
-	if( lgFileReadable( "ostar2002_p00.ascii", pc ) && !lgValidIdxFile( "ostar2002_p00.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_p00", pc );
-	if( lgFileReadable( "ostar2002_m03.ascii", pc ) && !lgValidIdxFile( "ostar2002_m03.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_m03", pc );
-	if( lgFileReadable( "ostar2002_m07.ascii", pc ) && !lgValidIdxFile( "ostar2002_m07.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_m07", pc );
-	if( lgFileReadable( "ostar2002_m10.ascii", pc ) && !lgValidIdxFile( "ostar2002_m10.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_m10", pc );
-	if( lgFileReadable( "ostar2002_m15.ascii", pc ) && !lgValidIdxFile( "ostar2002_m15.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_m15", pc );
-	if( lgFileReadable( "ostar2002_m17.ascii", pc ) && !lgValidIdxFile( "ostar2002_m17.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_m17", pc );
-	if( lgFileReadable( "ostar2002_m20.ascii", pc ) && !lgValidIdxFile( "ostar2002_m20.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_m20", pc );
-	if( lgFileReadable( "ostar2002_m30.ascii", pc ) && !lgValidIdxFile( "ostar2002_m30.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_m30", pc );
-	if( lgFileReadable( "ostar2002_m99.ascii", pc ) && !lgValidIdxFile( "ostar2002_m99.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_m99", pc );
-
-	if( lgFileReadable( "ostar2002_3d.ascii", pc ) && !lgValidIdxFile( "ostar2002_3d.idx", pc ) )
-		lgFail = lgFail || lgCompileAtmosphere( "ostar2002_3d", pc );
 	return lgFail;
 }
 
@@ -1341,13 +1101,15 @@ long TlustyInterpolate(double val[], /* val[nval] */
 	return rfield.nflux_with_check;
 }
 
-/* WernerCompile rebin Werner stellar models to match energy grid of code */
-/* >>chng 05 nov 16, added return value to indicate success (0) or failure (1) */
-bool WernerCompile(process_counter& pc)
+/* WernerInterpolate read in and interpolate on Werner grid of PN atmospheres, originally by K Volk */
+long WernerInterpolate(double val[], /* val[nval] */
+		       long *nval,
+		       long *ndim,
+		       bool lgList,
+		       double *Tlow,
+		       double *Thigh)
 {
-	DEBUG_ENTRY( "WernerCompile()" );
-
-	fprintf( ioQQQ, " WernerCompile on the job.\n" );
+	DEBUG_ENTRY( "WernerInterpolate()" );
 
 	/* The "kwerner.ascii" file is a modified ascii dump of the Klaus Werner 
 	 * stellar model files which he gave to me in 1992.  The first set of values 
@@ -1368,22 +1130,6 @@ bool WernerCompile(process_counter& pc)
 	 * those with slightly smaller energies). It is therefore safe to ignore this point. PvH
 	 *
 	 * >>chng 00 oct 20, As per the same comment, StarFlux[172] is also deleted. PvH */
-
-	bool lgFail = false;
-	if( lgFileReadable( "kwerner.ascii", pc ) && !lgValidIdxFile( "kwerner.idx", pc ) )
-		lgFail = lgCompileAtmosphere( "kwerner", pc );
-	return lgFail;
-}
-
-/* WernerInterpolate read in and interpolate on Werner grid of PN atmospheres, originally by K Volk */
-long WernerInterpolate(double val[], /* val[nval] */
-		       long *nval,
-		       long *ndim,
-		       bool lgList,
-		       double *Tlow,
-		       double *Thigh)
-{
-	DEBUG_ENTRY( "WernerInterpolate()" );
 
 	/* This subroutine was added (28 dec 1992) to read from the set of
 	 * hot white dwarf model atmospheres from Klaus Werner at Kiel. The 
@@ -1428,19 +1174,6 @@ long WernerInterpolate(double val[], /* val[nval] */
 	InterpolateRectGrid( &grid, val, Tlow, Thigh, Edges, 3L );
 
 	return rfield.nflux_with_check;
-}
-
-/* WMBASICCompile rebin WMBASIC stellar models to match energy grid of code */
-bool WMBASICCompile(process_counter& pc)
-{
-	DEBUG_ENTRY( "WMBASICCompile()" );
-
-	fprintf( ioQQQ, " WMBASICCompile on the job.\n" );
-
-	bool lgFail = false;
-	if( lgFileReadable( "wmbasic.ascii", pc ) && !lgValidIdxFile( "wmbasic.idx", pc ) )
-		lgFail = lgCompileAtmosphere( "wmbasic", pc );
-	return lgFail;
 }
 
 /* WMBASICInterpolate read in and interpolate on WMBASIC grid of hot star atmospheres */
