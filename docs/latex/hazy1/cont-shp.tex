@@ -758,11 +758,16 @@ If the keyword \cdCommand{extrapolate} is present then the SED will
 be extrapolated to the low-energy limit of the code.
 
 
-\subsection{Available SED datasets}
+\subsection{Table SED available}
 
 The primary documentation for the SED files included in the distribution
-is the set of files in the \cdFilename{data/SED} directory.
+has been added to the set of files in the \cdFilename{data/SED} directory.
 Consult the \cdFilename{ReadMe.txt} file to find out more about what is available.
+
+You can also obtain a list of all the SED files that are present on the search
+path using the \cdCommand{table sed available} command. This will include
+user-installed SED files by simply listing all files with names ending with \cdFilename{.sed}.
+It is not possible to check whether these files actually contain a valid SED table.
 
 Many of the SEDs listed in the following subsections were available in \Cloudy\ versions C10 and before.
 To maintain backwards compatibility the keywords listed in Table~\ref{tab:LegacyKeywords}, 
