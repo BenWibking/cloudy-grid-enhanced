@@ -811,7 +811,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 
 	long HighestIndexInFile = -1;
 
-	/* The total number of levels depends on the experimental Chianti switch */
+	/* The total number of levels depends on the Chianti case, experimental, theory, or mixed */
 	if( atmdat.lgChiantiExp )
 	{
 		HighestIndexInFile = nTotalLevels; // AS: Changed to take whole nrg column
@@ -826,13 +826,13 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 		HighestIndexInFile = nTotalLevels;
 	}
 	else
-		// must add MIXED option here
+		// can't happen
 		TotalInsanity();
 
 	dBaseSpecies[intNS].numLevels_max = HighestIndexInFile;
 
 	setProperties(dBaseSpecies[intNS]);
-
+	// derive default number of levels, Fe is special case, identify it
 	if( tolower(dBaseSpecies[intNS].chLabel[0]) == 'f' && tolower(dBaseSpecies[intNS].chLabel[1]) == 'e')
 	{
 		// Fe is special case with more levels
@@ -850,7 +850,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 		cdEXIT( EXIT_FAILURE );
 	}
 
-	//Consider the masterlist specified number of levels as the min. =1 if not specified
+	//Consider the number of levels spceified on the masterlist. =1 if not specified
 	long numMasterlist = MIN2( dBaseSpecies[intNS].numLevels_masterlist , HighestIndexInFile );
 	nLevelsUsed = MAX2(nLevelsUsed,numMasterlist);
 
@@ -945,8 +945,6 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	const int lvl_skip_to_exp_nrg = 4;
 	//lvl_skip_to_exp_nrg is the # of columns to skip to experimental value from lvl_skip_to_exp_nrg + lvl_nrg_col
 	const int lvl_skip_to_theo_nrg = 13;
-
-
 
 	//Read in nrg levels to see if they are in order
 	for( long ipLev=0; ipLev<nTotalLevels; ipLev++ )
