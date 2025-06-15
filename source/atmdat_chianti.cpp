@@ -1,3 +1,28 @@
+/**
+ * @file atmdat_chianti.cpp
+ * @brief Implements routines for reading and processing atomic and molecular data from the STOUT and CHIANTI databases for use in Cloudy.
+ *
+ * This file contains functions and utilities to parse, validate, and map atomic/molecular energy levels, transition probabilities, and collisional data
+ * from external data files (STOUT and CHIANTI formats) into Cloudy's internal data structures. It handles various file formats, data consistency checks,
+ * and supports special cases for certain species (e.g., iron). The code is responsible for:
+ *   - Reading and sorting energy levels.
+ *   - Mapping file indices to internal indices, including handling irregular or non-sequential indices.
+ *   - Reading and assigning transition probabilities (A-values, gf-values, line strengths).
+ *   - Reading and storing collisional data for multiple colliders.
+ *   - Error checking and reporting for malformed or incomplete data files.
+ *   - Providing debug output for data verification.
+ *
+ * Key functions:
+ *   - getCode(): Converts a transition type string (e.g., "E1", "M2") to an integer code.
+ *   - processIndices(): Maps file-based energy level indices to internal indices, handling both regular and irregular cases.
+ *   - atmdat_STOUT_readin(): Reads and processes STOUT data files for a given species.
+ *   - atmdat_CHIANTI_readin(): Reads and processes CHIANTI data files for a given species.
+ *
+ * The file also defines supporting structures and constants, such as LevelInfo and ENERGY_MIN_WN.
+ *
+ * @author Gary J. Ferland and others
+ * @copyright Copyright (C)1978-2025 by Gary J. Ferland and others. For conditions of distribution and use see license.txt.
+ */
 /* This file is part of Cloudy and is copyright (C)1978-2025 by Gary J. Ferland and
  * others.  For conditions of distribution and use see copyright notice in license.txt */
 #include "cddefines.h"
@@ -34,6 +59,19 @@ struct LevelInfo
 const double ENERGY_MIN_WN = 1e-10;
 
 /* convert transition type into integer code */
+/**
+ * @brief Converts a transition type string to its corresponding code.
+ *
+ * This function interprets a two-character string representing a transition type
+ * (e.g., "E1", "M2", "NS") and returns an integer code corresponding to the type:
+ *   - "NS": Returns 0, treating the transition as E1 (default, as per NIST).
+ *   - "E1", "E2", "E3": Returns 0, 1, or 2 respectively.
+ *   - "M1", "M2", "M3": Returns 3, 4, or 5 respectively.
+ * If the input string does not match the expected format, returns -1.
+ *
+ * @param transType A two-character string representing the transition type.
+ * @return int The corresponding code for the transition type, or -1 if invalid.
+ */
 inline int getCode(const string& transType)
 {
 	DEBUG_ENTRY( "getCode()" );
@@ -60,6 +98,21 @@ inline int getCode(const string& transType)
 	return val;
 }
 
+/**
+ * @brief Processes and maps input energy level indices to internal indices, handling both regular and irregular cases.
+ *
+ * This function adjusts the lower and upper energy level indices (`ipLo`, `ipHi`) based on whether the indices are regular
+ * (sequential and zero-based) or irregular (requiring mapping via `indexold2new`). If the indices are irregular and not found
+ * in the mapping, both output indices are set to `LONG_MAX`. The function also ensures that the lower index is less than or
+ * equal to the upper index, swapping them if necessary.
+ *
+ * @param[in]  ipLoInFile      The lower energy level index as read from the file (1-based).
+ * @param[in]  ipHiInFile      The upper energy level index as read from the file (1-based).
+ * @param[in]  lgIsRegular     Flag indicating if the indices are regular (true) or require mapping (false).
+ * @param[in]  indexold2new    Mapping from old (file) indices to new (internal) indices.
+ * @param[out] ipLo            The mapped lower energy level index (0-based).
+ * @param[out] ipHi            The mapped upper energy level index (0-based).
+ */
 inline void processIndices(long ipLoInFile, long ipHiInFile, bool lgIsRegular, const map<long,long>& indexold2new,
 			   long& ipLo, long& ipHi)
 {
@@ -103,6 +156,33 @@ inline void processIndices(long ipLoInFile, long ipHiInFile, bool lgIsRegular, c
 	}
 }
 
+/**
+ * @brief Reads and processes STOUT atomic/molecular data files for a given species.
+ *
+ * This function reads the STOUT data files (.nrg, .tp, .coll) for a specified species,
+ * parses the energy levels, transition probabilities, and collisional data, and
+ * initializes the corresponding data structures used by the code. It handles
+ * various file formats, checks for data consistency, and supports special cases
+ * (e.g., Fe species with more levels). The function also performs error checking
+ * and outputs debug information if enabled.
+ *
+ * @param intNS
+ *    The index of the species in the dBaseSpecies array.
+ * @param chPrefix
+ *    The prefix string used to construct the filenames for the STOUT data files.
+ *
+ * @details
+ * The function performs the following steps:
+ *   - Reads and validates the energy levels file (.nrg), sorts levels, and initializes state arrays.
+ *   - Reads the transition probability file (.tp), processes radiative data, and populates transition arrays.
+ *   - Reads the collision data file (.coll), processes collisional strengths/rates, and fills collisional data arrays.
+ *   - Handles special cases for Fe species and user-specified level limits.
+ *   - Performs extensive error checking and outputs debug information if DEBUGSTATE is enabled.
+ *
+ * @throws
+ *   Exits the program with an error message if any file is malformed, missing required data,
+ *   or contains invalid entries.
+ */
 void atmdat_STOUT_readin( long intNS, const string& chPrefix )
 {
 	DEBUG_ENTRY( "atmdat_STOUT_readin()" );
@@ -666,6 +746,33 @@ void atmdat_STOUT_readin( long intNS, const string& chPrefix )
 	}
 }
 
+/**
+ * @brief Reads and processes CHIANTI atomic data files for a given species.
+ *
+ * This function reads the CHIANTI data files (.elvlc, .wgfa, .splups, .psplups) for a specified species,
+ * parses the energy levels, transition probabilities, and collisional data, and initializes the corresponding
+ * data structures used by the code. It handles various file formats, checks for data consistency, and supports
+ * special cases (e.g., Fe species with more levels). The function also performs error checking and outputs
+ * debug information if enabled.
+ *
+ * @param intNS
+ *    The index of the species in the dBaseSpecies array.
+ * @param chPrefix
+ *    The prefix string used to construct the filenames for the CHIANTI data files.
+ *
+ * @details
+ * The function performs the following steps:
+ *   - Reads and validates the energy levels file (.elvlc), sorts levels, and initializes state arrays.
+ *   - Reads the transition probability file (.wgfa), processes radiative data, and populates transition arrays.
+ *   - Reads the electron and proton collision data files (.splups, .psplups), processes collisional strengths/rates,
+ *     and fills collisional data arrays.
+ *   - Handles special cases for Fe species and user-specified level limits.
+ *   - Performs extensive error checking and outputs debug information if DEBUGSTATE is enabled.
+ *
+ * @throws
+ *   Exits the program with an error message if any file is malformed, missing required data,
+ *   or contains invalid entries.
+ */
 void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 {
 	DEBUG_ENTRY( "atmdat_CHIANTI_readin()" );
@@ -735,7 +842,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	chProColFilename += ".psplups";
 
 	/*Open the files*/
-	if( trace.lgTrace )
+	if( DEBUGSTATE )
 		fprintf( ioQQQ," atmdat_CHIANTI_readin opening %s:",chProColFilename.c_str());
 
 	/*We will set a flag here to indicate if the proton collision strengths are available */
@@ -803,7 +910,9 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 		}
 		elvlcstream.seekg(0,ios::beg);
 	}
-	//fprintf(ioQQQ,"DEBUGG CHIANTI %ld %ld %ld \n", 	nTotalLevels,	nExperimentalLevels,nTheoreticalLevels);
+	if( DEBUGSTATE )
+		dprintf(ioQQQ,"CHIANTI in scope nTotalLevels %ld nExperimentalLevels %ld nTheoreticalLevels %ld \n",
+			nTotalLevels,	nExperimentalLevels,nTheoreticalLevels);
 
 
 	/* Sometimes the theoretical chianti level data is incomplete.
@@ -811,7 +920,8 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	 * 25 06 12 This print never happens so perhaps Chianti is now complete? 
 	 * 25 06 14 supplemental, text was "warning" so woul not be picked up by our tsuite scripts */
 	bool lgChiaBadTheo = false;
-	if( (atmdat.ChiantiType == t_atmdat::CHIANTI_THEO) && nTheoreticalLevels < nTotalLevels )
+	if( ((atmdat.ChiantiType == t_atmdat::CHIANTI_THEO) || (atmdat.ChiantiType == t_atmdat::CHIANTI_MIXED)) && 
+	nTheoreticalLevels < nTotalLevels )
 	{
 		lgChiaBadTheo = true;
 		atmdat.ChiantiType = t_atmdat::CHIANTI_EXP;
@@ -828,13 +938,22 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	switch (atmdat.ChiantiType) {
 		case t_atmdat::CHIANTI_EXP:
 			HighestIndexInFile = nExperimentalLevels;
+			if( DEBUGSTATE )
+				(ioQQQ,"DEBUGG CHIANTI case EXP tot=%ld exp=%ld theo=%ld high indx=%ld\n", 	
+				nTotalLevels,	nExperimentalLevels,nTheoreticalLevels,HighestIndexInFile);
 			break;
 		case t_atmdat::CHIANTI_THEO:
 			HighestIndexInFile = nTheoreticalLevels;
+			if( DEBUGSTATE )
+				fprintf(ioQQQ,"DEBUGG CHIANTI case THEO tot=%ld exp=%ld theo=%ld high indx=%ld\n", 	
+				nTotalLevels,	nExperimentalLevels,nTheoreticalLevels,HighestIndexInFile);
 			break;
 		case t_atmdat::CHIANTI_MIXED:
 			// mixed option, we use everything we have but prefer experimental. We have theory for all levels
 			HighestIndexInFile = nTheoreticalLevels;
+			if( DEBUGSTATE )
+				fprintf(ioQQQ,"DEBUGG CHIANTI case MIXED tot=%ld exp=%ld theo=%ld high indx=%ld\n", 	
+				nTotalLevels,	nExperimentalLevels,nTheoreticalLevels,HighestIndexInFile);
 			break;
 		default:
 			// can't happen
@@ -856,7 +975,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 
 	if( nLevelsUsed <= 0 )
 	{
-		fprintf( ioQQQ, "The number of energy levels is non-positive in datafile %s.\n", chEnFilename.c_str() );
+		fprintf( ioQQQ, "WARNING: The number of energy levels is non-positive in datafile %s.\n", chEnFilename.c_str() );
 		fprintf( ioQQQ, "The file must be corrupted.\n" );
 		cdEXIT( EXIT_FAILURE );
 	}
@@ -864,6 +983,10 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	//Consider the number of levels spceified on the masterlist. =1 if not specified
 	long numMasterlist = MIN2( dBaseSpecies[intNS].numLevels_masterlist , HighestIndexInFile );
 	nLevelsUsed = MAX2(nLevelsUsed,numMasterlist);
+		if( DEBUGSTATE )
+			fprintf(ioQQQ,"DEBUGG CHIANTI levels post masterlist %ld used of total %ld masterlist=%ld exp=%ld theo=%ld HighestIndexInFile=%ld\n", 	
+				nLevelsUsed, nTotalLevels,numMasterlist,	nExperimentalLevels,nTheoreticalLevels,
+				HighestIndexInFile);
 
 	if (dBaseSpecies[intNS].setLevels != -1)
 	{
@@ -1109,11 +1232,11 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 		for (size_t i = 0; i<dBaseStatesEnergy.size(); ++i)
 			revIntExperIndex[i] = -1;
 		for ( vector<long>::const_iterator i= intExperIndex.begin();
-		      i != intExperIndex.end(); ++i )
+			 i != intExperIndex.end(); ++i )
 		{
 			long ipos = intExperIndex[i-intExperIndex.begin()];
 			if (ipos >= 0 && ipos < long(dBaseStatesEnergy.size()))
-			    revIntExperIndex[ipos] = i-intExperIndex.begin();
+				revIntExperIndex[ipos] = i-intExperIndex.begin();
 		}
 	}
 
@@ -1193,7 +1316,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 		wgfastream.seekg(0,ios::beg);
 	}
 	else 
-		fprintf( ioQQQ, " The data file %s is corrupted .\n",chTraFilename.c_str());
+		fprintf( ioQQQ, "WARNING The data file %s is corrupted .\n",chTraFilename.c_str());
 
 
 	if( DEBUGSTATE )
@@ -1387,7 +1510,6 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 				fprintf(ioQQQ,"%.3e\n",feinsteina);
 			}
 
-			fixit("may need to do something with these rates");
 			//Read in the rest of the line and look for auto
 			string chLine;
 			getline( wgfastream, chLine );
@@ -1430,7 +1552,8 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 			tr->setComment( db_comment_tran_levels() );
 		}
 	}
-	else fprintf( ioQQQ, " The data file %s is corrupted .\n",chTraFilename.c_str());
+	else 
+		fprintf( ioQQQ, "WARNING  The data file %s is corrupted .\n",chTraFilename.c_str());
 	wgfastream.close();
 
 	/* allocate space for splines */
