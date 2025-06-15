@@ -919,15 +919,17 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	 * If it is bad use experimental instead. 
 	 * 25 06 12 This print never happens so perhaps Chianti is now complete? 
 	 * 25 06 14 supplemental, text was "warning" so woul not be picked up by our tsuite scripts */
-	bool lgChiaBadTheo = false;
+
+	/* save state in case we fall back to exp or theory */
+	atmdat.ChiantiTypeSaveState = atmdat.ChiantiType;
+
 	if( ((atmdat.ChiantiType == t_atmdat::CHIANTI_THEO) || (atmdat.ChiantiType == t_atmdat::CHIANTI_MIXED)) && 
 	nTheoreticalLevels < nTotalLevels )
 	{
-		lgChiaBadTheo = true;
 		atmdat.ChiantiType = t_atmdat::CHIANTI_EXP;
 		/*>>chng 25 06 14 this was lower case so not detected by our test suite*/
-		fprintf(ioQQQ,"WARNING: The theoretical energy levels for %s are incomplete.",dBaseSpecies[intNS].chLabel);
-		fprintf(ioQQQ,"Switching to the experimental levels for this species.");
+		fprintf(ioQQQ,"WARNING: The theoretical energy levels for %s are incomplete.\n",dBaseSpecies[intNS].chLabel);
+		fprintf(ioQQQ,"Switching to the experimental levels for this species.\n");
 	}
 
 	long HighestIndexInFile = -1;
@@ -1831,10 +1833,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 
 	// Chianti had bad theo level data so we used experimental by setting ChiantiType to CHIANTI_EXP
 	// must change ChiantiType back to CHIANTI_THEO so next speices will use theoretical
-	if( lgChiaBadTheo )
-	{
-		atmdat.ChiantiType = t_atmdat::CHIANTI_THEO;
-	}
+	atmdat.ChiantiType = atmdat.ChiantiTypeSaveState;
 
 	return;
 }

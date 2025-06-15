@@ -382,7 +382,7 @@ struct t_atmdat : public module {
 		CHIANTI_THEO, // only use theoretical energy levels, set with DATABASE CHIANTI THEORETICAL
 		CHIANTI_MIXED }; // mixed is experimental where possible, theoretical if none, set with DATABASE CHIANTI MIXED
 	/** specified EXP, THEO, or MIXED */
-	chianti_type ChiantiType;
+	chianti_type ChiantiType , ChiantiTypeSaveState;
 
 	/**CloudyChianti filename variable **/
 	char chCloudyChiantiFile[FILENAME_PATH_LENGTH];
