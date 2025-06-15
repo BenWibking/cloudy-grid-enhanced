@@ -199,6 +199,7 @@ SiN+
 SiO	LAMDA
 SiO+	
 SiOH+	
+SiO2	
 P	Stout
 P+	Stout
 P+10	Chianti
@@ -245,6 +246,7 @@ OCS	LAMDA
 OCS+	
 SO2	LAMDA
 SiS	LAMDA
+HSiS	
 S2	
 S2+	
 Cl	Stout
@@ -395,7 +397,7 @@ HNTi
 HNTi+	
 TiNC	
 TiNC+	
-TiO	
+TiO	LAMDA
 TiO+	
 TiOH+	
 TiO2	

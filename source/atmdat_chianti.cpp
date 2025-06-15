@@ -30,7 +30,6 @@ struct LevelInfo
 	}
 };
 
-static const bool DEBUGSTATE = false;
 // minimum energy difference (wavenumbers) we will accept
 const double ENERGY_MIN_WN = 1e-10;
 
@@ -109,6 +108,7 @@ void atmdat_STOUT_readin( long intNS, const string& chPrefix )
 	DEBUG_ENTRY( "atmdat_STOUT_readin()" );
 
 	static const int MAX_NUM_LEVELS = 999;
+	static const bool DEBUGSTATE = false;
 
 	// the magic numbers for the stout files
 	const long int iyr = 17, imo = 9, idy = 5;
@@ -669,6 +669,7 @@ void atmdat_STOUT_readin( long intNS, const string& chPrefix )
 void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 {
 	DEBUG_ENTRY( "atmdat_CHIANTI_readin()" );
+	static const bool DEBUGSTATE = false;
 
 	int intsplinepts,intTranType,intxs;
 
@@ -680,8 +681,8 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	  // number of theoretical energy levels, we test that all levels have theoretical energies
 	  nTheoreticalLevels;
 	FILE *ioElecCollData=NULL, *ioProtCollData=NULL;
-	realnum  fstatwt,fenergyWN,fWLAng,fenergy,feinsteina,theoenergy;
-	double fScalingParam,fEnergyDiff;
+	realnum  fstatwt,fenergyWN,fWLAng,feinsteina;
+	double fScalingParam,fEnergyDiff,EnergyTheory;
 	const char chCommentChianti = '#';
 
 	bool lgProtonData=false;
@@ -759,21 +760,24 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	//# of columns to skip over the rydberg energy, we don't use it
 	const int lvl_skip_ryd = 15;
 
-	/* UNDERSTAND WHY FIRST STARTS AT 0, OTHERS AT 1. OFF BY ONE BUG? */
 	nTotalLevels = 0;
+	/* level energy must be positive to be counted since 0 entered when no data.
+	 * ground has zero energy so is not counted, as coded, so we start from 1 
+	 * to compensate */
 	nExperimentalLevels = 1;
 	nTheoreticalLevels = 1;
+
+	double EnergyExperimental = 0.;
 	if (elvlcstream.is_open())
 	{
 		int nj = 0;
 		char otemp[eof_col];
 		char exptemp[lvl_nrg_col],theotemp[lvl_nrg_col];
-		double tempexpenergy = 0.,theoenergy = 0.;
 		/*This loop counts the number of valid rows within the elvlc file
 		  as well as the number of experimental energy levels.*/
 		while(nj != -1)
 		{
-			// count total number of levels
+			// count total number of energy level lines of data
 			elvlcstream.get(otemp,eof_col);
 			nj = atoi(otemp);
 			if( nj == -1)
@@ -783,50 +787,54 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 			// count number of experimental energy levels
 			elvlcstream.seekg(lvl_eof_to_nrg,ios::cur);
 			elvlcstream.get(exptemp,lvl_nrg_col);
-			tempexpenergy = (double) atof(exptemp);
-			if( tempexpenergy != 0.)
+			EnergyExperimental = (double) atof(exptemp);
+			if( EnergyExperimental != 0.)
 				nExperimentalLevels++;
 
 			// count number of theoretical enerby levels
 			elvlcstream.seekg(lvl_skip_ryd,ios::cur);
 			elvlcstream.get(theotemp,lvl_nrg_col);
-			theoenergy = (double) atof(theotemp);
-			if( theoenergy != 0. )
+			EnergyTheory = (double) atof(theotemp);
+			//dprintf(ioQQQ,"theory energy debug %f\n",EnergyTheory);
+			if( EnergyTheory != 0. )
 				nTheoreticalLevels++;
 
 			elvlcstream.ignore(INT_MAX,'\n');
 		}
 		elvlcstream.seekg(0,ios::beg);
 	}
-	fprintf(ioQQQ,"DEBUGG CHIANTI %ld %ld %ld \n", 	nTotalLevels,	nExperimentalLevels,nTheoreticalLevels);
+	//fprintf(ioQQQ,"DEBUGG CHIANTI %ld %ld %ld \n", 	nTotalLevels,	nExperimentalLevels,nTheoreticalLevels);
 
 
-	// Sometimes the theoretical chianti level data is incomplete.
-	// If it is bad use experimental
+	/* Sometimes the theoretical chianti level data is incomplete.
+	 * If it is bad use experimental instead. 
+	 * 25 06 12 This print never happens so perhaps Chianti is now complete? 
+	 * 25 06 14 supplemental, text was "warning" so woul not be picked up by our tsuite scripts */
 	bool lgChiaBadTheo = false;
-	if( (atmdat.ChiantiType = t_atmdat::CHIANTI_THEO) && nTheoreticalLevels < nTotalLevels )
+	if( (atmdat.ChiantiType == t_atmdat::CHIANTI_THEO) && nTheoreticalLevels < nTotalLevels )
 	{
 		lgChiaBadTheo = true;
 		atmdat.ChiantiType = t_atmdat::CHIANTI_EXP;
-		fprintf(ioQQQ,"Warning: The theoretical energy levels for %s are incomplete.",dBaseSpecies[intNS].chLabel);
+		/*>>chng 25 06 14 this was lower case so not detected by our test suite*/
+		fprintf(ioQQQ,"WARNING: The theoretical energy levels for %s are incomplete.",dBaseSpecies[intNS].chLabel);
 		fprintf(ioQQQ,"Switching to the experimental levels for this species.");
 	}
 
 	long HighestIndexInFile = -1;
 
-	/* total number of levels depends on the case, experiment, theory, or mixed.
+	/* total number of levels depends on the case; experiment, theory, or mixed.
 	 * Previous test passed, so we have theory for every level. Mixed and Theory will
-	 * both use all levels. */
+	 * both use all levels. Experiment does not use theory  */
 	switch (atmdat.ChiantiType) {
 		case t_atmdat::CHIANTI_EXP:
-			HighestIndexInFile = nTotalLevels; // AS: Changed to take whole nrg column
+			HighestIndexInFile = nExperimentalLevels;
 			break;
 		case t_atmdat::CHIANTI_THEO:
 			HighestIndexInFile = nTheoreticalLevels;
 			break;
 		case t_atmdat::CHIANTI_MIXED:
-			// mixed option, we use everything we have but prefer experimental
-			HighestIndexInFile = nTotalLevels;
+			// mixed option, we use everything we have but prefer experimental. We have theory for all levels
+			HighestIndexInFile = nTheoreticalLevels;
 			break;
 		default:
 			// can't happen
@@ -881,26 +889,26 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 
 	if( atmdat.lgChiantiPrint )
 	{
-		if( atmdat.ChiantiType==t_atmdat::CHIANTI_EXP )
+		char chLabelChemical[CHARS_SPECIES] = "";
+		switch( atmdat.ChiantiType )
 		{
-			char chLabelChemical[CHARS_SPECIES] = "";
-			spectral_to_chemical( chLabelChemical, dBaseSpecies[intNS].chLabel ),
-			fprintf( ioQQQ,"Using CHIANTI spectrum %s (species: %s) with %li experimental energy levels of %li available.\n",
-				dBaseSpecies[intNS].chLabel, chLabelChemical, nLevelsUsed , nTheoreticalLevels );
-		}
-		else if( atmdat.ChiantiType==t_atmdat::CHIANTI_MIXED )
-		{
-			char chLabelChemical[CHARS_SPECIES] = "";
-			spectral_to_chemical( chLabelChemical, dBaseSpecies[intNS].chLabel ),
-			fprintf( ioQQQ,"Using CHIANTI spectrum %s (species: %s) with %li experimental and theoretical energy levels of %li available.\n",
-				dBaseSpecies[intNS].chLabel, chLabelChemical, nLevelsUsed , nTheoreticalLevels );
-		}
-		else
-		{
-			char chLabelChemical[CHARS_SPECIES] = "";
-			spectral_to_chemical( chLabelChemical, dBaseSpecies[intNS].chLabel ),
-			fprintf( ioQQQ,"Using CHIANTI spectrum %s (species: %s) with %li theoretical energy levels of %li available.\n",
-				dBaseSpecies[intNS].chLabel, chLabelChemical, nLevelsUsed , nTotalLevels );
+			case t_atmdat::CHIANTI_EXP:
+				spectral_to_chemical( chLabelChemical, dBaseSpecies[intNS].chLabel ),
+				fprintf( ioQQQ,"Using CHIANTI spectrum %s (species: %s) with %li experimental energy levels of %li available.\n",
+					dBaseSpecies[intNS].chLabel, chLabelChemical, nLevelsUsed , nExperimentalLevels );
+				break;
+			case t_atmdat::CHIANTI_MIXED:
+				spectral_to_chemical( chLabelChemical, dBaseSpecies[intNS].chLabel ),
+				fprintf( ioQQQ,"Using CHIANTI spectrum %s (species: %s) with %li experimental and theoretical energy levels of %li available.\n",
+					dBaseSpecies[intNS].chLabel, chLabelChemical, nLevelsUsed , nTheoreticalLevels );
+				break;
+			case t_atmdat::CHIANTI_THEO:
+				spectral_to_chemical( chLabelChemical, dBaseSpecies[intNS].chLabel ),
+				fprintf( ioQQQ,"Using CHIANTI spectrum %s (species: %s) with %li theoretical energy levels of %li available.\n",
+					dBaseSpecies[intNS].chLabel, chLabelChemical, nLevelsUsed , nTheoreticalLevels );
+				break;
+			default:
+				TotalInsanity();
 		}
 	}
 
@@ -952,7 +960,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	//Read in stat weight and energy
 
 	//lvl_skip_to_exp_nrg is the # of columns to skip to experimental value from lvl_skipto_statwt + lvl_statwt_col
-	const int lvl_skip_to_exp_nrg = 4;
+	const int lvl_skip_to_exp_nrg = 3;
 	//lvl_skip_to_exp_nrg is the # of columns to skip to experimental value from lvl_skip_to_exp_nrg + lvl_nrg_col
 	const int lvl_skip_to_theo_nrg = 13;
 
@@ -973,12 +981,13 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 			//Reading experimental column
 			elvlcstream.seekg(lvl_skip_to_exp_nrg,ios::cur);
 			elvlcstream.get(exptemp,lvl_nrg_col);
-			fenergy = (double) atof(exptemp);
+			EnergyExperimental = (double) atof(exptemp);
 
 			// Reading Theoretical Column
 			elvlcstream.seekg(lvl_skip_to_theo_nrg,ios::cur);
 			elvlcstream.get(theotemp,lvl_nrg_col);
-			theoenergy = (double) atof(theotemp);
+			EnergyTheory = (double) atof(theotemp);
+			//dprintf(ioQQQ,"theory 2nd energy exp theo %f\n",EnergyExperimental,EnergyTheory);
 
 			if(fstatwt <= 0.)
 			{
@@ -996,10 +1005,10 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 				 * If it is a valid experimental energy level store the new ncounter index.
 				 */
 
-				if( fenergy != 0. || ipLev == 0 )
+				if( EnergyExperimental != 0. || ipLev == 0 )
 				{
-					dBaseStatesEnergy.at(ncounter).first = fenergy;
-					fprintf(ioQQQ, " The first exp column energies are %f\n",fenergy);
+					dBaseStatesEnergy.at(ncounter).first = EnergyExperimental;
+					//fprintf(ioQQQ, " The first exp column energies are %f\n",EnergyExperimental);
 					dBaseStatesEnergy.at(ncounter).second = ncounter;
 					dBaseStatesStwt.at(ncounter) = fstatwt;
 					intExperIndex.at(ipLev) = ncounter;
@@ -1007,15 +1016,22 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 				}
 				else
 				{
-					//intExperIndex.at(ipLev) = -1;
-
-					// Reading only theory because fenergy = 0
-					dBaseStatesEnergy.at(ncounter).first = theoenergy;
-					fprintf(ioQQQ, " The first theo column energies are %f\n",theoenergy);
-					dBaseStatesEnergy.at(ncounter).second = ncounter;
-					dBaseStatesStwt.at(ncounter) = fstatwt;
-					intExperIndex.at(ipLev) = ncounter;
-					ncounter++;
+					intExperIndex.at(ipLev) = -1;
+				}
+			}
+			else
+			{
+				if(EnergyTheory != 0. || ipLev == 0)
+				{
+					dBaseStatesEnergy.at(ipLev).first = EnergyTheory;
+					dBaseStatesEnergy.at(ipLev).second = ipLev;
+					dBaseStatesStwt.at(ipLev) = fstatwt;
+				}
+				else
+				{
+					dBaseStatesEnergy.at(ipLev).first = -1.;
+					dBaseStatesEnergy.at(ipLev).second = ipLev;
+					dBaseStatesStwt.at(ipLev) = -1.;
 				}
 			}
 
@@ -1690,8 +1706,8 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	if( lgProtonData )
 		fclose( ioProtCollData );
 
-	//Chianti had bad theo level data so we used experimental
-	//Changing lgChiantiExp back to false so next speices will use theoretical
+	// Chianti had bad theo level data so we used experimental by setting ChiantiType to CHIANTI_EXP
+	// must change ChiantiType back to CHIANTI_THEO so next speices will use theoretical
 	if( lgChiaBadTheo )
 	{
 		atmdat.ChiantiType = t_atmdat::CHIANTI_THEO;
