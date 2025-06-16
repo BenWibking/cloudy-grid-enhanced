@@ -920,7 +920,9 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	 * 25 06 12 This print never happens so perhaps Chianti is now complete? 
 	 * 25 06 14 supplemental, text was "warning" so woul not be picked up by our tsuite scripts */
 
-	/* save state in case we fall back to exp or theory */
+	/* save state in case we fall back to exp or theory - 
+	 * NB NB NB! Must recover saved state at end of routine below*/
+	/* better would be to recode so that ChiantiType is left intact and used for work */
 	atmdat.ChiantiTypeSaveState = atmdat.ChiantiType;
 
 	if( ((atmdat.ChiantiType == t_atmdat::CHIANTI_THEO) || (atmdat.ChiantiType == t_atmdat::CHIANTI_MIXED)) && 
