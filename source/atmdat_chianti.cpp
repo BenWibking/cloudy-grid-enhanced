@@ -941,7 +941,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 		case t_atmdat::CHIANTI_EXP:
 			HighestIndexInFile = nExperimentalLevels;
 			if( DEBUGSTATE )
-				(ioQQQ,"DEBUGG CHIANTI case EXP tot=%ld exp=%ld theo=%ld high indx=%ld\n", 	
+				fprintf(ioQQQ,"DEBUGG CHIANTI case EXP tot=%ld exp=%ld theo=%ld high indx=%ld\n", 	
 				nTotalLevels,	nExperimentalLevels,nTheoreticalLevels,HighestIndexInFile);
 			break;
 		case t_atmdat::CHIANTI_THEO:
