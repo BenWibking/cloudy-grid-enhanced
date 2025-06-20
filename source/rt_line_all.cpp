@@ -280,13 +280,31 @@ void RT_line_all( linefunc line_one, bool lgExcludeLyman )
 			{
 				/* loop over all lines */
 				ipLo = ipH1s;
-				/* these are the extra Lyman lines for the H iso sequence */
+				/* these are the extra Lyman lines for the H iso sequences */
 				/* only update if significant abundance and need to update fine opac */
 				if( dense.xIonDense[nelem][ion] > 1e-30 )
 				{
-					for( long nHi=2; nHi <= iso_sp[ipISO][nelem].n_HighestResolved_local + iso_sp[ipISO][nelem].nCollapsed_local; nHi++ )
+					for( long nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
 					{
-						if( nHi > iso_sp[ipH_LIKE][nelem].n_HighestResolved_local ) /* looping over collapsed levels */
+						if( nHi > iso_sp[ipISO][nelem].n_HighestResolved_local + iso_sp[ipISO][nelem].nCollapsed_local )
+						{
+							TransitionList::iterator tr = ExtraLymanLinesJ05[nelem].begin()+ipExtraLymanLinesJ05[nelem][nHi];
+							(*tr).Emis().PopOpc() = iso_sp[ipISO][nelem].st[0].Pop();
+							(*(*tr).Lo()).Pop() =
+								iso_sp[ipISO][nelem].st[ipLo].Pop();
+
+							/* actually do the work */
+							line_one( *tr, true, 0.f, DopplerWidth[nelem], true);
+
+							tr = ExtraLymanLinesJ15[nelem].begin()+ipExtraLymanLinesJ15[nelem][nHi];
+							(*tr).Emis().PopOpc() = iso_sp[ipISO][nelem].st[0].Pop();
+							(*(*tr).Lo()).Pop() =
+								iso_sp[ipISO][nelem].st[ipLo].Pop();
+
+							/* actually do the work */
+							line_one( *tr, true, 0.f, DopplerWidth[nelem], true);
+						}
+						else if( nHi > iso_sp[ipH_LIKE][nelem].n_HighestResolved_local ) /* looping over collapsed levels */
 						{
 							long ipHi = iso_sp[ipH_LIKE][nelem].QN2Index(nHi,-1,-1);
 
@@ -316,10 +334,10 @@ void RT_line_all( linefunc line_one, bool lgExcludeLyman )
 							/* actually do the work */
 							line_one( *tr, true, 0.f, DopplerWidth[nelem], true);
 						}
-			
+
 						else /* looping over resolved levels */
 						{
-						   long ipHi = iso_sp[ipH_LIKE][nelem].QN2Index(nHi,1,2);
+							long ipHi = iso_sp[ipH_LIKE][nelem].QN2Index(nHi,1,2);
 
 							TransitionList::iterator tr = ExtraLymanLinesJ05[nelem].begin()+ipExtraLymanLinesJ05[nelem][nHi];
 							(*(*tr).Lo()).Pop() =
