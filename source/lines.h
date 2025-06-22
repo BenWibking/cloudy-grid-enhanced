@@ -354,6 +354,16 @@ public:
 	void prt(FILE *fp) const;
 	string label() const;
 	string biglabel() const;
+	/**
+	 * @brief Checks if the last four characters of the line label match the given string.
+	 *
+	 * This function retrieves the label associated with the current line (via chALab()),
+	 * extracts its last four characters (or the entire label if it is shorter than four characters),
+	 * and compares it to the input string @p s.
+	 *
+	 * @param s The string to compare against the last four characters of the line label.
+	 * @return true if the last four characters of the label match @p s, false otherwise.
+	 */
 	bool isCat(const char *s) const;
 	bool isSeparator() const
 	{
