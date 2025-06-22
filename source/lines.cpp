@@ -76,15 +76,24 @@ string LinSv::biglabel() const
 	return val;
 }
 
+/**
+ * @brief Checks if the last four characters of the line label match the given string.
+ *
+ * This function retrieves the label associated with the current line (via chALab()),
+ * extracts its last four characters (or the entire label if it is shorter than four characters),
+ * and compares it to the input string @p s.
+ *
+ * @param s The string to compare against the last four characters of the line label.
+ * @return true if the last four characters of the label match @p s, false otherwise.
+ */
 bool LinSv::isCat(const char *s) const
 {
 	DEBUG_ENTRY( "LinSv::isCat()" );
 
-	const char* lbl = chALab();
-	while( *s != '\0' )
-		if( *lbl++ != *s++ )
-			return false;
-	return true;
+	string lbl = string(chALab());
+	if (lbl.size() > 4)
+		lbl = lbl.substr(lbl.length()-4);
+	return lbl==string(s);
 }
 
 void LinSv::chALabSet(const char *that)
@@ -102,6 +111,21 @@ void LinSv::chALabSet(const char *that)
 	caps(m_chCLab);
 }
 
+/**
+ * @brief Initializes a LinSv object with the provided parameters and sets its type based on the label.
+ *
+ * This function sets up the LinSv object by assigning the given index, sum type, comment, label, and transition proxy.
+ * It also determines the line type by examining the last four characters of the label and assigns the corresponding
+ * enumeration value to the member variable m_type. The m_type member variable categorizes the line according to its
+ * physical or logical meaning (such as separator, unit, inward line, collisional, etc.), which is essential for
+ * subsequent processing and interpretation of the line data.
+ *
+ * @param index      The index of the line in the array; must be non-negative.
+ * @param chSumTyp   Character indicating the sum type; must be one of 'c', 'h', 'i', 'r', or 't'.
+ * @param chComment  A comment string describing the line.
+ * @param label      The label associated with the line, used to determine its type.
+ * @param tr         The TransitionProxy object associated with this line.
+ */
 void LinSv::init(long index, char chSumTyp, const char *chComment, const char *label,
 					  const TransitionProxy& tr)
 {
@@ -117,6 +141,37 @@ void LinSv::init(long index, char chSumTyp, const char *chComment, const char *l
 	emslinZero();
 	m_chComment = chComment;
 	chALabSet( label );
+	/**
+	 * @brief Sets the line type based on the last four characters of the label.
+	 *
+	 * This block checks if the last four characters of the line label match specific
+	 * strings (such as "####", "Unit", "UntD", "Inwd", "InwC", "InwT") and assigns
+	 * the corresponding enumeration value to m_type. This allows the code to
+	 * categorize lines as separators, units, inward lines, etc., based on their label.
+	 */
+	// m_type is an enum defined in lines.h:198 as follows:
+	// enum LineType {
+	//     SEPARATOR, UNIT, UNITD, INWARD, INWARDCONTINUUM, INWARDTOTAL,
+	//     COLLISIONAL, PUMP, HEAT, CASEA, CASEB, NINU, NFNU, PHOPLUS, PCON, QH, DEFAULT
+	// };
+	// The possible values of m_type are:
+	//   SEPARATOR         // label ends with "####", used as a separator line
+	//   UNIT              // label ends with "Unit", indicates a unit line
+	//   UNITD             // label ends with "UntD", unit line for density
+	//   INWARD            // label ends with "Inwd", inward line
+	//   INWARDCONTINUUM   // label ends with "InwC", inward continuum
+	//   INWARDTOTAL       // label ends with "InwT", inward total
+	//   COLLISIONAL       // label ends with "Coll", collisional line
+	//   PUMP              // label ends with "Pump", pumped line
+	//   HEAT              // label ends with "Heat", heating line
+	//   CASEA             // label ends with "Ca A", Case A line
+	//   CASEB             // label ends with "Ca B", Case B line
+	//   NINU              // label ends with "nInu", n*I_nu line
+	//   NFNU              // label ends with "nFnu", n*F_nu line
+	//   PHOPLUS           // label ends with "Pho+", photoionization plus
+	//   PCON              // label ends with "Pcon", continuum process
+	//   QH                // label ends with "Q(H)", Q(H) line
+	//   DEFAULT           // any other label, default type
 	if (isCat("####"))
 	{
 		m_type = SEPARATOR;
