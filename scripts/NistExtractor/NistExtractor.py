@@ -22,6 +22,10 @@ import os
 #     "O_III", "o_iii", and "o_3"
 # All of the above are correctly interpreted as O$^{2+}$ (i.e., O+2).
 #
+# Example on how to run the code:
+
+    #Python3 NistExtractor.py O_III
+
 # Notes:
 # - The output directory is structured to be compatible with the Cloudy STOUT database.
 # - Since NIST does not provide collision strengths, the generated .coll file is empty.
