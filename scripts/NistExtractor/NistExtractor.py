@@ -8,6 +8,28 @@ import datetime
 import fractions
 import os
 
+
+# -----------------------------------------------------------------------------
+# Originally written by Matt Lykins in support of:
+#     Lykins et al. 2015, ApJ, 807, 118  [doi:10.1088/0004-637X/807/1/118]
+#
+# Updated and extended by Maryam Dehghanian (June 2025) in support of:
+#     JWST Archival Research Program AR-6019
+#
+# Description:
+# This script constructs a STOUT-style atomic data directory from NIST ASD data.
+# It now accepts a wide range of ion name formats, including:
+#     "O_III", "o_iii", and "o_3"
+# All of the above are correctly interpreted as O$^{2+}$ (i.e., O+2).
+#
+# Notes:
+# - The output directory is structured to be compatible with the Cloudy STOUT database.
+# - Since NIST does not provide collision strengths, the generated .coll file is empty.
+#   If used in Cloudy, electron collisions will be estimated using the g-bar approximation.
+# -----------------------------------------------------------------------------
+
+
+
 NIST_LEVEL_SERVER = "https://physics.nist.gov/cgi-bin/ASD/energy1.pl"
 NIST_LINE_SERVER = "https://physics.nist.gov/cgi-bin/ASD/lines1.pl"
 DEBUGMODE = False
