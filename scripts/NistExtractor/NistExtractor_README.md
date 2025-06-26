@@ -12,6 +12,8 @@ Example: Fe IX  with 30 levels
 NistExtractor.py Fe_IX 30
 ```
 
+Note that the code accepts both lower-case and upper-case letters, as well as numbers. For example O_III, o_iii, and o_3 will all result in similar data.
+
 NEWrapper.py allows for NistExtractor to be run on multiple species.
 The required parameter is a file listing the desired species and optionally the level limit.
 
