@@ -1,5 +1,13 @@
 title Perseus cluster
 # model of IGM in Perseus galaxy cluster inspired by Hitommi spectroscopy
+# RAD affects the intensity of 2e Fe Fe24 X
+# w 1.8504 A
+# X 1.8554 A
+# y 1.8595 A
+# z 1.8682 A
+# doublet ratio affected by line optical depths 2025A&A...694L..13G
+# Fe 26 1.77802A
+# Fe 26 1.78337A
 set save prefix "igm_perseus"
 # improve continuum resolution and use all levels for Fe23+
 init "XRISM.ini"
@@ -94,6 +102,7 @@ monitor line "Fe25"    1.49460A 0.0342
 ## >>chng 25 jun 10, from 8.03 to 1.372, change luminosity to intensity
 ## >>chng 25 jun 10, from 1.372 to 2.368, large N(H) to make lines thick
 monitor line "Blnd"    1.77982A 2.368
+#
 ## >>chng 24 feb 07, add monitor
 ## >>chng 25 jun 10, from 8.51 to 0.4436, change luminosity to intensity
 ## >>chng 25 jun 10, from 0.4436 to 1.1, large N(H) to make lines thick
