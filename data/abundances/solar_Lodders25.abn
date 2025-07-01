@@ -1,0 +1,38 @@
+# refer: 
+# Solar System Elemental Abundances 
+# K. Lodders, M. Bergemann, and H. Palme 2025
+# 2025SSRv..221...23L
+HYDROGEN        1.00E+00
+HELIUM          8.33E-02
+LITHIUM         2.00E-09
+BERYLLIUM       2.34E-11
+BORON           6.44E-10
+CARBON          3.23E-04
+NITROGEN        8.68E-05
+OXYGEN          5.77E-04
+FLUORINE        4.55E-08
+NEON            1.41E-04
+SODIUM          1.99E-06
+MAGNESIUM       3.70E-05
+ALUMINIUM       2.89E-06
+SILICON         3.56E-05
+PHOSPHORUS      2.99E-07
+SULPHUR         1.51E-05
+CHLORINE        1.89E-07
+ARGON           3.16E-06
+POTASSIUM       1.30E-07
+CALCIUM         2.15E-06
+SCANDIUM        1.20E-09
+TITANIUM        8.64E-08
+VANADIUM        9.75E-09
+CHROMIUM        4.71E-07
+MANGANESE       3.30E-07
+IRON            3.11E-05
+COBALT          8.16E-08
+NICKEL          1.78E-06
+COPPER          1.96E-08
+ZINC            4.44E-08
+****************************
+
+This is a reduced form of Table 6 of Lodders+25
+https://ui.adsabs.harvard.edu/abs/2025SSRv..221...23L
