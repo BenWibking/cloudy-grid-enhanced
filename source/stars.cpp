@@ -203,7 +203,7 @@ void AtmospheresAvail()
 	 * giving some basic info and the parameters for use in the input script as well.
 	 * All files matching the template *.ascii along the search path will be listed. */
 
-	fprintf( ioQQQ, "\n I will now list all stellar atmosphere grids that are ready to be used (if any).\n" );
+	fprintf( ioQQQ, "\n I will now list all stellar atmosphere grids that are ready to be used (if any).\n\n" );
 
 	vector<string> matches;
 	getFileList(matches, ".*\\.ascii");

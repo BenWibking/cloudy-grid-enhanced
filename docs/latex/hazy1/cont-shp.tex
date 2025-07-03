@@ -768,6 +768,7 @@ You can also obtain a list of all the SED files that are present on the search
 path using the \cdCommand{table sed available} command. This will include
 user-installed SED files by simply listing all files with names ending with \cdFilename{.sed}.
 It is not possible to check whether these files actually contain a valid SED table.
+This command will exit immediately after printing the list.
 
 Many of the SEDs listed in the following subsections were available in \Cloudy\ versions C10 and before.
 To maintain backwards compatibility the keywords listed in Table~\ref{tab:LegacyKeywords}, 
@@ -1434,7 +1435,7 @@ the command needed to use that grid in a \Cloudy\ script.
 The output will also list the files used by the \cdCommand{table HM05},
 \cdCommand{table HM12}, and \cdCommand{table KS19} commands. They are not strictly part of the
 \cdCommand{table star} family of commands, but they internally use the stellar
-grid infrastructure to do their work.
+grid infrastructure to do their work. This command will exit immediately after printing the list.
 
 To list all the SEDs that are contained in a single stellar atmosphere
 grid, you can use the \cdCommand{table star "some-name.ascii" list} command. For more

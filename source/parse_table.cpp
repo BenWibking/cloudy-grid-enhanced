@@ -857,9 +857,11 @@ void ParseTable(Parser &p)
 		fprintf(ioQQQ, "Note that it is not possible to check whether these contain a valid SED.\n\n");
 
 		vector<string> matches;
-		getFileList(matches, "SED/.*\\.sed");
+		string basedir = "SED"s + cpu.i().chDirSeparator();
+		string pattern = basedir + ".*\\.sed"s;
+		getFileList(matches, pattern);
 		for( string& fnam : matches )
-			(void)FindAndErase(fnam, "SED/");
+			(void)FindAndErase(fnam, basedir);
 		sort(matches.begin(), matches.end());
 		for( const string& fnam : matches )
 			fprintf(ioQQQ, "%s\n", fnam.c_str());

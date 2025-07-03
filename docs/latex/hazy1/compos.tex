@@ -322,6 +322,14 @@ If an element is not included in the file it will not be included in the calcula
 The \cdCommand{abundances} command has a \cdCommand{print} option to report
 grain types and abundances entered for each active element.
 
+\subsection{Abundance available}
+
+You can obtain a list of all the abundance files that are present on the search
+path using the \cdCommand{abundance available} command. This will include
+user-installed abundance files by simply listing all files with names ending with \cdFilename{.abn}.
+It is not possible to check whether these files actually contain a valid abundance table.
+This command will exit immediately after printing the list.
+
 \subsection{Older solar abundances}
 
 The default solar abundances are stored in the file 
