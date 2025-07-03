@@ -1201,6 +1201,27 @@ determine whether the calculations are size-resolved or not,
 irrespective
 of the keywords \cdCommand{distribution} or \cdCommand{single}.
 
+\subsection{Grains available [rfi, mix, szd, opc]}
+
+The command \cdCommand{grains available} allows you to get a list of all grain
+data files that can be found on the search path. This list will include
+user-defined files. The code will check the magic number in the data files and
+use that as a basic test to mark files that are not correctly formatted.
+The files will be searched simply by looking for a given file name extension, as
+shown below.
+
+There are four types of grain data files, which will each be listed
+separately. The four types are: refractive index files (file name extension:
+\cdFilename{.rfi}), mixed medium files (extension: \cdFilename{.mix}), size
+distribution files (extension: \cdFilename{.szd}), and opacity files
+(extension: \cdFilename{.opc}). You can add the following keywords on the
+command line: \cdCommand{rfi}, \cdCommand{mix}, \cdCommand{szd}, or
+\cdCommand{opc}. This will restrict the search to that specific type. Multiple
+keywords can be entered on the same command line. So, e.g., the command
+\cdCommand{grains available rfi szd} will list all refractive index and size
+distribution files, but no mixed medium or opacity files. If no keywords are
+entered, all four types will be listed.
+
 \subsection{PAHs}
 \label{sec:GrainPAHcommands}
 
