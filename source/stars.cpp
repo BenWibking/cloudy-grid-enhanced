@@ -2446,13 +2446,13 @@ STATIC void PrintGridInfo(const string& fnam)
 	grid.ioIN = open_data( fnam, "r" );
 	if( !lgReadAtmosphereHead(&grid) )
 	{
-		grid.lgIsTeffLoggGrid = ( grid.ndim == 2 &&
-								  strcmp( grid.names[0], "Teff" ) == 0 &&
-								  strcmp( grid.names[1], "log(g)" ) == 0 );
+		bool lgGravityOptional = ( grid.ndim == 2 &&
+								   strcmp( grid.names[0], "Teff" ) == 0 &&
+								   strcmp( grid.names[1], "log(g)" ) == 0 );
 
 		fprintf( ioQQQ, "Grid parameters: ndim: %d  npar: %d  nmods %d\n", grid.ndim, grid.npar, grid.nmods );
 		string command = "table star \""s + fnam + "\""s;
-		if( grid.lgIsTeffLoggGrid )
+		if( lgGravityOptional )
 			command += "  <Teff> [ <log(g)> ]"s;
 		else
 		{
@@ -2495,9 +2495,11 @@ STATIC void InitGrid(stellar_grid *grid,
 	grid->val.alloc(grid->ndim,grid->nmods);
 	grid->nval.resize(grid->ndim);
 
-	grid->lgIsTeffLoggGrid = ( grid->ndim == 2 &&
-				   strcmp( grid->names[0], "Teff" ) == 0 &&
-				   strcmp( grid->names[1], "log(g)" ) == 0 );
+	// this flag indicates relaxed rules for matching log(g)
+	// and also applies to 3-dim Teff-log(g)-log(Z) grids
+	grid->lgIsTeffLoggGrid = ( grid->ndim >= 2 &&
+							   strcmp( grid->names[0], "Teff" ) == 0 &&
+							   strcmp( grid->names[1], "log(g)" ) == 0 );
 
 	InitIndexArrays( grid, lgList );
 
