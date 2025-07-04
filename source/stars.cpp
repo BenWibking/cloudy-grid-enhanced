@@ -2435,7 +2435,16 @@ STATIC void PrintGridInfo(const string& fnam)
 
 	fprintf( ioQQQ, "File name: %s: ", fnam.c_str() );
 	if( lgValidASCIIFile( fnam ) )
-		fprintf( ioQQQ, "valid\n" );
+	{
+		fprintf( ioQQQ, "valid,  index file: " );
+		string basenam = fnam.substr(0, fnam.length()-6);
+		string idxnam = basenam + ".idx"s;
+		process_counter dum;
+		if( lgValidIdxFile(idxnam, dum) )
+			fprintf( ioQQQ, "present.\n" );
+		else
+			fprintf( ioQQQ, "absent.\n" );
+	}
 	else
 	{
 		fprintf( ioQQQ, "not a valid *.ascii file\n\n" );
