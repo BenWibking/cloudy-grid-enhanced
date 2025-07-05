@@ -66,8 +66,10 @@ C,O2=>CO,O:hmrate:3.3e-11:0:0 # UMIST
 C,OH=>CO,H:hmrate:1.e-10:0:0 # UMIST2012,updated on 2023may08,GS                 	 
 C,SiO+=>Si+,CO:hmrate:1.0e-9:0:0 # UMIST	 
 C,CRPHOT=>C+,e-:crnurate:510:0.:0. # rjrw: rate was hardwired constant, corrected to depend on impinging CR rate 
-C+,OH=>CO+,H:hmrate:7.7e-10:0.:0.#  UMIST; Dubernet et al. 1992, ApJ, 239, 855	 
-C+,OH=>CO,H+:hmrate:7.7e-10:0.:0. # UMIST; Dubernet et al. 1992, ApJ, 239, 855	 
+#C+,OH=>CO+,H:hmrate:7.7e-10:0.:0.#  UMIST; Dubernet et al. 1992, ApJ, 239, 855	
+C+,OH=>CO+,H:hmrate:7.7e-10:-.5:0.#  UMIST2022, updated on 2025july5 
+# The reaction below is commented out as it is not in UMIST2022 and Dubernet et al. did not provide the value
+#C+,OH=>CO,H+:hmrate:7.7e-10:0.:0. # UMIST; Dubernet et al. 1992, ApJ, 239, 855 
 C+,SiO=>Si+,CO:hmrate:5.4e-10:0:0 # UMIST
 #C+,SiO=>Si+,CO:hmrate:5.4e-10:-0.5:0 # UMIST2012,updated on 2023aug27,GS;convergence problem for clang++18.16 	     
 C+,O2=>CO,O+:hmrate:6.2e-10:0:0 # UMIST	 
