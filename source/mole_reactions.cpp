@@ -218,6 +218,8 @@ namespace {
 		 alpha==rate->a; beta== rate->b; gamma==rate->c */  
 		
 		te = phycon.te+noneq_offset(rate);
+		return hmrate4( rate->a, rate->b, rate->c , te);
+#if 0
 		/* UMIST rates are simple temperature power laws that
 	 	 * can become large at the high temperatures Cloudy
 	 	 * may encounter. Do not extrapolate to above T>5e3K */
@@ -239,6 +241,7 @@ namespace {
 		if( rate->c != 0. )
 			r *= exp(-rate->c/te);
 		return r;
+#endif
 	}
 	
 	class mole_reaction_hmrate_exo : public mole_reaction
