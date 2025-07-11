@@ -246,7 +246,7 @@ namespace {
 		  * turbulent heating */
 		/* option to use effective temperature as defined in
 		 * >>refer	CO	chemistry	Zsargo, J. & Federman, S. R. 2003, ApJ, 589, 319
-		 * By default, this is false - changed with set chemistry command */
+		 * By default, this is zero - changed with set chemistry command */
 		te = phycon.te+noneq_offset(rate);
 		/** hmrate is multiplied by rate->a when used so we do not pass rate->a as first coefficient */
 		return hmrate4( 1., rate->b, rate->c , te);
