@@ -224,6 +224,7 @@ namespace {
 	 * which accounts for non-equilibrium effects specific to the reaction. This offset allows
 	 * the rate calculation to reflect physical conditions where the electron temperature may
 	 * differ from the kinetic temperature due to non-equilibrium processes.
+	 * Normally zero, it is set with SET CHEMISTRY NON-EQUILIBRIUM command
 	 *
 	 * @param rate Pointer to a mole_reaction structure containing the reaction parameters.
 	 * @return The computed reaction rate coefficient [cm^3 s^-1].
@@ -235,33 +236,20 @@ namespace {
 		DEBUG_ENTRY( "hmrate()" );
 		/* the UMIST equation is
 		 * rate = alpha \times (T/300)^beta \times exp( -gamma/T 
-		 alpha==rate->a; beta== rate->b; gamma==rate->c */  
+		 alpha==rate->a; beta== rate->b; gamma==rate->c
+
+		 rate = rate->a * pow( te/300. , rate->b) * exp( -rate->c/te )
+		 where te is the electron temperature in K.
+		 */  
 		
+		 /* noneq_offset is possible temperature hack to account for
+		  * turbulent heating */
+		/* option to use effective temperature as defined in
+		 * >>refer	CO	chemistry	Zsargo, J. & Federman, S. R. 2003, ApJ, 589, 319
+		 * By default, this is false - changed with set chemistry command */
 		te = phycon.te+noneq_offset(rate);
-		return hmrate4( rate->a, rate->b, rate->c , te);
-#if 0
-		/* UMIST rates are simple temperature power laws that
-	 	 * can become large at the high temperatures Cloudy
-	 	 * may encounter. Do not extrapolate to above T>5e3K */
-		/* rate-b is the power beta in (T/300)^beta, positive beta
-		 * can diverge at high temperatures */
-		/* THIS CODE MUST BE KEPT PARALLEL WITH HMRATE4 IN MOLE.H */ 
-		if( rate->b > 0.)	
-			te = min(te, 5000.);
-		if(rate->b <0.)
-			te = max(te, 10.);
-
-		/* rate->c is gamma in expontntial */
-		if( rate->c < 0. )
-			te = max(te,10.);
-
-		double r = 1.;
-		if( rate->b != 0. )
-			r *= pow(te/300.,rate->b);
-		if( rate->c != 0. )
-			r *= exp(-rate->c/te);
-		return r;
-#endif
+		/** hmrate is multiplied by rate->a when used so we do not pass rate->a as first coefficient */
+		return hmrate4( 1., rate->b, rate->c , te);
 	}
 	
 	class mole_reaction_hmrate_exo : public mole_reaction
