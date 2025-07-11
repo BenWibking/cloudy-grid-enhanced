@@ -564,7 +564,7 @@ bool parse_species_label( const char label[], ChemNuclideList &atomsLeftToRight,
 bool parse_species_label( const char mylab[], ChemNuclideList &atomsLeftToRight, vector<int> &numAtoms, string &embellishments,
 	bool &lgExcit, int &charge, bool &lgGas_Phase );
 
-/*HMRATE compile molecular rates using Hollenbach and McKee fits */
+/**HMRATE compute molecular rates using Hollenbach and McKee fits */
 /* #define HMRATE(a,b,c) ( ((b) == 0 && (c) == 0) ? (a) : \
  *	( ((c) == 0) ? (a)*pow(phycon.te/300.,(b)) : \
  *	( ((c)/phycon.te > 50.) ? 0. : ( ((b) == 0) ?  (a)*exp(-(c)/phycon.te) : \
@@ -577,8 +577,7 @@ inline double hmrate4( double a, double b, double c, double te )
 	 * can become large at the high temperatures Cloudy
 	 * may encounter. Similarly they were not intended for very low temperatures.
 	 * Do not extrapolate rates far from the ~100 kK temperatures
-	 * UMIST was designed for.
-	 * THIS CODE MUST BE KEPT PARALLEL WITH HMRATE IN MOLE_REACTIONS.CPP */ 
+	 * UMIST was designed for*/
 	if (b >0.)	
 		te = min(te, 5000.);
 	if(b <0.)

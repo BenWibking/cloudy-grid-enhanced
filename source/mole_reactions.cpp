@@ -208,6 +208,26 @@ namespace {
 		return 0.;
 	}
 	/*hmrate - evalurate UMIST expression for rate coefficient */
+	/**
+	 * @brief Computes the reaction rate for a given molecular reaction using UMIST formalism.
+	 *
+	 * This function calculates the rate coefficient for a molecular reaction based on the UMIST database
+	 * formula:
+	 *   rate = alpha * (T/300)^beta * exp(-gamma/T)
+	 * where:
+	 *   - alpha = rate->a
+	 *   - beta  = rate->b
+	 *   - gamma = rate->c
+	 *   - T     = electron temperature (with possible non-equilibrium offset)
+	 *
+	 * The temperature used in the calculation is adjusted by the function noneq_offset(rate),
+	 * which accounts for non-equilibrium effects specific to the reaction. This offset allows
+	 * the rate calculation to reflect physical conditions where the electron temperature may
+	 * differ from the kinetic temperature due to non-equilibrium processes.
+	 *
+	 * @param rate Pointer to a mole_reaction structure containing the reaction parameters.
+	 * @return The computed reaction rate coefficient [cm^3 s^-1].
+	 */
 	double hmrate(const mole_reaction *rate) 
 	{
 		double te;
