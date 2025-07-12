@@ -270,6 +270,28 @@ void ParseSet(Parser &p)
 			}
 		}
 
+		else if( p.nMatch("TIO") )
+		{
+			/* turn on TiO chemistry, which is off by default */
+			if( p.nMatch(" ON ") )
+			{
+				mole_global.lgTiO = true;
+			}
+			else if( p.nMatch(" OFF") )
+			{
+				mole_global.lgTiO = false;
+			}
+			else
+			{
+				/* this is the default when command used - true */
+				mole_global.lgTiO = true;
+			}
+		}
+
+		else if( p.nMatch("STAN") )
+		{
+			mole_global.lgStancil = true;
+		}
 		else
 		{
 			/* should not have happened ... */
