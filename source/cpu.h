@@ -349,15 +349,15 @@ class t_cpu_i
 	vector<string> p_exit_status;
 
 	//* split path into a head and tail
-	//* head: part leading up to the last directory separator, empty if separator absent
+	//* head: part leading up to and including the last directory separator, empty if separator absent
 	//* tail: part after the last directory separator, full path if separator absent
 	void p_splitPath( const string& path, string& head, string& tail ) const
 	{
 		auto ptr = path.rfind(p_chDirSeparator);
 		if( ptr != string::npos )
 		{
-			head = path.substr(0, ptr);
-			tail = path.substr(++ptr);
+			head = path.substr(0, ++ptr);
+			tail = path.substr(ptr);
 		}
 		else
 		{
