@@ -50,13 +50,16 @@ Required packages: doxygen, pdfkit, pdflatex, wkhtmltopdf
 
     9. Copy hazy1.pdf, hazy2.pdf, hazy3.pdf, and QuickStart.pdf to top of docs directory
 
-    10. Clean tsuite and source, then commit the changes:
+    10. Clean tsuite and source:
             >> cd source
             >> make dist clean
 
             >> cd ../tsuite
+            >> ./clean_tsuite.pl
 
-    11. Copy Doxygen to the data area
+    11. Commit the changes
+
+    12. Copy Doxygen to the data area
        NOTE: These should not go in the tarball
 
        First make a new subdirectory under doxygen for the new release
@@ -68,11 +71,11 @@ Required packages: doxygen, pdfkit, pdflatex, wkhtmltopdf
        Copy the doxygen tree to the new subdirectory created in nublado
             >> rsync -a doxygen/html/ cmgu228@nublado.org:/var/www/webapps/data_area/doxygen/c25.00/
 
-    12. Copy the release tarball to nublado
+    13. Copy the release tarball to nublado
        (this script creates one automatically once all directories have been prepped sucessfully)
             >> rsync -avz c25.00.tar.gz <user-name>@nublado.org:/var/www/webapps/data_area/cloudy_releases/c25/
 
-    13. Tag the latest release branch commit
+    14. Tag the latest release branch commit
 """
 
 def prep_source():
