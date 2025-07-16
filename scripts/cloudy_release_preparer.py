@@ -1,15 +1,18 @@
+import sys
 import os
 import subprocess
 import glob
 import requests
 import tarfile
+import platform
+import asyncio
 
 import subprocess
 
 """
 Gold To Do Version: Making a Cloudy Release step by step instructions
 
-Required packages: doxygen, pdfkit, pdflatex, wkhtmltopdf
+Required packages: doxygen, pyppeteer, pdflatex (script will run through this as well)
 
     1. get a fresh copy of master
             >> git pull
@@ -17,7 +20,7 @@ Required packages: doxygen, pdfkit, pdflatex, wkhtmltopdf
             >> git fresh origin
 
     2. Update the copy right year
-            >> find ./ -type f -exec sed -i -e 's/1978-2023/1978-2025/g' {} \;
+#>> find ./ -type f -exec sed -i -e 's/1978-2023/1978-2025/g' {} \;
         validate the changes
             >> grep -rnw . -e '1978' | grep -v 2025 | grep -v Percival | grep -v Draine
 
@@ -78,6 +81,80 @@ Required packages: doxygen, pdfkit, pdflatex, wkhtmltopdf
     14. Tag the latest release branch commit
 """
 
+def check_packages():
+    # Make sure Doxygen is installed
+    # This checks if doxygen is installed, by running a version check
+    try:
+        result = subprocess.run(['doxygen', '--version'])
+    except:
+        print(f"Doxygen is not installed or not found in the system path.")
+
+        install_success = False
+        print("Attempting to download doxygen...")
+        if platform.system() == "Darwin": # macOS
+            try:
+                subprocess.check_call(['brew', 'install', 'doxygen'])
+                print("Doxygen installed!")
+                install_success = True
+            except:
+                print("Failed to install Doxygen using Homebrew.")
+                install_success = False
+
+        # If error returned on doxygen version check, attempt to download doxygen
+        if platform.system() != "Darwin" or install_success == False:
+            try:
+                subprocess.check_call(['sudo', 'apt-get', 'update'])
+                subprocess.check_call(['sudo', 'apt-get', 'install', '-y', 'doxygen'])
+                print("Doxygen installed!")
+                install_success = True
+            except:
+                print("Failed to install Doxygen using sudo apt-get.")
+                print("Please install doxygen manually before continuing. Aborting script.")
+                return -1
+
+    # pdfkit needed later for converting .htm file to .pdf file
+    try:
+        from pyppeteer import launch
+    except:
+        print(f"pyppeteer is not installed.")
+
+        install_success = False
+        print("Attempting to install pyppeteer...")
+        try:
+            subprocess.check_call(['pip', 'install', 'pyppeteer'])
+            print("pyppeteer installed!")
+        except:
+            print("Failed to install pyppeteer using pip.")
+            print("Please install pyppeteer manually before continuing. Aborting script.")
+            return -1
+
+    # Check if pdflatex is installed by doing a version check
+    try:
+        subprocess.run(["pdflatex", "--version"])
+    except:
+        print(f"pdflatex is not installed.")
+
+        print("Attempting to install pdflatex...")
+        if platform.system() == "Darwin": # macOS
+            try:
+                subprocess.run(["brew", "install", "--cask", "mactex"])
+                print("mactex installed! Please re-start terminal and re-start script.")
+            except:
+                print("Failed to install mactex using Homebrew.")
+                print("Please install mactex manually before continuing. Aborting script.")
+                return -1
+
+        elif platform.system() != "Darwin":
+            try:
+                subprocess.run(["sudo", "apt", "install", "texlive"])
+                print("texlive installed! Please re-start terminal and re-start script.")
+            except:
+                print("Failed to install texlive using sudo apt-get.")
+                print("Please install texlive manually before continuing. Aborting script.")
+                return -1
+
+    return 0
+
 def prep_source():
     os.chdir("./source/")
 
@@ -116,45 +193,6 @@ def prep_doxygen(cloudy_release):
     os.chdir("./doxygen/")
     current_dir = os.getcwd()
     print("Entered", current_dir)
-
-    # This checks if doxygen is installed, be looking for its version
-    try:
-        result = subprocess.run(['doxygen', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        if result.returncode == 0:
-            result = {"message": f"Doxygen is installed. Version: {result.stdout.strip()}", "x": 0}
-        else:
-            result = {"message": f"Doxygen is not installed or not found in the system path.\n Error: {result.stderr.strip()}", "x": -1}
-    except:
-        result = {"message": f"Doxygen is not installed or not found in the system path.", "x": -1}
-
-    print(result["message"])
-    
-    # If error returned on doxygen version check, attempt to download doxygen
-    if result["x"] == -1:
-        print("Attempting to download doxygen...")
-        try:
-            # Install doxygen using Homebrew
-            subprocess.check_call(['brew', 'install', 'doxygen'])
-            print("Doxygen installed!")
-            install_success = True
-        except:
-            print("Failed to install Doxygen using Homebrew.")
-            install_success = False
-
-        if install_success == False:
-            print("Attempting to use sudo apt-get instead...")
-            try:
-                subprocess.check_call(['sudo', 'apt-get', 'update'])
-                subprocess.check_call(['sudo', 'apt-get', 'install', '-y', 'doxygen'])
-                print("Doxygen installed!")
-                install_success = True                
-            except:# subprocess.CalledProcessError as e:
-                print("Failed to install Doxygen using apt-get.")
-                install_success = False
-        
-        if install_success == False:
-            print("Please install doxygen manually before continuing. Moving onto next directory.")
-            return 1
 
     # This creates the Doxygen documentation
     command_args = ["doxygen", "Doxyfile"]
@@ -255,6 +293,13 @@ def prep_data():
     print("\nData directory ready for release.\n")
     return 0
 
+async def convert_html_to_pdf(in_htm, out_pdf):
+    browser = await launch(headless=True)
+    page = await browser.newPage()
+    await page.goto(in_htm, {'waitUntil': 'networkidle2'})  # local HTML file
+    await page.pdf({'path': out_pdf})
+    await browser.close()
+
 
 def prep_tsuite():
     os.chdir("./tsuite/")
@@ -328,34 +373,20 @@ def prep_tsuite():
         print("Following files are not empty. Please resolve and come back. Moving onto next directory.")
         return 1
 
-    command_args = ["./CheckPunchSharp.pl"]
-    print(f"\n Running tsuite/auto/{command_args[0][2:]} to make sure save files start with a header saying what the column indicates.")
-    #The first character should be a sharp sign. This script lists all files that do not start with "#". This is an error, and may indicate that the header was not properly produced.
-    subprocess.run(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # Note: tsuite/slow/ does not have CheckPunchSharp.pl
 
     os.chdir("../")
 
-    # Following script has problems, TODO: fix
-#    print("\n Creating pdf from new do doc_tsuite.htm files to include in Hazy2.")
-#    # Install needed libraries; TODO: following needs to be handled better if subprocess.run does not work in any instance
-#    try:
-#        import pdfkit
-#    except ImportError:
-#        subprocess.run(["pip", "install", "pdfkit"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#        import pdfkit
-#    
-#    try:
-#        subprocess.run(["wkhtmltopdf","--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-#    except:
-#            try:
-#                subprocess.run(["brew", "install", "wkhtmltopdf"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#            except:
-#                subprocess.run(["sudo", "apt-get", "install", "wkhtmltopdf"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#
-#    pdfkit.from_file("./auto/doc_tsuite.htm", "./auto/doc_tsuite.pdf")
-#    pdfkit.from_file("./slow/doc_tsuite.htm", "./slow/doc_tsuite.pdf")
-#    print(" New doc_tsuite.pdf files created from doc_tsuite.htm files")
-#    #TODO: these need to go to Hazy2
+    print("\n Creating pdf from new do doc_tsuite.htm files to be included in Hazy2.")
+    asyncio.get_event_loop().run_until_complete(convert_html_to_pdf(f"file://{current_dir}/auto/doc_tsuite.htm", f"{current_dir}/auto/doc_tsuite.pdf"))
+    asyncio.get_event_loop().run_until_complete(convert_html_to_pdf(f"file://{current_dir}/slow/doc_tsuite.htm", f"{current_dir}/slow/doc_tsuite.pdf"))
+
+    auto_doc = glob.glob("auto/doc_tsuite.pdf")
+    slow_doc = glob.glob("slow/doc_tsuite.pdf")
+    if auto_doc and slow_doc:
+        print(" New doc_tsuite.pdf files created from doc_tsuite.htm files")
+    else:
+        print("Failed to convert doc_suite.htm files to .pdfs. Please do this manually.")
 
     # TODO: Find coverage run, what script does this? 
 
@@ -423,25 +454,6 @@ def prep_docs():
 
     if compile_hazy.lower() == "y":
         print("\n Compiling Hazy latex files.")
-        # Check if pdflatex is installed by doing a version check
-        try:
-            subprocess.run(["pdflatex", "--version"])
-        except:
-            print("Your system does not have pdflatex. Wait a moment, attempting to install pdflatex...")
-            os_sys = input("What OS system are you using (e.g. mac, linux)? ")
-            if "mac" in os_sys:
-                try:
-                    subprocess.run(["brew", "install", "--cask", "mactex"])
-                except:
-                    print("Unable to install pdflatex, please install and try again.\nMoving onto next directory.")
-                    return 1
-            if "linux" in os_sys:
-                try:
-                    subprocess.run(["sudo", "apt", "install", "texlive"])
-                except:
-                    print("Unable to install pdflatex, please install and try again.\nMoving onto next directory.")
-                    return 1
-
         # This creates pdfs in each hazy subfolder
         command_args = ["./CompileAll.pl"]
         print(f"\n Running docs/latex/{command_args[0][2:]}, to creating Hazy pdf files.")
@@ -449,7 +461,6 @@ def prep_docs():
 
     print("Docs directory ready for release.\n")
     return 0
-
 
 def main():
     print("Before we get started, the full tsuite must be run.")
@@ -461,20 +472,20 @@ def main():
     elif tsuite_run.lower() == "y":
         dir_prep_success = {}
         cloudy_release = input("Enter cloudy release version number (e.g. \'c25.00\'): ")
-        dir_prep_success["source"]  = prep_source()
+        dir_prep_success["source"] = prep_source()
         if dir_prep_success["source"] >= 0: os.chdir("../")
         else: return
         dir_prep_success["doxygen"] = prep_doxygen(cloudy_release)
         if dir_prep_success["doxygen"] >= 0: os.chdir("../")
         else: return
-        dir_prep_success["data"]    = prep_data()
+        dir_prep_success["data"] = prep_data()
         if dir_prep_success["doxygen"] >= 0: os.chdir("../")
         else: return
         dir_prep_success["tsuite"] = prep_tsuite()
         if dir_prep_success["tsuite"] >= 0: os.chdir("../../")
         # TODO: add a prep_scripts() routine
         else: return
-        dir_prep_success["docs"]    = prep_docs()
+        dir_prep_success["docs"] = prep_docs()
         os.chdir("../")
 
         print("Summary: \n")
@@ -506,6 +517,12 @@ def main():
     else:
         print("Aborting release prep script!")
         return
+
+
+package_success = check_packages()
+if package_success < 0: sys.exit(1)
+
+from pyppeteer import launch
 
 if __name__ == "__main__":
     main()
