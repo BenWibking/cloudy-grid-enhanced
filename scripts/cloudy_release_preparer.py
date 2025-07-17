@@ -8,6 +8,7 @@ import platform
 import asyncio
 import shutil
 import subprocess
+import re
 
 """
 Gold To Do Version: Making a Cloudy Release step by step instructions
@@ -152,7 +153,7 @@ def check_packages():
 
     return 0
 
-def prep_source():
+def prep_source(cloudy_release):
     os.chdir("./source/")
 
     current_dir = os.getcwd()
@@ -182,6 +183,32 @@ def prep_source():
         command_args = ["make", "-j", f"{num_cpus}"]
         print("Making Cloudy executable for later use.")
         subprocess.run(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    # Update the CLD_MAJOR, CLD_MINOR, CLD_BETA in version.cpp
+    rc = None if len(cloudy_release.split("_")) == 1 else cloudy_release.split("_")[-1]
+    CXX = cloudy_release.split(".")[0]
+    CXX = CXX.lower()
+    rev = cloudy_release.split(".")[1]
+    if rc: rev = rev.split("_")[0]
+    new_major = int(CXX.split("c")[-1])
+    new_minor = int(rev)
+    new_beta = 1 if rc else 0
+    replacements = {
+        r"(static\s+const\s+int\s+CLD_MAJOR\s*=\s*)\d+;": f"static const int CLD_MAJOR = {new_major};",
+        r"(static\s+const\s+int\s+CLD_MINOR\s*=\s*)\d+;": f"static const int CLD_MINOR = {new_minor};",
+        r"(static\s+const\s+int\s+CLD_BETA\s*=\s*)\d+;": f"static const int CLD_BETA = {new_beta};"
+    }
+    version_file = "version.cpp"
+    # Read in version.cpp
+    with open(version_file, "r", encoding="utf-8") as f:
+        content = f.read()
+    # Make the replacement with the new values for CLD_MAJOR, CLD_MINOR, CLD_BETA
+    for pattern, replacement in replacements.items():
+        content = re.sub(pattern, replacement, content)
+    with open(version_file, "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"Version numbers in {version_file} updated to")
+    print(f" CLD_MAJOR={new_major}, CLD_MINOR={new_minor}, CLD_BETA={new_beta}.")
 
     print("\nSource directory ready for release.\n")
     return 0
@@ -399,7 +426,6 @@ def prep_tsuite():
     print("Tsuite directory ready for release.\n")
     return 0
 
-
 def prep_docs():
     os.chdir("./docs/")
     current_dir = os.getcwd()
@@ -485,7 +511,7 @@ def main():
     elif tsuite_run.lower() == "y":
         dir_prep_success = {}
         cloudy_release = input("Enter cloudy release version number (e.g. \'c25.00\'): ")
-        dir_prep_success["source"] = prep_source()
+        dir_prep_success["source"] = prep_source(cloudy_release)
         if dir_prep_success["source"] >= 0: os.chdir("../")
         else: return
         dir_prep_success["doxygen"] = prep_doxygen(cloudy_release)
@@ -500,7 +526,6 @@ def main():
         else: return
         dir_prep_success["docs"] = prep_docs()
         os.chdir("../")
-        exit(0)
 
         print("Summary: \n")
         for dir in dir_prep_success.keys():
@@ -531,7 +556,6 @@ def main():
     else:
         print("Aborting release prep script!")
         return
-
 
 package_success = check_packages()
 if package_success < 0: sys.exit(1)
