@@ -6,13 +6,14 @@ import requests
 import tarfile
 import platform
 import asyncio
-
+import shutil
 import subprocess
 
 """
 Gold To Do Version: Making a Cloudy Release step by step instructions
 
 Required packages: doxygen, pyppeteer, pdflatex (script will run through this as well)
+> update the CLD_MAJOR, CLD_MINOR, etc in version.cpp
 
     1. get a fresh copy of master
             >> git pull
@@ -20,7 +21,7 @@ Required packages: doxygen, pyppeteer, pdflatex (script will run through this as
             >> git fresh origin
 
     2. Update the copy right year
-#>> find ./ -type f -exec sed -i -e 's/1978-2023/1978-2025/g' {} \;
+            >> find ./ -type f -exec sed -i -e 's/1978-2023/1978-2025/g' {} \;
         validate the changes
             >> grep -rnw . -e '1978' | grep -v 2025 | grep -v Percival | grep -v Draine
 
@@ -49,18 +50,16 @@ Required packages: doxygen, pyppeteer, pdflatex (script will run through this as
         The script will ask if tsuite has been run, enter "n" to run the tsuite. Then
         once the tsuite is has run clean, come back, re-run the script and enter "y".
 
-    8. Copy hazy1.pdf, hazy2.pdf, hazy3.pdf, and QuickStart.pdf to top of docs directory
-
-    9. Clean tsuite and source:
+    8. Clean tsuite and source:
             >> cd source
             >> make dist clean
 
             >> cd ../tsuite
             >> ./clean_tsuite.pl
 
-    10. Commit the changes
+    9. Commit the changes
 
-    11. Copy Doxygen to the data area
+    10. Copy Doxygen to the data area
        NOTE: These should not go in the tarball
 
        First make a new subdirectory under doxygen for the new release
@@ -72,11 +71,11 @@ Required packages: doxygen, pyppeteer, pdflatex (script will run through this as
        Copy the doxygen tree to the new subdirectory created in nublado
             >> rsync -a doxygen/html/ cmgu228@nublado.org:/var/www/webapps/data_area/doxygen/c25.00/
 
-    12. Copy the release tarball to nublado
+    11. Copy the release tarball to nublado
        (this script creates one automatically once all directories have been prepped sucessfully)
             >> rsync -avz c25.00.tar.gz <user-name>@nublado.org:/var/www/webapps/data_area/cloudy_releases/c25/
 
-    13. Tag the latest release branch commit
+    12. Tag the latest release branch commit
 """
 
 def check_packages():
@@ -435,17 +434,29 @@ def prep_docs():
         return -1
     
     print("\n Checking for remaining TODOs' in latex")
-    subprocess.run(["grep", "-r", "--include=\"*.tex\"", "TODO", "."])
-    todos_update = input(" Enter \'continue\' once TODOs are updated, otherwise enter \'error\' to abort: ")
-    if todos_update == "error":
-            print("Encoutered error, aborting script.")
-            return -1
+    result = subprocess.run(["grep", "-r", "--include=\"*.tex\"", "TODO", "."], capture_output=True, text=True)
+    # Print the result
+    if result.returncode == 0:
+        print("Matches found: please update TODOs")
+        todos_update = input(" Enter \'continue\' once TODOs are updated, otherwise enter \'error\' to abort: ")
+        print(result.stdout)
+    elif result.returncode == 1:
+        print("No TODOs found. Moving on...")
+    else:
+        print("Encoutered error, aborting script.")
+        return -1
 
-    hazy_pdfs = glob.glob("hazy*.pdf")
-    print("\n Hazy pdfs found in docs/latex/: ",hazy_pdfs)
+    pdf_files = ["./hazy1/hazy1.pdf", "./hazy2/hazy2.pdf", "./hazy3/hazy3.pdf", "./QuickStart/QuickStart.pdf"]
+
+    hazy_pdfs = []
+    for file in pdf_files:
+       found_file = glob.glob(file)
+       hazy_pdfs.append(found_file)
+
+    print("\n Hazy pdfs found in docs/latex/: ", hazy_pdfs)
     # This provides an option to skip re-compiliing hazy pdfs if they have already been
     #  compiled in a release script run previously.
-    if "hazy1.pdf" in hazy_pdfs and "hazy2.pdf" in hazy_pdfs and "hazy3.pdf" in hazy_pdfs:
+    if len(hazy_pdfs) == 4:
         compile_hazy = input("\n Recompile pdfs (y/n)? ")
     else:
         compile_hazy = "y"
@@ -456,6 +467,10 @@ def prep_docs():
         command_args = ["./CompileAll.pl"]
         print(f"\n Running docs/latex/{command_args[0][2:]}, to creating Hazy pdf files.")
         subprocess.run(command_args)
+
+    # Copy hazy1.pdf, hazy2.pdf, hazy3.pdf, and QuickStart.pdf to top of docs directory
+    for file in pdf_files:
+        shutil.copy(file, f"../{file}")
 
     print("Docs directory ready for release.\n")
     return 0
@@ -485,6 +500,7 @@ def main():
         else: return
         dir_prep_success["docs"] = prep_docs()
         os.chdir("../")
+        exit(0)
 
         print("Summary: \n")
         for dir in dir_prep_success.keys():
