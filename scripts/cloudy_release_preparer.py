@@ -14,53 +14,61 @@ import re
 Gold To Do Version: Making a Cloudy Release step by step instructions
 
 Required packages: doxygen, pyppeteer, pdflatex (script will run through this as well)
-> update the CLD_MAJOR, CLD_MINOR, etc in version.cpp
 
-    1. get a fresh copy of master
-            >> git pull
-            >> git checkout master
-            >> git fresh origin
+    1. Do a merge from master to release branch. Two options to do this:
 
-    2. Update the copy right year
-            >> find ./ -type f -exec sed -i -e 's/1978-2023/1978-2025/g' {} \;
-        validate the changes
-            >> grep -rnw . -e '1978' | grep -v 2025 | grep -v Percival | grep -v Draine
+    Option 1: Do it manually
+        1.1 get a fresh copy of master
+                >> git pull
+                >> git checkout master
+                >> git fetch origin
 
-    3. Merge needed branches to master and make sure these changes are described in
-       NewCXX and the release paper.
+        1.2 Update the copy right year
+                >> find ./ -type f -exec sed -i -e 's/1978-2023/1978-2025/g' {} \;
+            validate the changes
+                >> grep -rnw . -e '1978' | grep -v 2025 | grep -v Percival | grep -v Draine
 
-    4. Switch to the release branch
-            >> git switch release
+        1.3 Merge needed branches to master and make sure these changes are described in
+           NewCXX and the release paper.
 
-    5. do a fast forward merge from master onto the release branch with preference to
-       incoming changes if there are any merge conflicts.
+        1.4 Switch to the release branch
+                >> git switch release
 
-            >> git merge master --ff-only
-        If merge fails with conflicts:
-            >> git merge master
-            >> git merge -X theirs master
-            >> git push origin release
-    The merge_master_to_release.sh does the steps till here.
+        1.5 do a fast forward merge from master onto the release branch with preference to
+           incoming changes if there are any merge conflicts.
 
-    6. Bring up two terminals. You will need one terminal to run release preparer script,
-       and another to check outputs, and follow the instructions provided.
+                >> git merge master --ff-only
+            If merge fails with conflicts:
+                >> git merge master
+                >> git merge -X theirs master
+                >> git push origin release
+        The merge_master_to_release.sh does the steps till here.
 
-    7. Run the release script from the root of the release branch
+    Option 2: Start on master and run the following shell script which goes through the above steps:
+            >> chmod +x merge_master_to_release.sh
+            >> ./merge_master_to_release.sh
+
+            Note: merge_master_to_release.sh:31 does the push, this needs to be tested or commented out.
+
+    Bring up two terminals. You will need one terminal to run this release preparer script,
+    and another to check outputs, and follow the instructions provided.
+
+    2. Run the release script from the root of the release branch
 
             >> python scripts/cloudy_release_preparer.py
         The script will ask if tsuite has been run, enter "n" to run the tsuite. Then
         once the tsuite is has run clean, come back, re-run the script and enter "y".
 
-    8. Clean tsuite and source:
+    3. Clean tsuite and source:
             >> cd source
             >> make dist clean
 
             >> cd ../tsuite
             >> ./clean_tsuite.pl
 
-    9. Commit the changes
+    4. Commit the changes
 
-    10. Copy Doxygen to the data area
+    5. Copy Doxygen to the data area
        NOTE: These should not go in the tarball
 
        First make a new subdirectory under doxygen for the new release
@@ -72,11 +80,11 @@ Required packages: doxygen, pyppeteer, pdflatex (script will run through this as
        Copy the doxygen tree to the new subdirectory created in nublado
             >> rsync -a doxygen/html/ cmgu228@nublado.org:/var/www/webapps/data_area/doxygen/c25.00/
 
-    11. Copy the release tarball to nublado
+    6. Copy the release tarball to nublado
        (this script creates one automatically once all directories have been prepped sucessfully)
             >> rsync -avz c25.00.tar.gz <user-name>@nublado.org:/var/www/webapps/data_area/cloudy_releases/c25/
 
-    12. Tag the latest release branch commit
+    7. Tag the latest release branch commit
 """
 
 def check_packages():
