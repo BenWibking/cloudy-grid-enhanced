@@ -112,8 +112,8 @@ void RT_tau_reset(void)
 					{
 						/* fully transfer all of the extra lines even though
 						 * have not solved for their upper level populations */
-						RT_line_one_tau_reset(ExtraLymanLinesJ05[nelem][ipExtraLymanLinesJ05[nelem][nHi]]);
-						RT_line_one_tau_reset(ExtraLymanLinesJ15[nelem][ipExtraLymanLinesJ15[nelem][nHi]]);
+						RT_line_one_tau_reset(ExtraLymanLinesJ05[nelem][nHi]);
+						RT_line_one_tau_reset(ExtraLymanLinesJ15[nelem][nHi]);
 					}
 				}
 				else if( ipISO == ipHE_LIKE )

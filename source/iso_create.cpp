@@ -324,8 +324,8 @@ void iso_create()
 					/* fill the extra Lyman lines */
 					for( long nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
 					{
-						FillExtraLymanLine( ExtraLymanLinesJ05[nelem].begin()+ipExtraLymanLinesJ05[nelem][nHi], ipISO, nelem, nHi, 0.5 );
-						FillExtraLymanLine( ExtraLymanLinesJ15[nelem].begin()+ipExtraLymanLinesJ15[nelem][nHi], ipISO, nelem, nHi, 1.5 );
+						FillExtraLymanLine( ExtraLymanLinesJ05[nelem].begin()+nHi, ipISO, nelem, nHi, 0.5 );
+						FillExtraLymanLine( ExtraLymanLinesJ15[nelem].begin()+nHi, ipISO, nelem, nHi, 1.5 );
 
 						enum {DEBUG_LOC=false};
 						if(DEBUG_LOC && ipISO == ipH_LIKE && nelem == ipIRON && nHi == 2)
@@ -333,7 +333,7 @@ void iso_create()
 							fprintf( ioQQQ, "%li\t%li\t%f\n",
 										nelem,
 										nHi,
-										ExtraLymanLinesJ05[nelem][ipExtraLymanLinesJ05[nelem][nHi]].EnergyWN()
+										ExtraLymanLinesJ05[nelem][nHi].EnergyWN()
 										);
 
 							cdEXIT(EXIT_FAILURE);
@@ -710,23 +710,8 @@ STATIC void iso_allocate(void)
 			}
 		}
 
-		ipExtraLymanLinesJ05.reserve( LIMELM );
-		ipExtraLymanLinesJ15.reserve( LIMELM );
-
 		ExtraLymanLinesJ05.reserve(LIMELM);
 		ExtraLymanLinesJ15.reserve(LIMELM);
-	
-		for( long nelem=ipISO; nelem < LIMELM; ++nelem )
-		{
-			if( dense.lgElmtOn[nelem] )
-			{
-				ipExtraLymanLinesJ05.reserve( nelem, iso_ctrl.nLymanHLike[nelem] );
-				ipExtraLymanLinesJ15.reserve( nelem, iso_ctrl.nLymanHLike[nelem] );
-			}
-		}
-
-		ipExtraLymanLinesJ05.alloc();
-		ipExtraLymanLinesJ15.alloc();
 
 		for( long nelem=0; nelem < ipISO; ++nelem )
 		{
@@ -1213,7 +1198,6 @@ STATIC void iso_assign_extralyman_levels()
 			ExtraLymanLinesJ05[nelem][1].Junk();
 			for( long nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
 			{
-				ipExtraLymanLinesJ05[nelem][nHi] = nHi;
 				ExtraLymanLinesJ05[nelem][nHi].Junk();
 
 				long ipHi;
@@ -1242,7 +1226,6 @@ STATIC void iso_assign_extralyman_levels()
 			ExtraLymanLinesJ15[nelem][1].Junk();
 			for( long nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
 			{
-				ipExtraLymanLinesJ15[nelem][nHi] = nHi;
 				ExtraLymanLinesJ15[nelem][nHi].Junk();
 
 				long ipHi;

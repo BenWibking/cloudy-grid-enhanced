@@ -3840,12 +3840,12 @@ STATIC void SaveLineStuff(
 							{
 								++index;
 
-								Save1Line( ExtraLymanLinesJ05[nelem][ipExtraLymanLinesJ05[nelem][nHi]], ioPUN,
+								Save1Line( ExtraLymanLinesJ05[nelem][nHi], ioPUN,
 										xLimit, index, GetDopplerWidth(dense.AtomicWeight[nelem]) );
 
 								++index;
 
-								Save1Line( ExtraLymanLinesJ15[nelem][ipExtraLymanLinesJ15[nelem][nHi]], ioPUN,
+								Save1Line( ExtraLymanLinesJ15[nelem][nHi], ioPUN,
 										xLimit, index, GetDopplerWidth(dense.AtomicWeight[nelem]) );
 							}
 							/* j-resolved lyman lines */
@@ -3854,12 +3854,12 @@ STATIC void SaveLineStuff(
 							{
 								++index;
 
-								Save1Line( ExtraLymanLinesJ05[nelem][ipExtraLymanLinesJ05[nelem][nHi]], ioPUN,
+								Save1Line( ExtraLymanLinesJ05[nelem][nHi], ioPUN,
 										xLimit, index, GetDopplerWidth(dense.AtomicWeight[nelem]) );
 
 								++index;
 
-								Save1Line( ExtraLymanLinesJ15[nelem][ipExtraLymanLinesJ15[nelem][nHi]], ioPUN,
+								Save1Line( ExtraLymanLinesJ15[nelem][nHi], ioPUN,
 										xLimit, index, GetDopplerWidth(dense.AtomicWeight[nelem]) );
 							}
 						}

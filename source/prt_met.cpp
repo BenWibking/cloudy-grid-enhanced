@@ -47,8 +47,8 @@ void prtmet(void)
 							if(lgIsLymanLineResolved(iso_sp[ipISO][nelem].trans(ipHi,ipLo),
 											ExtraLymanLinesJ05[nelem][N_(ipHi)], ExtraLymanLinesJ15[nelem][N_(ipHi)]))
 							{
-								prme(false, ExtraLymanLinesJ05[nelem][ipExtraLymanLinesJ05[nelem][N_(ipHi)]]);
-								prme(false, ExtraLymanLinesJ15[nelem][ipExtraLymanLinesJ15[nelem][N_(ipHi)]]);
+								prme(false, ExtraLymanLinesJ05[nelem][N_(ipHi)]);
+								prme(false, ExtraLymanLinesJ15[nelem][N_(ipHi)]);
 							}
 							else
 								prme(false,iso_sp[ipISO][nelem].trans(ipHi,ipLo));
@@ -74,8 +74,8 @@ void prtmet(void)
 						if( lgIsLymanLineResolved(ExtraLymanLinesJ05[nelem][nHi],
 										ExtraLymanLinesJ05[nelem][nHi], ExtraLymanLinesJ15[nelem][nHi]) )
 						{
-							prme(false, ExtraLymanLinesJ05[nelem][ipExtraLymanLinesJ05[nelem][nHi]]);
-							prme(false, ExtraLymanLinesJ15[nelem][ipExtraLymanLinesJ15[nelem][nHi]]);
+							prme(false, ExtraLymanLinesJ05[nelem][nHi]);
+							prme(false, ExtraLymanLinesJ15[nelem][nHi]);
 						}
 					}
 				}
