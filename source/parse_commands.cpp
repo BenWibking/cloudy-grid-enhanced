@@ -1,4 +1,4 @@
-/* This file is part of Cloudy and is copyright (C)1978-2023 by Gary J. Ferland and
+/* This file is part of Cloudy and is copyright (C)1978-2025 by Gary J. Ferland and
  * others.  For conditions of distribution and use see copyright notice in license.txt */
 /*ParseCommands main command line parser, decode command, then call other routines to read */
 #include "cddefines.h"
@@ -268,8 +268,7 @@ void ParseCommands(void)
 		{"HIGH",ParseConvHighT},
 		/* approach equilibrium from high te */
 		{"HYDROGEN",ParseHydrogen},
-		{"ILLUMINATION",ParseIlluminate},
-		// illuminate command
+		{"ILLUMINATION",ParseIllumination},
 		{"INIT",ParseInitCount},
 		{"INTENSITY",ParseIntensity},
 		{"INTERPOLATE",ParseInterp},
@@ -648,24 +647,22 @@ void ParseCommands(void)
 			"NOTE exchange with the NO GRAIN GAS COLLISIONAL ENERGY EXCHANGE command.\n\n\n");
 	}
 
-	if( !rfield.lgDoLineTrans && rfield.lgOpacityFine )
+	if( !rfield.lgDoLineTrans)
 	{
 		if( called.lgTalk )
 		{
 			fprintf( ioQQQ, " NOTE NO LINE TRANSER set but fine opacities still computed.\n" );
 			fprintf( ioQQQ, " NOTE Turning off fine opacities.\n\n" );
 		}
-		rfield.lgOpacityFine = false;
 	}
 
-	if( h2.lgEnabled && (!rfield.lgDoLineTrans || !rfield.lgOpacityFine) )
+	if( h2.lgEnabled && (!rfield.lgDoLineTrans) )
 	{
 		if( called.lgTalk )
 		{
 			fprintf( ioQQQ, " NOTE Large H2 molecule turned on but line transfer and fine opacities are not.\n" );
 			fprintf( ioQQQ, " NOTE Turning on line transfer and fine opacities.\n\n" );
 		}
-		rfield.lgOpacityFine = true;
 		rfield.lgDoLineTrans = true;
 	}
 
