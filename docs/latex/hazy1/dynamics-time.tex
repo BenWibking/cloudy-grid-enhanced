@@ -123,31 +123,50 @@ save continuum units Angstroms ".concum" cumulative
 \end{figure}
 
 
-\begin{shaded}
-\section{An illuminated cooling gas}
-\label{sec:Cooling-Illum}
+\subsection{Handling of Temperature Floors}
+\label{sec:Cooling-TempFloor}
 
-In principle, an illuminated gas does not cool freely.
-Radiative processes can affect its thermal evolution, and the emitted spectrum.
-Crucial in this respect is the ratio of incident photon to particle densities.
-In the limit that the ratio approaches zero, the gas will evolve as in the
-purely collisional case of Section~\ref{sec:Cooling-Heating-NonEq}.
-However, as the ratio increases, so does the influence of the radiation field,
-which may drive the gas to settle at the Compton temperature of the radiation
-field.
+It is possible that a cooling calculation reaches a temperature floor above
+the temperature specified with the command
+\cdCommand{stop time when temperature below [value]}.
+This could happen in situations when the gas is not cooling freely, but some
+external mechanism deposits energy in the gas.
 
-If the gas does settle at a temperature above that specified with the command
-\cdCommand{stop time when temperature below [value]}, the code will iterate
-until the number of iterations criterion is met.
-This can present problems to the solvers, and even lead to crashes.
-By default, the code stops as soon as a temperature floor is detected
--- identified as a temperature constant within 1\% in the last four timesteps.
+For instance, when the gas is exposed to an intense radiation field,
+photoionization may be so important that the gas comes into equilibrium with
+the radiation field at a temperature higher than intended. 
+That will be the case, for instance, when computing the cooling of gas exposed
+to the SED of the AGN in the Phoenix Cluster \citep{Reefe2025} with the simple
+input deck shown above.
+Or when very tenuous gas is cooling isochorically (constant density) subject to
+cosmic ray heating, see Fig.~\ref{fig:crDensityTemp}.
 
-Alternatively, one can continue the integration up to a total integration time
-specified with the command \cdCommand{stop time $<$value$>$}.
-The value given is specified as with the \cdCommand{age} command, Section
-\ref{sec:AgeCommand}.
-\end{shaded}
+Cloudy is now designed to detect such temperature floors, identified as a
+temperature constant to within 1\% over the previous four timesteps, and
+conclude the simulation gracefully.
+In earlier versions, temperature floors drove the solvers to use unphysical
+timesteps, and eventually Cloudy to crash.
+
+
+\subsection{Other \texttt{stop time} options}
+\label{sec:StopTime}
+
+Another way to terminate a cooling a calculation is by setting a total
+integration time.
+The syntax is \cdCommand{stop time $<$value$>$}, where the value may be set as
+with the \cdCommand{age} command, Section \ref{sec:AgeCommand}.
+For example,
+%
+\begin{verbatim}
+stop time 25 Myr
+\end{verbatim}
+%
+will complete the simulation when the total integration time reaches 25 Myr.
+This command is useful when the cooling time may be limited by other dynamical
+effects, e.g., the time since the last X-ray bubble was inflated in a galaxy
+cluster \citep[e.g.,][]{Reefe2025}.
+It can also be useful with using Cloudy to post-process results of
+hydrodynamical simulations.
 
 
 \begin{shaded}
