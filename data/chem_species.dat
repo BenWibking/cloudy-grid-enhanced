@@ -187,21 +187,20 @@ PH3+	966.0
 #https://webbook.nist.gov/chemistry/form-ser/
 PH3	5.47
 # F compounds
-HF+     0
-HF      -272.5
-H2F+    0
-CF+     0
+HF+	0
+HF	-272.5
+H2F+	0
+CF+	0
 #https://cccbdb.nist.gov/hf0k.asp,GS, 20230827
 SiS	104.7
 HSiS	0
-HSiS+   0
-SiS+    0
-SiC     0
-SiC+    0
-SiC2+   0
-SiNC+   0
-SiH2    0
-SiCH2   0
-SiCH2+  0
-SiNC    0
-
+HSiS+	0
+SiS+	0
+SiC  	0
+SiC+	0
+SiC2+	0
+SiNC+	0
+SiH2	0
+SiCH2	0
+SiCH2+	0
+SiNC	0
