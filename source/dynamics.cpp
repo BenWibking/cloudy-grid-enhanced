@@ -91,13 +91,13 @@ void t_dynamics::update_recomb_recent_temps()
 	enum { DEBUG_LOCAL = false };
 	if( DEBUG_LOCAL )
 	{
-		printf( "===============\n" );
-		printf( "ITERATION: %ld\n", iteration );
+		fprintf( ioQQQ, "===============\n" );
+		fprintf( ioQQQ, "ITERATION: %ld\n", iteration );
 		for( auto &t: recomb_recent_temps )
 		{
-			printf( "%.4e\n", t );
+			fprintf( ioQQQ, "%.4e\n", t );
 		}
-		printf( "===============\n" );
+		fprintf( ioQQQ, "===============\n" );
 	}
 }
 
@@ -114,12 +114,13 @@ bool t_dynamics::recomb_temp_converged() const
 
 	enum { DEBUG_LOCAL = false };
 	if( DEBUG_LOCAL )
-		printf( "last temp: %.4e\n", last_temp );
+		fprintf( ioQQQ, "last temp: %.4e\n", last_temp );
 
 	for( size_t it = 1; it < nlast_temps; it++ )
 	{
 		if( DEBUG_LOCAL )
-			printf( "temp: %.4e\t dtemp/temp: %.4e\n",
+			fprintf( ioQQQ,
+				"temp: %.4e\t dtemp/temp: %.4e\n",
 				recomb_recent_temps[it],
 				last_temp / recomb_recent_temps[it] -1. );
 		if( fabs(last_temp - recomb_recent_temps[it])
@@ -130,7 +131,7 @@ bool t_dynamics::recomb_temp_converged() const
 	}
 
 	if( DEBUG_LOCAL )
-		printf( "-------\n" );
+		fprintf( ioQQQ, "-------\n" );
 
 	return true;
 }
