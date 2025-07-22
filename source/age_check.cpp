@@ -209,7 +209,7 @@ void AgeCheck(void)
 			bangin(chLine);
 		}
 
-		else if( tlong < 3e7/12. )
+		else if( tlong < YEAR/12. )
 		{
 			/* less than one month, give seconds and days */
 			sprintf( chLine, "  !AGE: Cloud age was not set.  Longest timescale was %.2e s = %.2e days.", 
@@ -217,7 +217,7 @@ void AgeCheck(void)
 			bangin(chLine);
 		}
 
-		else if( tlong < 3e7 )
+		else if( tlong < YEAR )
 		{
 			/* less than one year, give seconds and months */
 			sprintf( chLine, "  !AGE: Cloud age was not set.  Longest timescale was %.2e s = %.2e months.", 
