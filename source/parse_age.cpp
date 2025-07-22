@@ -5,55 +5,6 @@
 #include "timesc.h"
 #include "parser.h"
 
-#define NUMBEROF(a) (sizeof(a)/sizeof((a)[0]))
-
-namespace Time {
-	const double YEAR=3.15569e7,
-	        GIGAYEAR=YEAR*1.0e9,
-	        MEGAYEAR=YEAR*1.0e6,
-		MILLENIUM=YEAR*1000.,
-		CENTURY=YEAR*100.,
-		MONTH=YEAR/12.,
-		FORTNIGHT=(24.*3600.*14.),
-		WEEK=(24.*3600.*7.),
-		DAY=(24.*3600.),
-		HOUR=3600.,
-		MINUTE=60.,
-		SECOND=1.;
-
-	KeyAction<UnitConverter> TimeUnits[] =
-	{ 
-		MakeKeyAction(" GYR", UnitConverter(GIGAYEAR)),
-		MakeKeyAction(" MYR", UnitConverter(MEGAYEAR)),
-		MakeKeyAction("MILL", UnitConverter(MILLENIUM)),
-		MakeKeyAction("CENT", UnitConverter(CENTURY)),
-		MakeKeyAction("YEAR", UnitConverter(YEAR)),
-		MakeKeyAction("MONT", UnitConverter(MONTH)),
-		MakeKeyAction("FORT", UnitConverter(FORTNIGHT)),
-		MakeKeyAction("WEEK", UnitConverter(WEEK)),
-		MakeKeyAction("DAY ", UnitConverter(DAY)),
-		MakeKeyAction("HOUR", UnitConverter(HOUR)),
-		MakeKeyAction("MINU", UnitConverter(MINUTE)),
-		MakeKeyAction("SECO", UnitConverter(SECOND)),		
-	};
-
-}
-
-realnum parse_input_time( Parser &p )
-{
-	realnum value = (realnum)p.FFmtRead();
-
-	/* check if log of age */
-	if( p.nWord(" LOG") )
-	{
-		value = exp10(value);
-	}
-
-	parserProcess(p, Time::TimeUnits, NUMBEROF(Time::TimeUnits), &value);
-
-	return value;
-}
-
 void ParseAge( Parser &p )
 {
 	DEBUG_ENTRY( "ParseAge()" );
