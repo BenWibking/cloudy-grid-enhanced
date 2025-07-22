@@ -95,6 +95,10 @@ NEW_CONSTANT( MBOL_ZERO_LUMINOSITY, 3.0128e35 );
 /* >>refer	phys	const	https://pdg.lbl.gov/2021/reviews/rpp2021-rev-astrophysical-constants.pdf */
 NEW_CONSTANT( AU, 1.49597870700e13 );
 
+/** julian year in seconds
+ * >>refer	phys	const */
+NEW_CONSTANT( YEAR, 365.25 * 86400. );
+
 /*********************************************************************
  * fundamental constants go next, eventually rest should be defined  *
  * in terms of these, these are CODATA 2022 values.                  *
