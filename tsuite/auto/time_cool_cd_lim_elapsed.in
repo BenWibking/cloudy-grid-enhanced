@@ -1,4 +1,4 @@
-title constant density cloud cooling to temperature floor
+title constant density cloud cooling of preset elapsed time
 #
 # commands controlling continuum =========
 coronal 1e5 K init time 
