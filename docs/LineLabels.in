@@ -14,3 +14,5 @@ save species labels "SpeciesLabels.txt" all
 # The report includes both the spectrum name (for instance, C 4) and the
 # species name (in this case C+3)
 database print
+# save atomic data for all lines
+save line data "LineLabels.ldat"
