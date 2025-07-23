@@ -78,7 +78,7 @@ are set to 4\% of the cooling time.
 
 The \cdCommand{iterate} command tells the code to evolve
 the system until some stopping criterion is met.
-The command \cdCommand{stop time when temperature below [value]}
+The command \cdCommand{stop time when temperature below 10000}
 tells the code to stop when the lowest temperature falls
 below the specified value.
 The is a reasonable simulation of a constant pressure cooling flow.
@@ -129,7 +129,7 @@ save continuum units angstrom ".concum" cumulative
 
 It is possible that a cooling calculation reaches a temperature floor above
 the temperature specified with the command
-\cdCommand{stop time when temperature below [value]}.
+\cdCommand{stop time when temperature below 10000}.
 This could happen in situations when the gas is not cooling freely, but some
 external mechanism deposits energy in the gas.
 
@@ -149,7 +149,7 @@ In earlier versions, temperature floors drove the solvers to use unphysical
 timesteps, and eventually Cloudy to crash.
 
 
-\subsection{Stop time <age>}
+\subsection{Stop time 25 Myr}
 \label{sec:StopTime}
 
 Another way to terminate a cooling a calculation is by setting a total
