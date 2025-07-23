@@ -178,7 +178,7 @@ void lines()
 		if( ! dense.lgElmtOn[nelem] )
 			continue;
 		long int nLoop  = iso_Max_Emitting_Level(nelem, ipISO, prt.lgPrnIsoCollapsed);
-		for( long nHi=N_(nLoop); nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
+		for( long nHi=N_(nLoop); nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
 		{
 			if(nHi > iso_sp[ipISO][nelem].n_HighestResolved_local + iso_sp[ipISO][nelem].nCollapsed_local)
 			{

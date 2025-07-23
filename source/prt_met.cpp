@@ -69,7 +69,7 @@ void prtmet(void)
 					if( (*iso_sp[ipISO][nelem].trans(1,0).Lo()).ColDen() <= 0. )
                                                 continue;
 					/* print one-electron doublets nP Lyman sequence optical depths */
-					for( long nHi=iso_sp[ipISO][nelem].numLevels_local; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
+					for( long nHi=iso_sp[ipISO][nelem].numLevels_local; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
 					{
 						if( lgIsLymanLineResolved(ExtraLymanLinesJ05[nelem][nHi],
 										ExtraLymanLinesJ05[nelem][nHi], ExtraLymanLinesJ15[nelem][nHi]) )

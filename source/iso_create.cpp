@@ -322,7 +322,7 @@ void iso_create()
 				if( ipISO == ipH_LIKE)
 				{
 					/* fill the extra Lyman lines */
-					for( long nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
+					for( long nHi=2; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
 					{
 						FillExtraLymanLine( ExtraLymanLinesJ05[nelem].begin()+nHi, ipISO, nelem, nHi, 0.5 );
 						FillExtraLymanLine( ExtraLymanLinesJ15[nelem].begin()+nHi, ipISO, nelem, nHi, 1.5 );
@@ -707,6 +707,7 @@ STATIC void iso_allocate(void)
 			{
 				iso_ctrl.nLymanHLike[nelem] =
 					iso_sp[ipISO][nelem].n_HighestResolved_max + iso_sp[ipISO][nelem].nCollapsed_max + iso_ctrl.nLyman_alloc[ipISO] + 1;
+				iso_ctrl.nLymanHLike_max[nelem] = iso_ctrl.nLymanHLike[nelem];
 			}
 		}
 
@@ -745,10 +746,10 @@ STATIC void iso_allocate(void)
 			if( dense.lgElmtOn[nelem] )
 			{
 				AllTransitions.push_back(ExtraLymanLinesJ05[nelem]);
-				ExtraLymanLinesJ05[nelem].resize(iso_ctrl.nLymanHLike[nelem]);
+				ExtraLymanLinesJ05[nelem].resize(iso_ctrl.nLymanHLike_max[nelem]);
 
 				AllTransitions.push_back(ExtraLymanLinesJ15[nelem]);
-				ExtraLymanLinesJ15[nelem].resize(iso_ctrl.nLymanHLike[nelem]);
+				ExtraLymanLinesJ15[nelem].resize(iso_ctrl.nLymanHLike_max[nelem]);
 			}
 		}
 	}
@@ -1196,7 +1197,7 @@ STATIC void iso_assign_extralyman_levels()
 			/* We will be indexing by principal quantum number, so the first two elements must not be used. */
 			ExtraLymanLinesJ05[nelem][0].Junk();
 			ExtraLymanLinesJ05[nelem][1].Junk();
-			for( long nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
+			for( long nHi=2; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
 			{
 				ExtraLymanLinesJ05[nelem][nHi].Junk();
 
@@ -1224,7 +1225,7 @@ STATIC void iso_assign_extralyman_levels()
 			ExtraLymanLinesJ15[nelem].states() = &iso_sp[ipISO][nelem].stJ15;
 			ExtraLymanLinesJ15[nelem][0].Junk();
 			ExtraLymanLinesJ15[nelem][1].Junk();
-			for( long nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
+			for( long nHi=2; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
 			{
 				ExtraLymanLinesJ15[nelem][nHi].Junk();
 
