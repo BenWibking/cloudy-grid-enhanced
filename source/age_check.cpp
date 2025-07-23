@@ -193,7 +193,7 @@ void AgeCheck(void)
 	if( timesc.CloudAgeSet < 0. )
 	{
 		/* CloudAgeSet initially set to -1, if still the case then age not set */
-		if( tlong < 3600. )
+		if( tlong < HOUR )
 		{
 			/* less than one day, give only seconds */
 			sprintf( chLine, "  !AGE: Cloud age was not set.  Longest timescale was %.2e s.", 
@@ -201,19 +201,19 @@ void AgeCheck(void)
 			bangin(chLine);
 		}
 
-		else if( tlong < 8.64e4 )
+		else if( tlong < DAY )
 		{
 			/* less than one day, give seconds and hours */
 			sprintf( chLine, "  !AGE: Cloud age was not set.  Longest timescale was %.2e s = %.2e hours.", 
-			  tlong, tlong/3600. );
+			  tlong, tlong/HOUR );
 			bangin(chLine);
 		}
 
-		else if( tlong < YEAR/12. )
+		else if( tlong < MONTH )
 		{
 			/* less than one month, give seconds and days */
 			sprintf( chLine, "  !AGE: Cloud age was not set.  Longest timescale was %.2e s = %.2e days.", 
-			  tlong, tlong/86400. );
+			  tlong, tlong/DAY );
 			bangin(chLine);
 		}
 
@@ -221,7 +221,7 @@ void AgeCheck(void)
 		{
 			/* less than one year, give seconds and months */
 			sprintf( chLine, "  !AGE: Cloud age was not set.  Longest timescale was %.2e s = %.2e months.", 
-			  tlong, (tlong/YEAR)*12. );
+			  tlong, tlong/MONTH );
 			bangin(chLine);
 		}
 
