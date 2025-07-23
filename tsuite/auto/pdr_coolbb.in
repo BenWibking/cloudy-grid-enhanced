@@ -289,7 +289,8 @@ monitor "CO  " 118.548m  -2.538 line intensity
 ## >>chng 15 may 29, from -3.738 to -3.686, double optical depth, iterate to convergence
 ## >>chng 15 jun 04, from -3.686 to -3.62, updates after merge from trunk, r10449
 ## >>chng 20 aug 03, from -3.62 to -3.676, update H3+ rates Indriola+ 2012
-monitor "CO  " 100.433m  -3.676 line intensity
+## >>chng 25 jul 23, from -3.676 to -3.632, GS enable PN and PO
+monitor "CO  " 100.433m  -3.632 line intensity
 ## >>chng 13 jun 27, from -7.522 to -2.884, add line intensities of some molecules with strong emissions
 ## >>chng 13 jun 29, from -2.884 to -2.823, update newly added monitors
 ## >>chng 13 jul 15, from -2.823 to -2.897, move to Stout/Chianti for Si, botches are due to improved atomic data
