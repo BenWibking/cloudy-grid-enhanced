@@ -182,8 +182,7 @@ void lines()
 		{
 			if(nHi > iso_sp[ipISO][nelem].n_HighestResolved_local + iso_sp[ipISO][nelem].nCollapsed_local)
 			{
-				if (ExtraLymanLinesJ05[nelem][nHi].ipCont() > 0 or
-				ExtraLymanLinesJ15[nelem][nHi].ipCont() > 0)
+				if (ExtraLymanLinesJ05[nelem][nHi].ipCont() > 0)
 				{
 					string comment_trans = extraLymanJ_comment_tran_levels( ExtraLymanLinesJ05[nelem][nHi] );
 					PutLine(ExtraLymanLinesJ05[nelem][nHi],
