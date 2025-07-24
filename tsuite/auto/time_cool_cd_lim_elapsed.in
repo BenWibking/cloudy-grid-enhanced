@@ -32,7 +32,7 @@ save cumulative continuum units Angstroms last ".concum"
 save monitors ".asr" last
 #
 # commands giving the asserts    =========
-monitor temperature at face > 1e4
+monitor time elapsed 1 Myr error 0.001
 #
 # time_cool_cd_tfloor.in 
 # class dynamics 

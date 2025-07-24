@@ -1545,3 +1545,10 @@ realnum parse_input_time( Parser &p )
 
 	return value;
 }
+
+realnum parse_input_time_unit( Parser &p )
+{
+	realnum value = 1.;
+	parserProcess( p, Time::TimeUnits, Time::nUnits, &value );
+	return value;
+}
