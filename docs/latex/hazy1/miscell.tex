@@ -1767,9 +1767,12 @@ the example) to zero.
 By default, proton elimination is included.
 
 \item[set chemistry TiO  [ON , OFF]]  A chemistry network 
-developed by Gargi Shaw is available for testing. 
-By default we do not include it due to instabilities in our
-linear algebra package. 
+developed by Gargi Shaw is available for testing
+\citep{2024RMxAA..60..373S}. 
+By default, we do not include it due to instabilities in our
+linear algebra package when dealing with ill-conditioned matrices
+in extreme conditions. It is well behaved for typical PDR or
+protoplanetary disk conditions. 
 \cdCommand{set chemistry TiO on} will enable it.
 
 \end{description}
