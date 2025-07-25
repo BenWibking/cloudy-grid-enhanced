@@ -1,4 +1,4 @@
-/* This file is part of Cloudy and is copyright (C)1978-2023 by Gary J. Ferland and
+/* This file is part of Cloudy and is copyright (C)1978-2025 by Gary J. Ferland and
  * others.  For conditions of distribution and use see copyright notice in license.txt */
 /*ion_recom_calculate calculate radiative and dielectronic recombination rate coefficients */
 /*Badnell_rec_init This code is written by Terry Yun, 2005 *
@@ -945,7 +945,7 @@ void Badnell_rec_init( void )
 	{
 		count++;
 
-		if( chLine[2] == 'Z' )
+		if( chLine.find("Z ")  != string::npos )
 		{
 			/* number has to be 0 or 1, and indicates the first or second block of data
 			 * count is the line number for the start of that block */

@@ -1,4 +1,4 @@
-/* This file is part of Cloudy and is copyright (C)1978-2023 by Gary J. Ferland and
+/* This file is part of Cloudy and is copyright (C)1978-2025 by Gary J. Ferland and
  * others.  For conditions of distribution and use see copyright notice in license.txt */
 /* DynaIterEnd called at end of iteration when advection is turned on */
 /* DynaStartZone called at start of zone calculation when advection is turned on */
@@ -943,9 +943,9 @@ void DynaStartZone(void)
 		f1 = fabs(ymol - Upstream_molecules[mol] );
 		if( f1 > SMALLFLOAT )
 		{
-			dynamics.dRad = MIN2(dynamics.dRad,fabs(Dyn_dr*STEP_FACTOR) * 
-				/* don't pay attention to species with abundance relative to H less than 1e-6 */
-				MAX2(ymol + Upstream_molecules[mol],1e-6 ) / f1 );
+			dynamics.dRad = MIN2(dynamics.dRad,
+								 /* don't pay attention to species with abundance relative to H less than 1e-6 */
+								 safe_div(fabs(Dyn_dr*STEP_FACTOR) * MAX2(ymol + Upstream_molecules[mol], 1e-6), f1));
 		}
 
 		/* Must be consistent with convergence_error below */
