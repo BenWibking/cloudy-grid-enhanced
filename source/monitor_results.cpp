@@ -1699,7 +1699,6 @@ void ParseMonitorResults(Parser &p)
 		{
 			fprintf( ioQQQ, "No time option given\n" );
 			cdEXIT(EXIT_FAILURE);
-
 		}
 
 		/* NB NB
@@ -1717,11 +1716,11 @@ void ParseMonitorResults(Parser &p)
 
 		/* store the unit time (inverse) to report results in the
 		 * units given in the command */
-		wavelength[nAsserts] = parse_input_time_unit( p );
-		if( wavelength[nAsserts] > 0. )
-			wavelength[nAsserts] = 1. / wavelength[nAsserts];
+		Param[nAsserts][0] = parse_input_time_unit( p );
+		if( Param[nAsserts][0] > 0. )
+			Param[nAsserts][0] = 1. / Param[nAsserts][0];
 		else
-			wavelength[nAsserts] = 1.;
+			Param[nAsserts][0] = 1.;
 
 		/* optional error, default available */
 		AssertError[nAsserts] = p.FFmtRead();
@@ -2935,7 +2934,7 @@ bool lgCheckMonitors(
 		/* age of cooling (dynamical) calc */
 		else if( chAssertType[i] == "Tc" )
 		{
-			PredQuan[i] = dynamics.time_elapsed * wavelength[i];
+			PredQuan[i] = dynamics.time_elapsed * Param[i][0];
 			if (AssertError[i] > 0.0)
 				RelError[i] = get_error_ratio( PredQuan[i], AssertQuantity[i] );
 			else
