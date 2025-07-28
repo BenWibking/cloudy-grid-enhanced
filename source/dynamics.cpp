@@ -1246,7 +1246,7 @@ void DynaIterEnd(void)
 		else if( StopCalc.TimeStop > 0. )
 		{
 			dynamics.timestep = timestep_next();
-			if( dynamics.time_elapsed + dynamics.timestep >= StopCalc.TimeStop )
+			if( dynamics.time_elapsed + dynamics.timestep >= 0.9999 * StopCalc.TimeStop )
 				dynamics.timestep = StopCalc.TimeStop - dynamics.time_elapsed;
 		}
 		/* at this point dynamics.time_elapsed is the time at the end of the 
