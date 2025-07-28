@@ -1500,3 +1500,55 @@ void DataParser::warning(const string& msg, FILE *io)
 	// restore state flags to initial state
 	p_ls.flags(f);
 }
+
+namespace Time {
+	const double
+	        GIGAYEAR=YEAR*1.0e9,
+	        MEGAYEAR=YEAR*1.0e6,
+		MILLENIUM=YEAR*1000.,
+		CENTURY=YEAR*100.,
+		FORTNIGHT=DAY*14.,
+		WEEK=DAY*7.,
+		MINUTE=60.,
+		SECOND=1.;
+
+	KeyAction<UnitConverter> TimeUnits[] =
+	{
+		MakeKeyAction(" GYR", UnitConverter(GIGAYEAR)),
+		MakeKeyAction(" MYR", UnitConverter(MEGAYEAR)),
+		MakeKeyAction("MILL", UnitConverter(MILLENIUM)),
+		MakeKeyAction("CENT", UnitConverter(CENTURY)),
+		MakeKeyAction("YEAR", UnitConverter(YEAR)),
+		MakeKeyAction("MONT", UnitConverter(MONTH)),
+		MakeKeyAction("FORT", UnitConverter(FORTNIGHT)),
+		MakeKeyAction("WEEK", UnitConverter(WEEK)),
+		MakeKeyAction(" DAY", UnitConverter(DAY)),
+		MakeKeyAction("HOUR", UnitConverter(HOUR)),
+		MakeKeyAction("MINU", UnitConverter(MINUTE)),
+		MakeKeyAction("SECO", UnitConverter(SECOND)),
+	};
+
+	const size_t nUnits = sizeof(TimeUnits) / sizeof(TimeUnits[0]);
+}
+
+realnum parse_input_time( Parser &p )
+{
+	realnum value = (realnum)p.FFmtRead();
+
+	/* check if log of age */
+	if( p.nWord(" LOG") )
+	{
+		value = exp10(value);
+	}
+
+	parserProcess(p, Time::TimeUnits, Time::nUnits, &value);
+
+	return value;
+}
+
+realnum parse_input_time_unit( Parser &p )
+{
+	realnum value = 1.;
+	parserProcess( p, Time::TimeUnits, Time::nUnits, &value );
+	return value;
+}

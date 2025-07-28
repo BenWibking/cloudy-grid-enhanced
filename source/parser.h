@@ -624,7 +624,7 @@ public:
 	}
 };
 
-/** Interate through a list of KeyActions: apply the first which
+/** Iterate through a list of KeyActions: apply the first which
 	 matches and then quit */
 template <typename T, typename V>
 bool parserProcess(Parser &p, T *list, unsigned long nlist, V *value)
@@ -641,6 +641,18 @@ bool parserProcess(Parser &p, T *list, unsigned long nlist, V *value)
 	}
 	return lgFound;
 }
+
+/** parse_input_time
+ *  Parse the given time, and convert it to seconds.
+ * \param p
+ */
+realnum parse_input_time( Parser &p );
+
+/** parse_input_time_unit
+ *  Parse the given time unit, and return its value in seconds.
+ * \param p
+ */
+realnum parse_input_time_unit( Parser &p );
 
 /**ParseCosmicRays parse the cosmic rays command 
 \param *chCard
