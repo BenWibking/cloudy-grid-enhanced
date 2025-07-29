@@ -214,12 +214,12 @@ public:
 		return m_chSumTyp;
 	}
 
-	/** the four char string label for the line */
+	/** the label for the line */
 	const char *chALab() const
 	{
 		return m_chALab;
 	}
-	/** the four char string label for the line, all caps */
+	/** the label for the line, all caps */
 	const char *chCLab() const
 	{
 		return m_chCLab;
@@ -353,6 +353,7 @@ public:
 
 	void prt(FILE *fp) const;
 	string label() const;
+	string labelQuoted() const;
 	string biglabel() const;
 	bool isCat(const char *s) const;
 	bool isSeparator() const
