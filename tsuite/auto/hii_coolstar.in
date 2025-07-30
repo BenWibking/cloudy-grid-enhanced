@@ -187,8 +187,7 @@ monitor line "blnd" 2326 0.075
 ## >>chng 10 mar 05, from 0.571 to 0.5995, changes caused by r3848 atomic data update
 ## >>chng 13 mar 03, from 0.5995 to 0.6692, update atomic models for S II, S III
 ## >>chng 14 jan 05, from 0.6692 to 0.6035, N to external databases
-## >>chng 25 jul 25, from 0.6035 to 0.5658, Fixed to match Del Zana+2025 clike data-C25 release
-monitor line "N  2"  6583.45 0.5658
+monitor line "N  2"  6583.45 0.6035
 ##
 ## >>chng 00 mar 22 after cont pump, widflx changes, from 1.16 to 1.04
 ## >>chng 00 sep 12 from 1.04 to 0.936, cs change in s3
