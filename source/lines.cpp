@@ -64,10 +64,18 @@ string LinSv::label() const
 	return val;
 }
 
+string LinSv::labelQuoted() const
+{
+	DEBUG_ENTRY( "LinSv::labelQuoted()" );
+	string val = "\""s + string(chALab()) + "\""s;
+	val += " " + twav().sprt_wl();
+	return val;
+}
+
 string LinSv::biglabel() const
 {
 	DEBUG_ENTRY( "LinSv::biglabel()" );
-	string val = label();
+	string val = labelQuoted();
 	if (m_tr.associated())
 	{
 		val += " ";
@@ -281,8 +289,8 @@ void LinSv::makeBlend(const char* chLabel,const t_wavl& wavelength1, const realn
 			    strcmp(chCaps,chCARD.c_str()) == 0)
 			{
 				addComponentID(j);
-				fprintf( ioQQQ,"Adding \"%s\" to blend\n", 
-							LineSave.lines[j].label().c_str() );
+				fprintf( ioQQQ,"Adding %s to blend\n", 
+							LineSave.lines[j].labelQuoted().c_str() );
 			}
 		}
 	}
@@ -466,10 +474,10 @@ long t_LineSave::findline(const LineID& line)
 					{
 						fprintf(ioQQQ,"WARNING: multiple matching lines found in search for %s\n",
 								line.str().c_str());
-						fprintf(ioQQQ,"WARNING: match 1 is \"%s\" (dwl=%gA)\n",
+						fprintf(ioQQQ,"WARNING: match 1 is %s (dwl=%gA)\n",
 								lines[*found].biglabel().c_str(),wavlVac(*found)-line.wavlVac());
 					}
-					fprintf(ioQQQ,"WARNING: match %d is \"%s\" (dwl=%gA)\n",
+					fprintf(ioQQQ,"WARNING: match %d is %s (dwl=%gA)\n",
 							nmatch, lines[*pos].biglabel().c_str(),dwl);
 				}
 				if ( found == SortWL.end() )
@@ -507,8 +515,8 @@ long t_LineSave::findline(const LineID& line)
 		fprintf(ioQQQ,"WARNING: no exact matching lines found for %s\n",line.str().c_str());
 		for (vector<size_t>::iterator pos = first; pos != second; ++pos)
 		{
-			fprintf(ioQQQ,"WARNING: Line with incorrect label found close \"%s\"\n",
-					  lines[*pos].label().c_str());
+			fprintf(ioQQQ,"WARNING: Line with incorrect label found close %s\n",
+					lines[*pos].labelQuoted().c_str());
 		}
 		// Haven't found a match with correct label
 		vector<size_t>::iterator best = SortWL.end();
@@ -537,11 +545,11 @@ long t_LineSave::findline(const LineID& line)
 				{
 					best = next;
 					besterror = error;
-					fprintf(ioQQQ,"Taking best match as \"%s\"\n",lines[*next].label().c_str());
+					fprintf(ioQQQ,"Taking best match as %s\n",lines[*next].labelQuoted().c_str());
 				}
 				else
 				{
-					fprintf(ioQQQ,"Possible ambiguity with \"%s\"\n",lines[*next].label().c_str());
+					fprintf(ioQQQ,"Possible ambiguity with %s\n",lines[*next].labelQuoted().c_str());
 				}
 			}
 			// Assume this is clearly unambiguous
@@ -636,12 +644,12 @@ long t_LineSave::findline(const LineID& line)
 		prt_line_err( ioQQQ, line );
 		if( index_of_closest >= 0 )
 		{
-			fprintf( ioQQQ,"  The closest line (any label) was   \"%s\"\n", 
-						lines[index_of_closest].label().c_str() );
+			fprintf( ioQQQ,"  The closest line (any label) was   %s\n", 
+						lines[index_of_closest].labelQuoted().c_str() );
 			if( index_of_closest_w_correct_label >= 0 )
 			{
-				fprintf( ioQQQ,"  The closest with correct label was \"%s\"\n", 
-							lines[index_of_closest_w_correct_label].label().c_str() );
+				fprintf( ioQQQ,"  The closest with correct label was %s\n", 
+							lines[index_of_closest_w_correct_label].labelQuoted().c_str() );
 				fprintf( ioQQQ,"  Error was %15.8g vs. tolerance %15.8g\n", 
 							smallest_error_w_correct_label, errorwave );
 			}

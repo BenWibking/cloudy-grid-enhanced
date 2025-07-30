@@ -1144,12 +1144,6 @@ double csphot(long int inu, long int ithr, long int iofset);
 /**AnuUnit produce continuum energy in arbitrary units, ip is on C scale */
 double AnuUnit(realnum energy);
 
-/**cap4 convert first 4 char of input line chLab into chCAP all in caps, null termination 
-\param chCAP output string, cap'd first 4 char of chLab,
-\param chLab with null terminating input string ending with eol
-*/ 
-void cap4(char *chCAP , const char *chLab);
-
 /**uncaps convert input command line (through eol) to all lowercase 
 \param chCard - line image as string of characters */
 void uncaps(char *chCard);

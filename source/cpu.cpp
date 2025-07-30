@@ -161,8 +161,15 @@ t_cpu_i::t_cpu_i()
 #if defined(__APPLE__) /* MacOS only use physical cores*/
 	size_t sizeOfInt = sizeof(int);
 	int physicalCores;
-	sysctlbyname("hw.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
-	n_avail_CPU = physicalCores;
+	// this is needed on modern ARM machines to only pick up peformance cores
+	int retval = sysctlbyname("hw.perflevel0.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
+	if( retval == -1 )
+		// fallback for older Intel Macs
+		retval = sysctlbyname("hw.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
+	if( retval == 0 )
+		n_avail_CPU = int(physicalCores);
+	else
+		n_avail_CPU = 1;
 #else
 	n_avail_CPU = sysconf(_SC_NPROCESSORS_ONLN);
 #endif
@@ -183,11 +190,18 @@ t_cpu_i::t_cpu_i()
 		n_avail_CPU = 1;
 	}
 #	elif defined(HW_AVAILCPU)         /* MacOS, BSD variants */
-#if defined(__APPLE__) /* MacOS only use physical cores*/
+#if defined(__APPLE__) /* MacOS only use physical (performance) cores*/
 	size_t sizeOfInt = sizeof(int);
 	int physicalCores;
-	sysctlbyname("hw.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
-	n_avail_CPU = int(physicalCores);
+	// this is needed on modern ARM machines to only pick up peformance cores
+	int retval = sysctlbyname("hw.perflevel0.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
+	if( retval == -1 )
+		// fallback for older Intel Macs
+		retval = sysctlbyname("hw.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
+	if( retval == 0 )
+		n_avail_CPU = int(physicalCores);
+	else
+		n_avail_CPU = 1;
 #else
 	int mib[2];
 	size_t len = sizeof(n_avail_CPU);

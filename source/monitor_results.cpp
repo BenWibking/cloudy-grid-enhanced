@@ -1892,8 +1892,9 @@ bool lgCheckMonitors(
 					if( j==ipDisambiguate[i][0] )
 						continue;
 
-					/* change chLabel to all caps to be like input chALab */
-					cap4(chCaps, LineSave.lines[j].chALab());
+					/* change chLabel to all caps to be like input */
+					strcpy(chCaps, LineSave.lines[j].chALab());
+					caps(chCaps);
 
 					/* look for wavelengths within 3 error bars.
 					 * For example, for a line entered in Angstroms with
@@ -2998,6 +2999,7 @@ bool lgCheckMonitors(
 
 			LineSave.sig_figs = LineSave.sig_figs_max;
 
+			// NB NB - do not change the following line, the checkall.pl script picks this up!
 			fprintf( ioMONITOR, "=======================Line Disambiguation============================================================\n" );
 			fprintf( ioMONITOR, "                            Wavelengths                 ||                  Intensities               \n" );
 			fprintf( ioMONITOR, "Label               line     match1   match2   match3   ||   asserted     match1     match2     match3\n" );
@@ -3045,7 +3047,8 @@ bool lgCheckMonitors(
 					}
 				}
 			}
-			fprintf( ioMONITOR, "\n" );
+			// NB NB - do not change the following line, the checkall.pl script picks this up!
+			fprintf( ioMONITOR, "======================================================================================================\n\n" );
 
 			/* revert to original significant figures */
 			LineSave.sig_figs = sigfigsav;
