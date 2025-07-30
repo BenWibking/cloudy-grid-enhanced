@@ -258,7 +258,8 @@ monitor itrzn 4.124
 ## >>chng 21 sep 11, from 773 to 728, LAMDA update
 ## >>chng 21 nov 04, from 728 to 767, update mole co data
 ## >>chng 25 jul 11, from 767 to 774, GS Si chemistry, UMIST 2022
-monitor nzone 774 error 0.01
+## >>chng 25 jul 23, from 774 to 801, GS Si chemistry, UMIST 2022
+monitor nzone 801 error 0.01
 ##
 ## >>chng 13 jun 27, from -8.869 to -9.49, add line intensities of some molecules with strong emissions
 ## >>chng 13 jul 24, wl from 538.1m to 538.142m, increased wl precision to 6 sig. fig.
@@ -372,7 +373,8 @@ monitor "CO  " 520.089m  -10.06 line intensity
 ## >>chng 21 sep 11, from -11.77 to -11.88, LAMDA update
 ## >>chng 21 nov 04, from -11.88 to -11.74, update mole co data
 ## >>chng 23 may 15, from -11.74 to -11.67, GS updates 21 reactions to UMIST 2012
-monitor "CO  " 433.438m  -11.67 line intensity
+## >>chng 25 jul 23, from -11.67 to -11.72, GS enable PN and PO
+monitor "CO  " 433.438m  -11.72 line intensity
 ## >>chng 13 jun 27, from -7.48 to -12.53, add line intensities of some molecules with strong emissions
 ## >>chng 13 jul 24, wl from 371.5m to 371.549m, increased wl precision to 6 sig. fig.
 ## >>chng 13 nov 03, from -12.53 to -12.21, update H2 - C II 158m collision rate

@@ -175,7 +175,8 @@ monitor itrzn 7.271
 ## >>chng 12 nov 08, from 766 to 809, fix e-,H2 dissociation rate
 ## >>chng 14 jan 05, from 809 to 771, N to external databases
 ## >>chng 17 feb 10, from 771 to 818, default size of N 1 model atom set to 50
-monitor nzone 818
+## >>chng 25 jul 23, from 818 to 925, GS enable PN and PO
+monitor nzone 925
 ##
 ## >>chng 13 jun 27, from -8.869 to -6.199, add line intensities of some molecules with strong emissions
 ## >>chng 13 jul 24, wl from 538.1m to 538.142m, increased wl precision to 6 sig. fig.
@@ -242,7 +243,8 @@ monitor "CO  " 371.549m  -7.292 line intensity
 ## >>chng 14 mar 26, from -7.727 to -7.899, Move oxygen data to stout and chianti files
 ## >>chng 21 sep 11, from -7.899 to -7.682, LAMDA update
 ## >>chng 21 nov 04, from -7.682 to -7.907, update mole co data
-monitor "CO  " 325.137m  -7.907 line intensity
+## >>chng 25 jul 23, from -7.907 to -7.952, GS enable PN and PO
+monitor "CO  " 325.137m  -7.952 line intensity
 ## >>chng 13 jun 27, from -7.522 to -6.506, add line intensities of some molecules with strong emissions
 ## >>chng 13 jul 24, wl from 906.6m to 906.599m, increased wl precision to 6 sig. fig.
 monitor "^13CO" 906.599m  -6.506 line intensity

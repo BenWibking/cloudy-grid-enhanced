@@ -238,7 +238,8 @@ monitor "^13CO" 906.599m  -11.66 line intensity
 ## >>chng 23 may 15, from -13.19 to -12.84, GS updates 21 reactions to UMIST 2012
 ## >>chng 23 jul 15, from -12.84 to -13.9, GS update UMIST to 2012 and set upper limit on T
 ## >>chng 25 may 25, from -13.9 to -13.32, limit to UMIST Te extrapolation
-monitor "CN  " 880.858m  -13.32  line intensity
+## >>chng 25 jul 23, from -13.32 to -13.39, GS enable PN and PO
+monitor "CN  " 880.858m  -13.39  line intensity
 #
 # h2_coll_t4.in
 # class coronal  

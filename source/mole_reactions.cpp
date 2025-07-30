@@ -1772,7 +1772,7 @@ namespace {
 			}
 	};
 
-	enum {exclude, base, umisthack, federman, lithium, deuterium, ti, misc, in_code, generated};
+	enum {exclude, base, umisthack, federman, lithium, deuterium, ti, misc, in_code, generated, phosphorus};
 	static int source;
 
 
@@ -1904,6 +1904,10 @@ void mole_create_react( void )
 	
 	source = misc;
 	read_data("mole_misc.dat",parse_base);
+	
+	/* 25 apr 22, GS adding P-chemistry */
+	source = phosphorus;
+	read_data("mole_Phosphorus.dat",parse_base);
 
 	/* Load null reaction to delete real rate from database */
 	if (!mole_global.lgProtElim) 
