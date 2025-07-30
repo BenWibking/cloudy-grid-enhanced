@@ -322,7 +322,8 @@ monitor column density "C2H2"      12.7
 ## >>chng 21 sep 11, from 13.23 to 12.51, LAMDA update
 ## >>chng 21 nov 04, from 12.51 to 13.2, update mole co data
 ## >>chng 23 may 15, from 13.2 to 12.81, GS updates 21 reactions to UMIST 2012
-monitor column density "C2H2+"     12.81  
+## >>chng 25 jul 23, from 12.81 to 12.77, GS enable PN and PO
+monitor column density "C2H2+"     12.77  
 ## >>chng 21 sep 11, from 10.62 to 7.786, LAMDA update
 ## >>chng 21 nov 04, from 7.786 to 10.4, update mole co data
 ## >>chng 23 may 15, from 10.4 to 10.45, GS updates 21 reactions to UMIST 2012

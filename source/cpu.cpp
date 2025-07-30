@@ -161,8 +161,15 @@ t_cpu_i::t_cpu_i()
 #if defined(__APPLE__) /* MacOS only use physical cores*/
 	size_t sizeOfInt = sizeof(int);
 	int physicalCores;
-	sysctlbyname("hw.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
-	n_avail_CPU = physicalCores;
+	// this is needed on modern ARM machines to only pick up peformance cores
+	int retval = sysctlbyname("hw.perflevel0.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
+	if( retval == -1 )
+		// fallback for older Intel Macs
+		retval = sysctlbyname("hw.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
+	if( retval == 0 )
+		n_avail_CPU = int(physicalCores);
+	else
+		n_avail_CPU = 1;
 #else
 	n_avail_CPU = sysconf(_SC_NPROCESSORS_ONLN);
 #endif
@@ -183,11 +190,18 @@ t_cpu_i::t_cpu_i()
 		n_avail_CPU = 1;
 	}
 #	elif defined(HW_AVAILCPU)         /* MacOS, BSD variants */
-#if defined(__APPLE__) /* MacOS only use physical cores*/
+#if defined(__APPLE__) /* MacOS only use physical (performance) cores*/
 	size_t sizeOfInt = sizeof(int);
 	int physicalCores;
-	sysctlbyname("hw.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
-	n_avail_CPU = int(physicalCores);
+	// this is needed on modern ARM machines to only pick up peformance cores
+	int retval = sysctlbyname("hw.perflevel0.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
+	if( retval == -1 )
+		// fallback for older Intel Macs
+		retval = sysctlbyname("hw.physicalcpu", &physicalCores, &sizeOfInt, NULL, 0);
+	if( retval == 0 )
+		n_avail_CPU = int(physicalCores);
+	else
+		n_avail_CPU = 1;
 #else
 	int mib[2];
 	size_t len = sizeof(n_avail_CPU);
@@ -738,8 +752,7 @@ STATIC string check_mult_path( const string& fname, const vector<string>& PathLi
 	return ( PathSuccess.size() > 0 ) ? PathSuccess[0] : "";
 }
 
-STATIC void getFileListSub(vector<string>& results, fs::path fspath, const string& pattern,
-						   const string& basePath, bool lgStrip)
+STATIC void getFileListSub(vector<string>& results, fs::path fspath, const string& pattern, bool lgStrip)
 {
 	DEBUG_ENTRY( "getFileListSub()" );
 
@@ -748,6 +761,8 @@ STATIC void getFileListSub(vector<string>& results, fs::path fspath, const strin
 		if( fs::status(fspath).type() != fs::file_type::directory )
 			return;
 
+		string basePath = fspath;
+
 		for( const auto& entry : fs::directory_iterator(fspath) )
 		{
 			fs::path spath = entry.path();
@@ -755,13 +770,15 @@ STATIC void getFileListSub(vector<string>& results, fs::path fspath, const strin
 			if( stat.type() == fs::file_type::regular )
 			{
 				string name = entry.path();
+				string sname = name;
+				FindAndReplace(sname, basePath, ""s);
 				if( lgStrip )
-					FindAndReplace(name, basePath, ""s);
+					name = sname;
 				if( !pattern.empty() )
 				{
 					regex fnam_expr(pattern);
 					smatch what;
-					if( regex_match(name, what, fnam_expr) )
+					if( regex_match(sname, what, fnam_expr) )
 						results.emplace_back(name);
 				}
 				else
@@ -789,6 +806,7 @@ void t_cpu_i::p_getFileList(vector<string>& results, const string& pattern, bool
 	}
 
 	string filepattern, subdir;
+	// subdir includes the trailing directory separator
 	p_splitPath(pattern, subdir, filepattern);
 
 	for( const string& path1 : chSearchPath )
@@ -797,9 +815,9 @@ void t_cpu_i::p_getFileList(vector<string>& results, const string& pattern, bool
 		if( !subdir.empty() )
 		{
 			fs::path fspath_sub{path1 + subdir};
-			getFileListSub(results, fspath_sub, filepattern, path1, lgStrip);
+			getFileListSub(results, fspath_sub, filepattern, lgStrip);
 		}
-		getFileListSub(results, fspath, filepattern, path1, lgStrip);
+		getFileListSub(results, fspath, filepattern, lgStrip);
 	}
 }
 	
@@ -940,7 +958,8 @@ void check_data(const string& fpath, const string& fname)
 		string checksum = VHstream(fpath);
 		if( checksum != ptr->second )
 		{
-			fprintf( ioQQQ, "NOTE: using modified data in %s.\n", fname.c_str() );
+			fprintf( ioQQQ, "NOTE: using modified data in %s. Full path:\n", fname.c_str() );
+			fprintf( ioQQQ, "   ==%s==\n", fpath.c_str() );
 			++cpu.i().nCSMismatch;
 		}
 	}

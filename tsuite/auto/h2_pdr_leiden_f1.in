@@ -574,7 +574,8 @@ monitor column density "CCl+"      10.47
 ## >>chng 21 sep 11, from 11.46 to 11.66, LAMDA update
 ## >>chng 21 nov 04, from 11.66 to 11.32, update mole co data
 ## >>chng 23 may 15, from 11.32 to 11.23, GS updates 21 reactions to UMIST 2012
-monitor column density "CCl"       11.23  
+## >>chng 25 jul 23, from 11.23 to 11.27, GS enable PN and PO
+monitor column density "CCl"       11.27  
 ## >>chng 21 sep 11, from 10.89 to 11.32, LAMDA update
 ## >>chng 21 nov 04, from 11.32 to 10.87, update mole co data
 monitor column density "CH+"       10.87  
