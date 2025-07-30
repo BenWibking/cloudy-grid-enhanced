@@ -125,7 +125,8 @@ monitor line luminosity cumulative intrinsic "C  4"      1548.19A   12.0837
 monitor line luminosity cumulative intrinsic "C  3"      1906.68A   11.74
 ## >>chng 16 aug 07, from 11.26 to 11.28, Marios bug fixes
 monitor line luminosity cumulative intrinsic "O  3"      1666.15A   11.28
-monitor line luminosity cumulative intrinsic "O  3"      5006.84A   11.5285
+##>>chng 25 jul 30 from 11.5285 to 11.5500, stout clike isosequences
+monitor line luminosity cumulative intrinsic "O  3"      5006.84A   11.5500
 ## >>chng 16 aug 07, from 11.31 to 11.28, Marios bug fixes
 ## >>chng 16 nov 14, from 11.28 to 11.12, Reintegration of RydDep after several bug fixes
 ## >>chng 19 jun 28, from 11.12 to 11.42, reintegrate iso_collisions branch
