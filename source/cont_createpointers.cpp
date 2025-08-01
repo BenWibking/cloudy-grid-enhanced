@@ -571,9 +571,9 @@ void ContCreatePointers(void)
 			{
 				/* these are the extra Lyman lines */
 				string sLab = chIonLbl( nelem+1, nelem+1-ipISO );
-				for( long nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
+				for( long nHi=2; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
 				{
-					/*   nPj Lyman lines: 2 <= nHi < n_HighestResolved_max + nCollapsed_max,
+					/*   nPj Lyman lines: 2 <= nHi <= n_HighestResolved_max + nCollapsed_max,
 					   extra lyman lines: n_HighestResolved_max + nCollapsed_max < nHi < nLyman_alloc */
 					long ipLo = 0;
 					/* some energies are negative for inverted levels */
