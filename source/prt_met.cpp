@@ -59,29 +59,39 @@ void prtmet(void)
 		}
 
 		/* extra lyman lines H-like */
+		long ipISO=ipH_LIKE;
+		for( long nelem=ipISO; nelem < LIMELM; nelem++ )
 		{
-			long ipISO=ipH_LIKE;
-
-			for( long nelem=ipISO; nelem < LIMELM; nelem++ )
+			if( dense.lgElmtOn[nelem] )
 			{
-				if( dense.lgElmtOn[nelem] )
+				if( (*iso_sp[ipISO][nelem].trans(1,0).Lo()).ColDen() <= 0. )
+                                            continue;
+				/* print one-electron doublets nP Lyman sequence optical depths */
+				for( long nHi=iso_sp[ipISO][nelem].numLevels_local; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
 				{
-					if( (*iso_sp[ipISO][nelem].trans(1,0).Lo()).ColDen() <= 0. )
-                                                continue;
-					/* print one-electron doublets nP Lyman sequence optical depths */
-					for( long nHi=iso_sp[ipISO][nelem].numLevels_local; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
+					if( lgIsLymanLineResolved(ExtraLymanLinesJ05[nelem][nHi],
+									ExtraLymanLinesJ05[nelem][nHi], ExtraLymanLinesJ15[nelem][nHi]) )
 					{
-						if( lgIsLymanLineResolved(ExtraLymanLinesJ05[nelem][nHi],
-										ExtraLymanLinesJ05[nelem][nHi], ExtraLymanLinesJ15[nelem][nHi]) )
-						{
-							prme(false, ExtraLymanLinesJ05[nelem][nHi]);
-							prme(false, ExtraLymanLinesJ15[nelem][nHi]);
-						}
+						prme(false, ExtraLymanLinesJ05[nelem][nHi]);
+						prme(false, ExtraLymanLinesJ15[nelem][nHi]);
 					}
 				}
 			}
 		}
 
+		/* extra lyman lines He-like */
+		ipISO = ipHE_LIKE;
+		for( long nelem=ipISO; nelem < LIMELM; nelem++ )
+		{
+			if( dense.lgElmtOn[nelem] )
+			{
+				/* print two-electron doublets nP Lyman sequence optical depths */
+				for( long ipHi=iso_sp[ipISO][nelem].numLevels_max; ipHi < iso_ctrl.nLyman_max[ipISO]; ipHi++ )
+				{
+					prme(false, ExtraLymanLinesHeLike[nelem][ipExtraLymanLinesHeLike[nelem][ipHi]]);
+				}
+			}
+		}
 		/* print main lines optical depths */
 		for( long i=0; i < nWindLine; i++ )
 		{
