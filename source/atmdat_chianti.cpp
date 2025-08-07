@@ -187,8 +187,8 @@ void atmdat_STOUT_readin( long intNS, const string& chPrefix )
 {
 	DEBUG_ENTRY( "atmdat_STOUT_readin()" );
 
-	static const int MAX_NUM_LEVELS = 999;
-	static const bool DEBUGSTATE = false;
+	const int MAX_NUM_LEVELS = 999;
+	const bool DEBUGSTATE = false;
 
 	// the magic numbers for the stout files
 	const long int iyr = 17, imo = 9, idy = 5;
@@ -776,17 +776,17 @@ void atmdat_STOUT_readin( long intNS, const string& chPrefix )
 void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 {
 	DEBUG_ENTRY( "atmdat_CHIANTI_readin()" );
-	static const bool DEBUGSTATE = false;
+	const bool DEBUGSTATE = false;
 
 	int intsplinepts,intTranType,intxs;
 
-	long int nLevelsUsed,
-	  // number of experimental Chianti levels
-	  nExperimentalLevels,
-	  // total number of chianti levels
-	  nTotalLevels , //nElvlcLines,
-	  // number of theoretical energy levels, we test that all levels have theoretical energies
-	  nTheoreticalLevels;
+	long int nLevelsUsed;
+	// total number of chianti levels
+	long int nTotalLevels;
+	// number of experimental Chianti levels
+	long int nExperimentalLevels;
+	// number of energy levels with either theoretical or experimental energy
+	long int nTheoreticalLevels;
 	FILE *ioElecCollData=NULL, *ioProtCollData=NULL;
 	realnum  fstatwt,fenergyWN,fWLAng,feinsteina;
 	double fScalingParam,fEnergyDiff,EnergyTheory;
@@ -795,7 +795,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	bool lgProtonData=false;
 
 	// this is the largest number of levels allowed by the chianti format, I3
-	static const int MAX_NUM_LEVELS = 999;
+	const int MAX_NUM_LEVELS = 999;
 
 	dBaseSpecies[intNS].lgMolecular = false;
 	dBaseSpecies[intNS].lgLTE = false;
@@ -887,7 +887,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 			// count total number of energy level lines of data
 			elvlcstream.get(otemp,eof_col);
 			nj = atoi(otemp);
-			if( nj == -1)
+			if( nj == -1 )
 				break;
 			nTotalLevels++;
 
@@ -895,15 +895,14 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 			elvlcstream.seekg(lvl_eof_to_nrg,ios::cur);
 			elvlcstream.get(exptemp,lvl_nrg_col);
 			EnergyExperimental = (double) atof(exptemp);
-			if( EnergyExperimental != 0.)
+			if( EnergyExperimental != 0. )
 				nExperimentalLevels++;
 
 			// count number of theoretical enerby levels
 			elvlcstream.seekg(lvl_skip_ryd,ios::cur);
 			elvlcstream.get(theotemp,lvl_nrg_col);
 			EnergyTheory = (double) atof(theotemp);
-			//dprintf(ioQQQ,"theory energy debug %f\n",EnergyTheory);
-			if( EnergyTheory != 0. )
+			if( EnergyTheory != 0. || EnergyExperimental != 0. )
 				nTheoreticalLevels++;
 
 			elvlcstream.ignore(INT_MAX,'\n');
@@ -919,20 +918,6 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	 * If it is bad use experimental instead. 
 	 * 25 06 12 This print never happens so perhaps Chianti is now complete? 
 	 * 25 06 14 supplemental, text was "warning" so woul not be picked up by our tsuite scripts */
-
-	/* save state in case we fall back to exp or theory - 
-	 * NB NB NB! Must recover saved state at end of routine below*/
-	/* better would be to recode so that ChiantiType is left intact and used for work */
-	atmdat.ChiantiTypeSaveState = atmdat.ChiantiType;
-
-	if( ((atmdat.ChiantiType == t_atmdat::CHIANTI_THEO) || (atmdat.ChiantiType == t_atmdat::CHIANTI_MIXED)) && 
-	nTheoreticalLevels < nTotalLevels )
-	{
-		atmdat.ChiantiType = t_atmdat::CHIANTI_EXP;
-		/*>>chng 25 06 14 this was lower case so not detected by our test suite*/
-		fprintf(ioQQQ,"WARNING: The theoretical energy levels for %s are incomplete.\n",dBaseSpecies[intNS].chLabel);
-		fprintf(ioQQQ,"Switching to the experimental levels for this species.\n");
-	}
 
 	long HighestIndexInFile = -1;
 
@@ -960,7 +945,6 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 				nTotalLevels,	nExperimentalLevels,nTheoreticalLevels,HighestIndexInFile);
 			break;
 		default:
-			// can't happen
 			TotalInsanity();
 	}
 	dBaseSpecies[intNS].numLevels_max = HighestIndexInFile;
@@ -1026,7 +1010,7 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 				break;
 			case t_atmdat::CHIANTI_MIXED:
 				spectral_to_chemical( chLabelChemical, dBaseSpecies[intNS].chLabel ),
-				fprintf( ioQQQ,"Using CHIANTI spectrum %s (species: %s) with %li experimental and theoretical energy levels of %li available.\n",
+				fprintf( ioQQQ,"Using CHIANTI spectrum %s (species: %s) with %li mixed energy levels of %li available.\n",
 					dBaseSpecies[intNS].chLabel, chLabelChemical, nLevelsUsed , nTheoreticalLevels );
 				break;
 			case t_atmdat::CHIANTI_THEO:
@@ -1124,42 +1108,47 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 				cdEXIT(EXIT_FAILURE);
 			}
 
-			if( atmdat.ChiantiType==t_atmdat::CHIANTI_EXP )
+			/* Go through the entire level list selectively choosing experimental or theoretical level energies.
+			 * Store them, not zeroes, in order using ncounter to count the index.
+			 * Any row on the level list where there is no valid energy, put a -1 in the relational vector.
+			 * If it is a valid energy level store the new ncounter index.
+			 */
+			double EnergyUsed = 0.;
+			switch( atmdat.ChiantiType )
 			{
-				/* Go through the entire level list selectively choosing only experimental level energies.
-				 * Store them, not zeroes, in order using ncounter to count the index.
-				 * Any row on the level list where there is no experimental energy, put a -1 in the relational vector.
-				 * If it is a valid experimental energy level store the new ncounter index.
-				 */
-
-				if( EnergyExperimental != 0. || ipLev == 0 )
-				{
-					dBaseStatesEnergy.at(ncounter).first = EnergyExperimental;
-					//fprintf(ioQQQ, " The first exp column energies are %f\n",EnergyExperimental);
-					dBaseStatesEnergy.at(ncounter).second = ncounter;
-					dBaseStatesStwt.at(ncounter) = fstatwt;
-					intExperIndex.at(ipLev) = ncounter;
-					ncounter++;
-				}
+			case t_atmdat::CHIANTI_EXP:
+				// only use experimental energies
+				EnergyUsed = EnergyExperimental;
+				break;
+			case t_atmdat::CHIANTI_THEO:
+				// prefer theoretical energy, but if that is absent use experimental energy
+				if( EnergyTheory != 0. )
+					EnergyUsed = EnergyTheory;
 				else
-				{
-					intExperIndex.at(ipLev) = -1;
-				}
+					EnergyUsed = EnergyExperimental;
+				break;
+			case t_atmdat::CHIANTI_MIXED:
+				// prefer experimental energy, but if that is absent use theoretical energy
+				if( EnergyExperimental != 0. )
+					EnergyUsed = EnergyExperimental;
+				else
+					EnergyUsed = EnergyTheory;
+				break;
+			default:
+				TotalInsanity();
+			}
+
+			if( EnergyUsed != 0. || ipLev == 0 )
+			{
+				dBaseStatesEnergy.at(ncounter).first = EnergyUsed;
+				dBaseStatesEnergy.at(ncounter).second = ncounter;
+				dBaseStatesStwt.at(ncounter) = fstatwt;
+				intExperIndex.at(ipLev) = ncounter;
+				ncounter++;
 			}
 			else
 			{
-				if(EnergyTheory != 0. || ipLev == 0)
-				{
-					dBaseStatesEnergy.at(ipLev).first = EnergyTheory;
-					dBaseStatesEnergy.at(ipLev).second = ipLev;
-					dBaseStatesStwt.at(ipLev) = fstatwt;
-				}
-				else
-				{
-					dBaseStatesEnergy.at(ipLev).first = -1.;
-					dBaseStatesEnergy.at(ipLev).second = ipLev;
-					dBaseStatesStwt.at(ipLev) = -1.;
-				}
+				intExperIndex.at(ipLev) = -1;
 			}
 
 			elvlcstream.ignore(INT_MAX,'\n');
@@ -1230,18 +1219,15 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	}
 
 	vector<long> revIntExperIndex;
-	if ( atmdat.ChiantiType==t_atmdat::CHIANTI_EXP )
+	revIntExperIndex.resize(dBaseStatesEnergy.size());
+	for (size_t i = 0; i<dBaseStatesEnergy.size(); ++i)
+		revIntExperIndex[i] = -1;
+	for ( vector<long>::const_iterator i= intExperIndex.begin();
+		  i != intExperIndex.end(); ++i )
 	{
-		revIntExperIndex.resize(dBaseStatesEnergy.size());
-		for (size_t i = 0; i<dBaseStatesEnergy.size(); ++i)
-			revIntExperIndex[i] = -1;
-		for ( vector<long>::const_iterator i= intExperIndex.begin();
-			 i != intExperIndex.end(); ++i )
-		{
-			long ipos = intExperIndex[i-intExperIndex.begin()];
-			if (ipos >= 0 && ipos < long(dBaseStatesEnergy.size()))
-				revIntExperIndex[ipos] = i-intExperIndex.begin();
-		}
+		long ipos = intExperIndex[i-intExperIndex.begin()];
+		if (ipos >= 0 && ipos < long(dBaseStatesEnergy.size()))
+			revIntExperIndex[ipos] = i-intExperIndex.begin();
 	}
 
 	for( DoubleLongPairVector::iterator i=dBaseStatesEnergy.begin(); i != dBaseStatesEnergy.end(); i++ )
@@ -1832,10 +1818,6 @@ void atmdat_CHIANTI_readin( long intNS, const string& chPrefix )
 	fclose( ioElecCollData );
 	if( lgProtonData )
 		fclose( ioProtCollData );
-
-	// Chianti had bad theo level data so we used experimental by setting ChiantiType to CHIANTI_EXP
-	// must change ChiantiType back to CHIANTI_THEO so next speices will use theoretical
-	atmdat.ChiantiType = atmdat.ChiantiTypeSaveState;
 
 	return;
 }
