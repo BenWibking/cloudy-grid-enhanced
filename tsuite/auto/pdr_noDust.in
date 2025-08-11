@@ -86,8 +86,6 @@ monitor "CN  " 880.858m  -7.051  line intensity
 # Ti-bearing column densities
 ## >>chng 25 aug 11, from 21.9 to 14.73, Sim without dust incr column density
 monitor "TiO" column density 14.73 error 0.1
-## >>chng 25 aug 11, from 10 to -20.01, Sim without dust incr column density
-monitor column density "HNTi" -20.01
 ## >>chng 25 aug 11, from 10 to 1.644, Sim without dust incr column density
 monitor column density "HNTi+" 1.644
 ## >>chng 25 aug 11, from 10 to 3.612, Sim without dust incr column density
@@ -119,12 +117,8 @@ monitor column densitty "PH2" 1.028
 monitor column densitty "PH2+" 5.003
 ## >>chng 25 aug 11, from 10 to 4.108, Sim without dust incr column density
 monitor column densitty "PH3" 4.108
-## >>chng 25 aug 11, from 10 to -0.1504, Sim without dust incr column density
-monitor column densitty "PH3+" -0.1504
 ## >>chng 25 aug 11, from 10 to 3.808, Sim without dust incr column density
 monitor column densitty "CP" 3.808
-## >>chng 25 aug 11, from 10 to -4.035, Sim without dust incr column density
-monitor column densitty "HCP+" -4.035
 ## >>chng 25 aug 11, from 10 to 15.15, Sim without dust incr column density
 monitor column densitty "PN" 15.15
 ## >>chng 25 aug 11, from 10 to 7.993, Sim without dust incr column density
@@ -165,12 +159,8 @@ monitor column density "C2H"       7.746
 monitor column density "C2H2"      1.457  
 ## >>chng 25 aug 11, from 12.77 to 2.145, Sim without dust incr column density
 monitor column density "C2H2+"     2.145  
-## >>chng 25 aug 11, from 10.41 to -2.543, Sim without dust incr column density
-monitor column density "C2H3+"     -2.543  
 ## >>chng 25 aug 11, from 15.27 to 3.339, Sim without dust incr column density
 monitor column density "C3"        3.339  
-## >>chng 25 aug 11, from 12.06 to -0.6991, Sim without dust incr column density
-monitor column density "C3H+"      -0.6991
 ## >>chng 25 aug 11, from 13.72 to 1.508, Sim without dust incr column density
 monitor column density "C3H"       1.508  
 ## >>chng 25 aug 11, from 10.47 to 5.179, Sim without dust incr column density
