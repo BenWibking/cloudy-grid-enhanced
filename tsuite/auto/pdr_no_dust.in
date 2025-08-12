@@ -1,5 +1,5 @@
 title dust-free Leiden meeting model 1
-set save prefix "pdr_noDust"
+set save prefix "pdr_no_dust"
 # This is one of the tests in Rollig et al. 2007, A&A, 467, 187 
 # but with no dust to test TiO, PN, PO chemistry
 #
