@@ -574,7 +574,7 @@ void ContCreatePointers(void)
 				for( long nHi=2; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
 				{
 					/*   nPj Lyman lines: 2 <= nHi <= n_HighestResolved_max + nCollapsed_max,
-					   extra lyman lines: n_HighestResolved_max + nCollapsed_max < nHi < nLyman_alloc */
+					   extra lyman lines: n_HighestResolved_max + nCollapsed_max < nHi < nLymanHLike_max */
 					long ipLo = 0;
 					/* some energies are negative for inverted levels */
 					char chLab[NCHLAB];

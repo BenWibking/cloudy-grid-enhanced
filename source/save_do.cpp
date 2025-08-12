@@ -3836,7 +3836,7 @@ STATIC void SaveLineStuff(
 						for( long nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
 						{
 							/* H-like extra lyman lines */
-							if (nHi > iso_sp[ipISO][nelem].n_HighestResolved_local + iso_sp[ipISO][nelem].nCollapsed_local)
+							if (nHi > iso_sp[ipISO][nelem].n_HighestResolved_max + iso_sp[ipISO][nelem].nCollapsed_max)
 							{
 								++index;
 

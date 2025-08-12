@@ -177,7 +177,7 @@ void lines()
 	{
 		if( ! dense.lgElmtOn[nelem] )
 			continue;
-		for( long nHi=iso_sp[ipISO][nelem].n_HighestResolved_local + iso_sp[ipISO][nelem].nCollapsed_local; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
+		for( long nHi=iso_sp[ipISO][nelem].n_HighestResolved_max + iso_sp[ipISO][nelem].nCollapsed_max+1; nHi < iso_ctrl.nLymanHLike_max[nelem]; nHi++ )
 		{
 			if (ExtraLymanLinesJ05[nelem][nHi].ipCont() > 0)
 			{

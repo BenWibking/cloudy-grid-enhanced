@@ -625,7 +625,7 @@ void RT_tau_init(void)
 					iso_sp[ipH_LIKE][nelem].trans(ipHi,ipLo).Emis().FracInwd() = 0.5;
 				}
 			}
-			for( nHi=N_(ipH1s); nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
+			for( nHi=2; nHi < iso_ctrl.nLymanHLike[nelem]; nHi++ )
 			{
 				if( ExtraLymanLinesJ05[nelem][nHi].ipCont() > 0 )
 				{
