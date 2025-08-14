@@ -302,7 +302,8 @@ monitor itrzn 2.934
 ## 05 dec 10, add this assert (590)
 ## >>chng 06 apr 15, from 650 to 70 (651) ded N2H+ to the chemistry
 ## >>chng 08 dec 08, from 700 to 578, upper limit -> equals (r2515)
-monitor nzone 578
+## >>chng 25 jul 23, from 578 to 636, GS update PN and PO
+monitor nzone 636
 ##
 ## >>chng 13 jun 27, from -3.4460 to -7.2037, add H2 2.121m line luminosity
 ## >>chng 13 jun 27, from -7.7037 to -6.8865, fix the errors in mole_h2_coll.cpp

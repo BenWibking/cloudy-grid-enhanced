@@ -371,7 +371,8 @@ monitor itrzn 6.464
 ## >>chng 13 nov 13, from 696 to 752, resolve face at all freqs
 ## >>chng 14 jan 05, from 752 to 706, N to external databases
 ## >>chng 14 jun 11, from 706 to 743, BUGFIX 14 jan 05, N to external databases, did not include N I, Mg II excited state photoa
-monitor nzone 743
+## >>chng 25 jul 23, from 743 to 810, GS update PN and PO
+monitor nzone 810
 ##
 ## >>chng 13 jun 27, from -3.4460 to -6.2826, add H2 2.121m line luminosity
 ## >>chng 13 jul 26, wl from 2.1215m to 2.12125m, increased wl precision to 6 sig. fig.
@@ -405,7 +406,8 @@ monitor "HNC " 1652.90m  line intensity -11.69
 ## >>chng 21 nov 04, from -12.37 to -13.16, update co mole data
 ## >>chng 23 may 15, from -13.16 to -13.21, GS updates 21 reactions to UMIST 2012
 ## >>chng 25 may 25, from -13.21 to -13.12, change limitts to UMIST Te extrapolation
-monitor "HCS+" 1755.88m  -13.12 line intensity
+## >>chng 25 jul 23, from -13.12 to -13.16, GS update PN and PO
+monitor "HCS+" 1755.88m  -13.16 line intensity
 ## >>chng 13 jun 27, from -7.453 to -10.95, add line intensities of some molecules with strong emissions
 ## >>chng 13 jul 26, wl from 3059m to 3058.86m, increased wl precision to 6 sig. fig.
 ## >>chng 13 oct 30, from -10.95 to -10.98, change H2/HD secondary scale factors

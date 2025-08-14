@@ -550,8 +550,7 @@ STATIC void PrintSpectrum ()
 
 void PrtFinal(void)
 {
-	char chCKey[5], 
-	  chGeo[7], 
+	char chGeo[7], 
 	  chPlaw[21];
 
 	long int ip2500, 
@@ -630,10 +629,11 @@ void PrtFinal(void)
 			continue;
 
 		/* copy start of command to key, making it into capitals */
-		cap4(chCKey,input.crd[i]->chCardSav.c_str());
+		string chCKey = input.crd[i]->chCardSav.substr(0, 4);
+		caps(chCKey);
 
 		/* print if not continue */
-		if( strcmp(chCKey,"CONT") != 0 )
+		if( chCKey != "CONT"s )
 			fprintf( ioQQQ, "%23c* %-80s*\n", ' ', input.crd[i]->chCardSav.c_str() );
 	}
 

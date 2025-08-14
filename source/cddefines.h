@@ -144,7 +144,7 @@ typedef float sys_float;
  *
  * @param l The unsigned long long integer literal to convert.
  * @return The value of `l` converted to `realnum`.
-  */
+ */
 inline realnum operator ""_r( unsigned long long l )
 {
 	return realnum(l);
@@ -1156,12 +1156,6 @@ double csphot(long int inu, long int ithr, long int iofset);
 /**AnuUnit produce continuum energy in arbitrary units, ip is on C scale */
 double AnuUnit(realnum energy);
 
-/**cap4 convert first 4 char of input line chLab into chCAP all in caps, null termination 
-\param chCAP output string, cap'd first 4 char of chLab,
-\param chLab with null terminating input string ending with eol
-*/ 
-void cap4(char *chCAP , const char *chLab);
-
 /**uncaps convert input command line (through eol) to all lowercase 
 \param chCard - line image as string of characters */
 void uncaps(char *chCard);
@@ -1314,6 +1308,8 @@ class t_wavl {
 	realnum p_wavl;
 	/** wavelength type: air, vacuum, or native */
 	wl_type p_type;
+	/** boolean for uncertain wavelengths(rmatrix) */
+	bool p_lgUnc;
 	/** convert wavelength to vacuum, if needed */
 	realnum p_convertWvl() const;
 	/** convert air wavelength to vacuum */
@@ -1323,8 +1319,9 @@ class t_wavl {
 	*/
 	double p_RefIndex(double EnergyWN) const;
 public:
-	t_wavl() : p_wavl(-1_r), p_type(WL_NATIVE) {}
-	t_wavl(realnum w, wl_type t) : p_wavl(w), p_type(t) {}
+	t_wavl() : p_wavl(-1_r), p_type(WL_NATIVE), p_lgUnc(false) {}
+	t_wavl(realnum w, wl_type t) : p_wavl(w), p_type(t), p_lgUnc(false) {}
+	t_wavl(realnum w, wl_type t, bool unc) : p_wavl(w), p_type(t), p_lgUnc(unc) {}
 	/** unary minus */
 	t_wavl operator- () const { return t_wavl(-p_wavl, p_type); }
 	/** gives the vacuum wavelength of the line in angstrom */
