@@ -1,9 +1,9 @@
-title dust-free Leiden meeting model 1
+title dust-free dense PDR
 set save prefix "pdr_no_dust"
 # This started as one of the tests in Rollig et al. 2007, A&A, 467, 187 
-# but with no dust to test TiO, PN, PO chemistry and higher density to
-# allow molecules to form. There is little Balmer continuum Opacity
-# since no dust so we extend to a large column density.
+# but with no dust or depletion to test TiO, PN, PO chemistry. A high density is
+# needed to allow molecules to form. There is little Balmer continuum opacity
+# since grains are not present, so we extend to a large column density.
 #
 # commands controlling continuum =========
 # Use the Draine 1978 field, for a semi-infinite slab we have to use half
