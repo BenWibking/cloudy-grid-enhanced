@@ -9,6 +9,7 @@ import asyncio
 import shutil
 import subprocess
 import re
+from datetime import datetime
 
 """
 Gold To Do Version: Making a Cloudy Release step by step instructions
@@ -161,6 +162,41 @@ def check_packages():
 
     return 0
 
+def update_copyright_year():
+    # Check Copyright year and update to current year
+    pattern = re.compile(r"1978-20\d{2}")
+    current_year = str(datetime.now().year)
+    replacement = f"1978-{current_year}"
+
+    folder_path = "source/"
+    for root, dirs, files in os.walk(folder_path):
+        for filename in files:
+            filepath = os.path.join(root, filename)
+            try:
+                with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                    content = f.read()
+
+                # Change copyright year only if it needs to
+                matches = pattern.findall(content)
+                if matches and any(match != replacement for match in matches):
+                    new_content = pattern.sub(replacement, content)
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        f.write(new_content)
+            except Exception as e:
+                print(f"Skipping {filepath}: {e}")
+
+    # Also make this replacement in docs/latex/frontis_common.tex
+    pattern = re.compile(r"1978--20\d{2}")
+    replacement = f"1978--{current_year}"
+    filepath = "docs/latex/frontis_common.tex"
+    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+        content = f.read()
+    matches = pattern.findall(content)
+    if matches and any(match != replacement for match in matches):
+        new_content = pattern.sub(replacement, content)
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+
 def prep_source(cloudy_release):
     os.chdir("./source/")
 
@@ -171,6 +207,7 @@ def prep_source(cloudy_release):
     command_args = ["./list_headers.pl"]
     print(f"\n Running source/{command_args[0][1:]}")
     subprocess.run(command_args)
+
     header_summary = glob.glob(f"{current_dir}/headers.txt")[0]
     header_file_list = glob.glob(f"{current_dir}/listfiles.list")[0]
     print(f" Written to \n{header_summary} \n{header_file_list}")
@@ -516,7 +553,9 @@ def main():
         os.chdir("./tsuite/")
         subprocess.run(["./run_parallel.pl"])
         os.chdir("../")
+        return
     elif tsuite_run.lower() == "y":
+        update_copyright_year()
         dir_prep_success = {}
         cloudy_release = input("Enter cloudy release version number (e.g. \'c25.00\'): ")
         dir_prep_success["source"] = prep_source(cloudy_release)
@@ -545,7 +584,7 @@ def main():
         if (-1 not in list(dir_prep_success.values())) and (1 not in list(dir_prep_success.values())):
             # Define your parameters
             output_file = f"{cloudy_release}.tar.gz"
-            branch_name = "EditReleaseScript" #release
+            branch_name = "release"
             prefix_dir = f"{cloudy_release}/"
 
             # Run the git archive command
