@@ -640,8 +640,8 @@ def main():
 
             print(f"Tarball created: {output_file}")
 
-            if os.path.isfile(log_file):
-                os.remove(log_file)
+            if os.path.isfile(log_file[0]):
+                os.remove(log_file[0])
         else:
             print("I did not create a release tarball since some directories failed to be prepped.")
     else:
