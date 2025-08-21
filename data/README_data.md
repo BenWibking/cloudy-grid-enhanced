@@ -36,7 +36,7 @@ Cloudy draws the majority of its atomic and molecular data from external
 databases, namely:
 
 * the _Chianti_ database (v10.0.1),
-[Del Zanna et al. 2021 ApJ, 909, 38](https://ui.adsabs.harvard.edu/abs/2021ApJ...909...38D)
+[Dere et al. 2023 APJ, 268, 52](https://ui.adsabs.harvard.edu/abs/2023ApJS..268...52D)
 
 * the _Stout_ database,
 [Lykins et al. 2015 ApJ, 807, 118](https://ui.adsabs.harvard.edu/abs/2015ApJ...807..118L)
