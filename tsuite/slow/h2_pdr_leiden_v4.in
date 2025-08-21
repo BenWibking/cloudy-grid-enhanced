@@ -135,7 +135,8 @@ monitor column density C2   12.29 error 0.1
 ## >>chng 23 may 15, from 9.431 to 9.608, GS updates 21 reactions to UMIST 2012
 ## >>chng 24 apr 21, from 9.608 to 9.539, GS updates chemistry
 ## >>chng 24 jun 08, from 9.539 to 9.618, GS rm 3 TiO reactions
-monitor column density C3   9.618 error 0.1
+## >>chng 25 jul 23, from 9.618 to 9.577, GS update PN and PO
+monitor column density C3   9.577 error 0.1
 ## >>chng 11 jul 16, from 10 to 12.44, add column density monitors
 ## >>chng 11 nov 16, from 12.44 to 13.63, adjust newmole monitors
 ## >>chng 12 jan 06, from 13.63 to 12.45, several H2 model changes
@@ -388,7 +389,8 @@ monitor itrzn 7.028
 ## >>chng 12 jan 06, from 1070 to 790, several H2 model changes
 ## >>chng 14 jan 05, from 790 to 747, N to external databases
 ## >>chng 17 feb 10, from 747 to 819, default size of N 1 model atom set to 50
-monitor nzone 819
+## >>chng 25 jul 23, from 819 to 925, GS update PN and PO
+monitor nzone 925
 ##
 ## >>chng 13 jun 27, from -3.4460 to -4.8823, add H2 2.121m line luminosity
 ## >>chng 13 jun 29, from -4.8823 to -4.7340, update w gcc
@@ -443,7 +445,8 @@ monitor "CO  " 650.074m  -5.796 line intensity
 ## >>chng 13 jul 26, wl from 520.1m to 520.089m, increased wl precision to 6 sig. fig.
 ## >>chng 14 mar 26, from -5.827 to -5.857, move O to external databases
 ## >>chng 20 aug 03, from -5.857 to -5.884, update H3+ rates Indriola+ 2012
-monitor "CO  " 520.089m  -5.884 line intensity
+## >>chng 25 jul 23, from -5.884 to -5.936, GS update PN and PO
+monitor "CO  " 520.089m  -5.936 line intensity
 ## >>chng 13 jun 27, from -6.954 to -6.245, add line intensities of some molecules with strong emissions
 ## >>chng 13 jul 26, wl from 433.4m to 433.438m, increased wl precision to 6 sig. fig.
 ## >>chng 14 jan 05, from -6.245 to -6.265, N to external databases
@@ -469,7 +472,8 @@ monitor "CO  " 371.549m  -7.252 line intensity
 ## >>chng 20 jul 21, from -7.907 to -7.932, update DR H2 diss as per  2020RNAAS...4...78S
 ## >>chng 21 sep 11, from -7.932 to -7.643, LAMDA update
 ## >>chng 21 nov 04, from -7.643 to -7.93, update co mole data
-monitor "CO  " 325.137m  -7.93 line intensity
+## >>chng 25 jul 23, from -7.93 to -7.982, GS update PN and PO
+monitor "CO  " 325.137m  -7.982 line intensity
 ## >>chng 13 jun 27, from -7.522 to -6.483, add line intensities of some molecules with strong emissions
 ## >>chng 13 jul 26, wl from 906.6m to 906.599m, increased wl precision to 6 sig. fig.
 ## >>chng 20 aug 03, from -6.483 to -6.506, update H3+ rates Indriola+ 2012

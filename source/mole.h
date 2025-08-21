@@ -370,6 +370,10 @@ public:
 	 * By default, this is false - changed with set chemistry command */
 	bool lgNonEquilChem;
 
+	/** flag to enable TiO chemistry. it is off by default due to significant slowdown
+	 * even in models with no Ti, controlled with SET CHEMISTRY TIO ON/OFF command */
+	bool lgTiO;  
+
 	/** option to set proton elimination rates to zero
 	 * >>refer	CO	chemistry	Huntress, W. T., 1977, ApJS, 33, 495
 	 * By default, this is false - changed with set chemistry command */

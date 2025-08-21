@@ -44,7 +44,8 @@ monitor H2 column density 7.69 errr 0.1
 ## >>chng 23 jul 15, from -4.804 to -4.908, GS update UMIST to 2012 and set upper limit on T
 ## >>chng 25 jan 15, from -4.908 to -4.786, GS removes destabilizing reactions, updates others to current UMIST
 ## >>chng 25 jul 11, from -4.786 to -4.725, GS Si chemistry, UMIST 2022
-monitor ionization Hydrogen  2 -4.725 error 0.15
+## >>chng 25 jul 23, from -4.725 to -4.809, GS enable PN and PO
+monitor ionization Hydrogen  2 -4.809 error 0.15
 ##
 ## >>chng 12 dec 12, from -9.46 to -11.29, first run
 ## >>chng 16 mar 21, from -11.29 to -10.98, remove He+,Si=>Si+,He from chemical network (is already in ChargTranEval)
@@ -58,7 +59,8 @@ monitor ionization Helium    2 -11.93 error 0.30
 ## >>chng 23 jul 15, from -3.795 to -5.911, GS update UMIST to 2012 and set upper limit on T
 ## >>chng 25 jan 15, from -5.911 to -5.758, GS removes destabilizing reactions, updates others to current UMIST
 ## >>chng 25 jul 11, from -5.758 to -5.621, GS Si chemistry, UMIST 2022
-monitor ionization Carbon    2 -5.621 error 0.20
+## >>chng 25 jul 23, from -5.621 to -5.79, GS enable PN and PO
+monitor ionization Carbon    2 -5.79 error 0.20
 ##
 ## >>chng 12 dec 12, from -2.762 to -4.268, first run
 ## >>chng 13 feb 01, from -4.268 to -4.383, BUGFIX, largely undo r6703
@@ -70,7 +72,8 @@ monitor ionization Carbon    2 -5.621 error 0.20
 ## >>chng 23 jul 15, from -4.696 to -5.585, GS update UMIST to 2012 and set upper limit on T
 ## >>chng 25 jan 15, from -5.585 to -5.463, GS removes destabilizing reactions, updates others to current UMIST
 ## >>chng 25 jul 11, from -5.463 to -5.401, GS Si chemistry, UMIST 2022
-monitor ionization Nitrogen  2 -5.401 error 0.15
+## >>chng 25 jul 23, from -5.401 to -5.485, GS enable PN and PO
+monitor ionization Nitrogen  2 -5.485 error 0.15
 ##
 ## >>chng 12 dec 12, from -2.956 to -4.457, first run
 ## >>chng 13 feb 01, from -4.457 to -4.574, BUGFIX, largely undo r6703
@@ -82,7 +85,8 @@ monitor ionization Nitrogen  2 -5.401 error 0.15
 ## >>chng 23 jul 15, from -4.899 to -5.297, GS update UMIST to 2012 and set upper limit on T
 ## >>chng 25 jan 15, from -5.297 to -5.171, GS removes destabilizing reactions, updates others to current UMIST
 ## >>chng 25 jul 11, from -5.171 to -5.106, GS Si chemistry, UMIST 2022
-monitor ionization Oxygen    2 -5.106 error 0.15
+## >>chng 25 jul 23, from -5.106 to -5.195, GS enable PN and PO
+monitor ionization Oxygen    2 -5.195 error 0.15
 ##
 ## >>chng 12 dec 12, from -1.495 to -1.074, first run
 ## >>chng 13 feb 01, from -1.074 to -0.9826, BUGFIX, largely undo r6703

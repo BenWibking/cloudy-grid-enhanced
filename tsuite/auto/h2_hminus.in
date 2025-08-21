@@ -183,7 +183,8 @@ monitor "HCS+" 1755.88m  -25.43 line intensity
 ## >>chng 15 aug 03, from -23.99 to -24.05, update LAMDA to 2015
 ## >>chng 21 sep 11, from -24.05 to -23.94, LAMDA update
 ## >>chng 23 may 11, from -23.94 to -24.02, update RR DR to 2022 Badnell wor
-monitor "CS  " 3058.86m  -24.02 line intensity
+## >>chng 25 jul 23, from -24.02 to -23.98, GS enable PN and PO
+monitor "CS  " 3058.86m  -23.98 line intensity
 ## >>chng 13 jun 27, from -7.288 to -22.2, add line intensities of some molecules with strong emissions
 ## >>chng 13 jul 24, wl from 2600m to 2600.05m, increased wl precision to 6 sig. fig.
 ## >>chng 14 dec 04, from -22.2 to -22.06, fix double-counting of big-H2 Solomon rate

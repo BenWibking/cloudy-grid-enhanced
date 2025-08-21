@@ -410,7 +410,8 @@ monitor itrzn 5.006
 ## >>chng 05 sep 08, from 620 to 830 first run in 2 mo
 ## >>chng 08 dec 08, from 830 to 619, upper limit -> equals (r2515)
 ## >>chng 09 jan 16, from 619 to 623, average of 9 runs
-monitor nzone 623
+## >>chng 25 jul 23, from 623 to 707, GS update PN and PO
+monitor nzone 707
 ##
 ## >>chng 13 jun 27, from -3.4460 to -7.2574, add H2 2.121m line luminosity
 ## >>chng 13 jun 27, from -7.2574 to -6.9275, fix the errors in mole_h2_coll.cpp
