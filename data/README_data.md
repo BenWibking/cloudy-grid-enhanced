@@ -35,7 +35,7 @@ Database atomic/molecular models
 Cloudy draws the majority of its atomic and molecular data from external
 databases, namely:
 
-* the _Chianti_ database (v10.0.1),
+* the _Chianti_ database (v10.1),
 [Dere et al. 2023 APJ, 268, 52](https://ui.adsabs.harvard.edu/abs/2023ApJS..268...52D)
 
 * the _Stout_ database,
@@ -201,6 +201,9 @@ Mewe files
 The files mewe\_fluor.dat and mewe\_nelectron.dat are tables 2 and 3 of the
 atomic data from 
 [Kaastra, J.S., & Mewe, R., 1993, A&AS, 97, 443](https://ui.adsabs.harvard.edu/abs/1993A%26AS...97..443K).
+
+The Si and S K flourescence line energies have been updated as described in
+[Camilloni, F., Bianchi, S., Amato, R., et al., 2021, RNAAS, 5, 6, 149](https://ui.adsabs.harvard.edu/abs/2021RNAAS...5..149C)
 
 The file mewe\_gbar.dat  is the Mewe data files for g-bar collision strengths.
 
