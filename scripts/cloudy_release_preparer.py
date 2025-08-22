@@ -222,13 +222,6 @@ def prep_source(cloudy_release):
     print("\n Running ", command_args[0])
     subprocess.run(command_args)
 
-    cloudy_executable = glob.glob(f"{current_dir}/cloudy.exe")
-    if f"{current_dir}/cloudy.exe" not in cloudy_executable:
-        num_cpus = os.cpu_count()
-        command_args = ["make", "-j", f"{num_cpus}"]
-        print("Making Cloudy executable for later use.")
-        subprocess.run(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
     # Update the CLD_MAJOR, CLD_MINOR, CLD_BETA in version.cpp
     rc = None if len(cloudy_release.split("_")) == 1 else cloudy_release.split("_")[-1]
     CXX = cloudy_release.split(".")[0]
@@ -613,6 +606,13 @@ def prep_docs():
 
 
 def main():
+    print("First make sure that the executable has recently been made...")
+    os.chdir("./source/")
+    num_cpus = os.cpu_count()
+    command_args = ["make", "-j", f"{num_cpus}"]
+    subprocess.run(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    os.chdir("../")
+
     print("Before we get started, the full tsuite must be run.")
     tsuite_run = input("Full tsuite has been run? (y/n) Warning: entering \'n\' will start tsuite run. ")
     if tsuite_run.lower() == "n":
@@ -624,6 +624,7 @@ def main():
         update_copyright_year()
         dir_prep_success = {}
 
+        # Write release prep log
         log_file = glob.glob("./cloudy_file_prep_log.txt")
         if not log_file:
             with open("./cloudy_file_prep_log.txt", 'w', encoding='utf-8') as f:
