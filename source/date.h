@@ -11,8 +11,8 @@
  * This is the GMT year, 117 indicates 2017 */
 #define YEAR	125
 /* month, January is 0, December is 11 */
-#define	MONTH	6
+#define	MONTH	7
 /* day is correct */
-#define	DAY	25
+#define	DAY	22
 
 #endif /* DATE_H_ */

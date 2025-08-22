@@ -197,6 +197,42 @@ def update_copyright_year():
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(new_content)
 
+def update_readme(cloudy_release):
+    if "_" in cloudy_release:
+        print("Please review and update README.md in the root directory.")
+        with open("cloudy_file_prep_log.txt", 'a', encoding='utf-8') as f:
+            f.write("readme\n")
+        return
+
+    readme_file = "README.md"
+    new_version = cloudy_release[1:]
+    if "00" in cloudy_release:
+        new_version = new_version.split(".")[0]
+    year_suffix = str(datetime.now().year)[-2:]
+
+    replacements = {
+        r"The current version of Cloudy is C\d+, released in \d{4}.": f"The current version of Cloudy is C{new_version}, released in {datetime.now().year}.",
+        r"\[here\]\(https://gitlab\.nublado\.org/cloudy/cloudy/-/wikis/NewC\d+\)": f"[here](https://gitlab.nublado.org/cloudy/cloudy/-/wikis/NewC{year_suffix})"
+    }
+
+    with open(readme_file, 'r', encoding="utf-8") as f:
+        lines = f.read()
+    for pattern, replacement in replacements.items():
+        lines = re.sub(pattern, replacement, lines)
+    with open(readme_file, "w", encoding="utf-8") as f:
+        f.write(lines)
+
+    print("Please update the bib link to the latest release paper in README.md")
+    readme_update_success = input(" Is the README.md file in the root directory up-to-date (y/n)? ")
+
+    if readme_update_success == "y":
+        with open("cloudy_file_prep_log.txt", 'a', encoding='utf-8') as f:
+            f.write("readme\n")
+    else:
+        print("README.md not ready for release.")
+        return
+
+
 def prep_source(cloudy_release):
     os.chdir("./source/")
 
@@ -221,13 +257,6 @@ def prep_source(cloudy_release):
     command_args = ["./doc_atomic_data.pl"]
     print("\n Running ", command_args[0])
     subprocess.run(command_args)
-
-    cloudy_executable = glob.glob(f"{current_dir}/cloudy.exe")
-    if f"{current_dir}/cloudy.exe" not in cloudy_executable:
-        num_cpus = os.cpu_count()
-        command_args = ["make", "-j", f"{num_cpus}"]
-        print("Making Cloudy executable for later use.")
-        subprocess.run(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
     # Update the CLD_MAJOR, CLD_MINOR, CLD_BETA in version.cpp
     rc = None if len(cloudy_release.split("_")) == 1 else cloudy_release.split("_")[-1]
@@ -255,6 +284,27 @@ def prep_source(cloudy_release):
     print(f"Version numbers in {version_file} updated to")
     print(f" CLD_MAJOR={new_major}, CLD_MINOR={new_minor}, CLD_BETA={new_beta}.")
 
+    # Update the release date to current date in date.h
+    date_file = "date.h"
+    base_year = 2000
+    today = datetime.now()
+    year = today.year - base_year + 100 # So 2025 -> 125
+    month = today.month - 1        # January is 0
+    day = today.day
+    replacement_dates = {
+        r'#define\s+YEAR\t\d+':  f'#define YEAR\t{year}',
+        r'#define\s+MONTH\t\d+': f'#define\tMONTH\t{month}',
+        r'#define\s+DAY\t\d+':   f'#define\tDAY\t{day}'
+    }
+    with open(date_file, 'r', encoding="utf-8") as f:
+        lines = f.read()
+    for pattern, replacement in replacement_dates.items():
+        lines = re.sub(pattern, replacement, lines)
+    with open(date_file, "w", encoding="utf-8") as f:
+        f.write(lines)
+    print(f"Date in {date_file} updated to")
+    print(f" YEAR={year}, MONTH={month}, DATE={day}.")
+
     print("\nSource directory ready for release.\n")
     os.chdir("../")
     with open("cloudy_file_prep_log.txt", 'a', encoding='utf-8') as f:
@@ -267,7 +317,13 @@ def prep_doxygen(cloudy_release):
     print("Entered", current_dir)
 
     doxygen_html = glob.glob(f"{current_dir}/html/index.html")
-    if not doxygen_html:
+    if doxygen_html:
+        print("\n Doxygen files found: ", "/".join(doxygen_html[0].split("/")[-3:]))
+        run_doxygen = input("\n Run Doxygen (y/n)? ")
+    else:
+        run_doxygen = "y"
+
+    if run_doxygen.lower() == "y":
         # This creates the Doxygen documentation
         command_args = ["doxygen", "Doxyfile"]
         print("\n Running ", command_args[0], command_args[1])
@@ -354,17 +410,28 @@ def prep_data():
         command_args = ["../scripts/generate_checksums.sh"]
         print(f"\n Running {command_args[0]} to update checksums.dat")
         subprocess.run(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # TODO: add test for checksums run success
+
+        print("A smoke test will now start to make sure checksums ran ok.")
+        run_smoketest = input("Run smoke test (y/n) ?")
+        if run_smoketest == "y":
+            command_args = ["../source/cloudy.exe", "-e", "test"]
+            subprocess.run(command_args)
     else:
         print("Could not find /source/vh128sum.exe. If you build Cloudy in one of the sys_xxxx")
         print("directories, you must temporarily copy (or symlink) vh128sum.exe into source.")
         print("Moving onto next directory.")
         return
 
-    print("\nData directory ready for release.\n")
-    os.chdir("../")
-    with open("cloudy_file_prep_log.txt", 'a', encoding='utf-8') as f:
-        f.write("data\n")
+    smoketest_success = input("Smoke test looks good (y/n) ?")
+
+    if smoketest_success == "y":
+        print("\nData directory ready for release.\n")
+        os.chdir("../")
+        with open("cloudy_file_prep_log.txt", 'a', encoding='utf-8') as f:
+            f.write("data\n")
+    else:
+        print("Something went wrong. Data directory not ready for release.")
+        return
 
 
 async def convert_html_to_pdf(in_htm, out_pdf):
@@ -460,19 +527,29 @@ def prep_tsuite():
 
     os.chdir("../")
 
-    auto_doc = glob.glob("auto/doc_tsuite.pdf")
-    slow_doc = glob.glob("slow/doc_tsuite.pdf")
-    if not auto_doc or not slow_doc:
-        create_pdfs = input(" Creat pdfs through script (y/n)? If \'no\' then do this manually. ")
-        if create_pdfs == "y":
-            print("\n Creating pdf from new do doc_tsuite.htm files to be included in Hazy2.")
-            asyncio.get_event_loop().run_until_complete(convert_html_to_pdf(f"file://{current_dir}/auto/doc_tsuite.htm", f"{current_dir}/auto/doc_tsuite.pdf"))
-            asyncio.get_event_loop().run_until_complete(convert_html_to_pdf(f"file://{current_dir}/slow/doc_tsuite.htm", f"{current_dir}/slow/doc_tsuite.pdf"))
+    doctsuite_files = ["auto/doc_tsuite.pdf", "slow/doc_tsuite.pdf"]
 
-        auto_doc = glob.glob("auto/doc_tsuite.pdf")
-        slow_doc = glob.glob("slow/doc_tsuite.pdf")
+    doctsuite_pdfs = []
+    for file in doctsuite_files:
+        found_file = glob.glob(file)
+        if found_file: doctsuite_pdfs.append(found_file)
+
+    print("\n pdf files found in tsuite: ", doctsuite_pdfs)
+
+    if len(doctsuite_pdfs) == 2:
+        html_to_pdf = input("\n Convert doc_tsuite.htm files to pdfs to be included in Hazy2 (y/n)? ")
+    else:
+        html_to_pdf = "y"
+
+    if html_to_pdf == "y":
+        print("\n Creating pdfs from doc_tsuite.htm files...")
+        asyncio.get_event_loop().run_until_complete(convert_html_to_pdf(f"file://{current_dir}/auto/doc_tsuite.htm", f"{current_dir}/auto/doc_tsuite.pdf"))
+        asyncio.get_event_loop().run_until_complete(convert_html_to_pdf(f"file://{current_dir}/slow/doc_tsuite.htm", f"{current_dir}/slow/doc_tsuite.pdf"))
+
+        auto_doc = glob.glob(doctsuite_files[0])
+        slow_doc = glob.glob(doctsuite_files[1])
         if not auto_doc or not slow_doc:
-            print("Could not find auto/doc_tsuite.pdf and slow/doc_tsuite.pdf.")
+            print(" Something went wrong. Could not find auto/doc_tsuite.pdf and slow/doc_tsuite.pdf.")
             return
 
     # TODO: Find coverage run, what script does this? 
@@ -516,7 +593,6 @@ def prep_docs():
     # This makes sure LineLabels.txt and SpeciesLabels.txt are up-to-date
     linelable_input_script = "LineLabels"
     print(f"\n Running docs/{linelable_input_script}.in")
-    input_file = glob.glob(f"{linelable_input_script}.in")
     subprocess.run(["../source/cloudy.exe", "-r", linelable_input_script])
     outfile = glob.glob(f"{linelable_input_script}.out")
     if not outfile:
@@ -564,7 +640,7 @@ def prep_docs():
     hazy_pdfs = []
     for file in pdf_files:
        found_file = glob.glob(file)
-       hazy_pdfs.append(found_file)
+       if found_file: hazy_pdfs.append(found_file)
 
     print("\n Hazy pdfs found in docs/latex/: ", hazy_pdfs)
     # This provides an option to skip re-compiliing hazy pdfs if they have already been
@@ -592,7 +668,14 @@ def prep_docs():
 
 
 def main():
-    print("Before we get started, the full tsuite must be run.")
+    print("\nFirst make sure that the executable has recently been made...")
+    os.chdir("./source/")
+    num_cpus = os.cpu_count()
+    command_args = ["make", "-j", f"{num_cpus}"]
+    subprocess.run(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    os.chdir("../")
+
+    print("\nBefore we get started, the full tsuite must be run.")
     tsuite_run = input("Full tsuite has been run? (y/n) Warning: entering \'n\' will start tsuite run. ")
     if tsuite_run.lower() == "n":
         os.chdir("./tsuite/")
@@ -601,8 +684,8 @@ def main():
         return
     elif tsuite_run.lower() == "y":
         update_copyright_year()
-        dir_prep_success = {}
 
+        # Write release prep log
         log_file = glob.glob("./cloudy_file_prep_log.txt")
         if not log_file:
             with open("./cloudy_file_prep_log.txt", 'w', encoding='utf-8') as f:
@@ -611,6 +694,8 @@ def main():
         cloudy_release = input("Enter cloudy release version number (e.g. \'c25.00\'): ")
         with open("./cloudy_file_prep_log.txt", 'r', encoding='utf-8') as f:
             release_log = f.read()
+        if "readme" not in release_log: update_readme(cloudy_release)
+        return
         if "source" not in release_log: prep_source(cloudy_release)
         if "doxygen" not in release_log: prep_doxygen(cloudy_release)
         if "data" not in release_log: prep_data()
@@ -620,7 +705,7 @@ def main():
 
         with open("./cloudy_file_prep_log.txt", 'r', encoding='utf-8') as f:
             release_log = f.read()
-        if all(s in release_log for s in ["source", "doxygen", "data", "tsuite", "docs"]):
+        if all(s in release_log for s in ["readme", "source", "doxygen", "data", "tsuite", "docs"]):
             print("All directories prepped.")
 
             # Define your parameters
@@ -640,8 +725,8 @@ def main():
 
             print(f"Tarball created: {output_file}")
 
-            if os.path.isfile(log_file):
-                os.remove(log_file)
+            if os.path.isfile(log_file[0]):
+                os.remove(log_file[0])
         else:
             print("I did not create a release tarball since some directories failed to be prepped.")
     else:
