@@ -62,6 +62,10 @@ feii\_t4n8\_Smyth19 & FeII emission in typical intermediate density photoionzied
 feii\_t4n8\_Tayal18 & FeII emission in typical intermediate density photoionzied cloud \\ 
 feii\_t4n8\_Verner99 & FeII emission in typical intermediate density photoionzied cloud \\ 
 func\_abund\_fluc & check fluctuating heavy-element abundances  \\ 
+func\_ChiantiExp & check Chianti experimental works \\ 
+func\_ChiantiMixed & check Chianti mixed works \\ 
+func\_ChiantiTheo & check Chianti theory works \\ 
+func\_cont\_lower & exercise continuum lowering \\ 
 func\_distance & check that distance and "print flux earth" commands work  \\ 
 func\_dlaw & test model with dlaw table \\ 
 func\_fulltrace & test full trace output \\ 
@@ -273,6 +277,7 @@ pdr\_leiden\_v2 & Leiden meeting model 6 \\
 pdr\_leiden\_v3 & Leiden meeting model 7 \\ 
 pdr\_leiden\_v4 & Leiden meeting model 8 \\ 
 pdr\_minimal & test physical conditions at the illuminated face of a PDR \\ 
+pdr\_no\_dust & dust-free dense PDR \\ 
 pdr\_orion\_veil & Orion's veil \\ 
 pdr\_th85ism & TH85 PDR with ISM grains \\ 
 pdr\_th85ism\_cgto & TH85 pdr with ISM grains and C > O \\ 
@@ -324,4 +329,6 @@ thin & "Thin coronal model" \\
 time\_cool\_cd & constant density cooling cloud \\ 
 time\_cool\_cd\_eq & constant density equilibrium cooling cloud \\ 
 time\_cool\_cd\_flux & constant density cooling cloud \\ 
+time\_cool\_cd\_lim\_elapsed & constant density cloud cooling of preset elapsed time \\ 
 time\_cool\_cd\_noaccu & constant density cooling cloud \\ 
+time\_cool\_cd\_tfloor & constant density cloud cooling to temperature floor \\ 

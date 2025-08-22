@@ -695,7 +695,6 @@ def main():
         with open("./cloudy_file_prep_log.txt", 'r', encoding='utf-8') as f:
             release_log = f.read()
         if "readme" not in release_log: update_readme(cloudy_release)
-        return
         if "source" not in release_log: prep_source(cloudy_release)
         if "doxygen" not in release_log: prep_doxygen(cloudy_release)
         if "data" not in release_log: prep_data()

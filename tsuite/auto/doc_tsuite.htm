@@ -347,7 +347,9 @@ through the S curve in the Fields et al. three-phase model of
 ISM stability.
 <p>
 <p>
-</p><hr><kbd><h2>agn_warm_absorber.in</h2>  </kbd><h2><I>simple warm absorber model
+</p><hr><kbd><h2>agn_warm_absorber.in</h2>  <br>print line sort wavelength
+<br>print line column
+</kbd><h2><I>simple warm absorber model
 </I></h2><kbd><br>title simple warm absorber model
 <br>#
 <br># commands controlling continuum =========
@@ -365,7 +367,7 @@ ISM stability.
 <br>iterate to convergence
 <br>#
 <br># commands controlling output    =========
-<br>print line faint 10 
+<br># print line faint 10 
 <br>save overview "agn_warm_absorber.ovr"
 <br>save performance "agn_warm_absorber.per"
 <br>save continuum "agn_warm_absorber.con" last units kev
@@ -1042,7 +1044,7 @@ This is one of the models that sample the LOC plane.
 <br># some of these ions will not exist at the inner edge or even anywhere in the sim
 <br># saving the emissivities should still work correctly though...
 <br>save line emissivity "blr_n09_p22_Z20.ems"
-<br>Fe21 142.281A
+<br>Fe21 142.280A
 <br>blnd  1666A
 <br>O  1  6300.30
 <br>He 1  6678.15A
@@ -2707,6 +2709,59 @@ The model is optically thin, no RT.
 </kbd><p>
 This checks that the variable abundances option works
 <p>
+</p><hr><kbd><h2>func_ChiantiExp.in</h2>  </kbd><h2><I>check Chianti experimental works
+</I></h2><kbd><br>title check Chianti experimental works
+<br>test
+<br>database Chianti experimental
+<br>database print
+</kbd><p>
+</p><hr><kbd><h2>func_ChiantiMixed.in</h2>  </kbd><h2><I>check Chianti mixed works
+</I></h2><kbd><br>title check Chianti mixed works
+<br>test
+<br>database Chianti mixed
+<br>database print
+</kbd></p><hr><kbd><h2>func_ChiantiTheo.in</h2>  </kbd><h2><I>check Chianti theory works
+</I></h2><kbd><br>title check Chianti theory works
+<br>test
+<br>database Chianti theory
+<br>database print
+</kbd></p><hr><kbd><h2>func_cont_lower.in</h2>  </kbd><h2><I>exercise continuum lowering
+</I></h2><kbd><br>title exercise continuum lowering
+<br>set save prefix "func_cont_lower"
+<br># 
+<br># grid_extreme has a history of instability in the chemistry solver
+<br># in the low-T, high-n corner. We do not want to be hampered by that,
+<br># so disable the chemical network
+<br>no molecules
+<br>#
+<br># the number of levels is chosen such that continuum lowering will remove
+<br># resolved levels for hydrogen and only collapsed levels for helium
+<br>database h-like hydrogen resolved levels 15
+<br>database h-like hydrogen collapsed levels 25
+<br>database h-like helium resolved levels 10
+<br>database h-like helium collapsed levels 25
+<br>database he-like helium resolved levels 10
+<br>database he-like helium collapsed levels 25
+<br># 
+<br>blackbody 6 
+<br>energy density 3
+<br>cmb
+<br>#
+<br>hden 19
+<br>stop column density 23.5
+<br>stop temperature off
+<br>iterate
+<br>database print
+<br>print line optical depth faint -6
+<br>#
+<br>save performance no hash ".per"
+<br>save line optical depths ".lin"
+<br>#
+<br>#
+</kbd><p>
+modified from one of the four corners of grid_extreme, 
+the purpose of the sim is to test the interaction of
+continuum lowering with the iso sequences 
 </p><hr><kbd><h2>func_distance.in</h2>  </kbd><h2><I>check that distance and "print flux earth" commands work 
 </I></h2><kbd><br>title check that distance and "print flux earth" commands work 
 <br>#
@@ -4496,8 +4551,8 @@ chemistry is exercised, but with the trace amount of cosmic rays.
 <br># use all databases
 <br>database H2
 <br>database chianti levels max
-<br>database stout  levels max
-<br>species "Fe+" levels=all
+<br># disable maxing out the Stout database for now as it uses too much memory
+<br># database stout  levels max
 <br>#
 <br># must include cosmic ray background since going below 1e4 K
 <br>cosmic ray background
@@ -11696,6 +11751,8 @@ this is a pair with pdr_co_fully.in, which does not include non-equil chem
 </p><hr><kbd><h2>pdr_coolbb.in</h2>  </kbd><h2><I>illumination by cool STE blackbody
 </I></h2><kbd><br>title illumination by cool STE blackbody
 <br># gasis fully molecular, grains should be in STE
+<br># turn on TiO chemistry
+<br># set chemistry TiO on
 <br>#
 <br># commands controlling continuum =========
 <br># illuminate with 120 blackbody in thermodynamic equilibrium
@@ -11714,8 +11771,8 @@ this is a pair with pdr_co_fully.in, which does not include non-equil chem
 <br>metals and grains 0.1
 <br>#
 <br># other commands for details     =========
-<br># CO heating sets dr on second iteration, need many zones
-<br>set nend 1600
+<br>print line column
+<br>print line sort wavelength
 <br># set background cosmic rays to allow chemistry 
 <br>cosmic ray background
 <br># we need iterate to convergence here, but that doesn't work for now... 
@@ -12688,6 +12745,63 @@ The ionization in this sim is produced by continuum pumping of the metastable
 levels of N I, followed by photoionization out of the metastable levels of N I.
 See Ferland et al., 2012, ApJ, 757, 79. So this pumping and ionization mechanism
 is also tested by this sim.
+</p><hr><kbd><h2>pdr_no_dust.in</h2>  </kbd><h2><I>dust-free dense PDR
+</I></h2><kbd><br>title dust-free dense PDR
+<br>set save prefix "pdr_no_dust"
+<br># This started as one of the tests in Rollig et al. 2007, A&A, 467, 187 
+<br># but with no dust or depletion to test TiO, PN, PO chemistry. A high density is
+<br># needed to allow molecules to form. There is little Balmer continuum opacity
+<br># since grains are not present, so we extend to a large column density.
+<br>#
+<br># commands controlling continuum =========
+<br># Use the Draine 1978 field, for a semi-infinite slab we have to use half
+<br># the requested value, so the actual value
+<br># they want for the model is actually twice the value below
+<br>table draine 5
+<br>extinguish 24
+<br>cosmic rays background
+<br>set chemistry TiO on
+<br>#
+<br># commands for density & abundances =========
+<br># hydrogen density 
+<br>hden 7.
+<br>#
+<br># commands controlling geometry  =========
+<br>#
+<br># other commands for details     =========
+<br>failures 3
+<br># This sets the gas kinetic temperature to a constant 50 Kelvin
+<br>constant temperature 50 linear
+<br>stop column density 22
+<br>stop temperature off
+<br>#
+<br># commands controlling output    =========
+<br>print line optical depths 
+<br>save performance ".per"
+<br>save overview ".ovr"
+<br>save continuum ".con"
+<br>save leiden lines ".lin"
+<br>save leiden ".lei"
+<br>save dr ".dr" 
+<br>save molecules ".mol"
+<br>save chemistry rates ".COr" "CO"
+<br>save chemistry rates ".H2r" "H2"
+<br>save chemistry rates ".H2a" "H2" all
+<br>save chemistry rates ".H2ds" "H2" destruction
+<br>save chemistry rates ".H2cr" "H2" creation
+<br>save chemistry rates ".H2ca" "H2" catalytic 
+<br>save secondaries ".sec"
+<br>save species column densities ".col" all
+<br>#
+<br>#
+<br># Ti-bearing column densities
+<br># P-bearing column densities
+<br># pdr_mpDust.in
+<br># class pdr  
+<br># ========================================
+<br># 
+</kbd><p>
+<p>
 </p><hr><kbd><h2>pdr_orion_veil.in</h2>  </kbd><h2><I>Orion's veil
 </I></h2><kbd><br>title Orion's veil
 <br>#
@@ -15209,6 +15323,48 @@ In time_cool_cd.in, the line emission accumulation is done by default by mass.
 In this sim, the accumulation is done by flux (see 'set cumulative' above).
 This sim is meant simply to exercise the 'set cumulative flux' command, so a
 full run to low temperatures is deemed unnecessary.
+</p><hr><kbd><h2>time_cool_cd_lim_elapsed.in</h2>  </kbd><h2><I>constant density cloud cooling of preset elapsed time
+</I></h2><kbd><br>title constant density cloud cooling of preset elapsed time
+<br>#
+<br># commands controlling continuum =========
+<br>coronal 1e5 K init time 
+<br>#
+<br># commands for density & abundances =========
+<br>hden 1e-4 linear
+<br>#
+<br># commands controlling geometry  =========
+<br>set dr 0 
+<br>set nend 1
+<br>stop zone 1
+<br>#
+<br># other commands for details     =========
+<br># number of time steps
+<br>iterate 300
+<br>stop time 1 Myr
+<br>cosmic rays background
+<br>#
+<br># commands controlling output    =========
+<br>print line faint 2 log
+<br>print line cumulative
+<br>print ages
+<br>set save prefix "time_cool_cd_lim_elapsed"
+<br>save time dependent ".tim" no hash
+<br>save dt ".dt" no hash
+<br>save overview ".ovr" no hash
+<br>save cooling ".col" no hash
+<br>save heating ".het" no hash
+<br>save continuum units Angstroms ".con"
+<br>save cumulative continuum units Angstroms last ".concum"
+<br>#
+<br># commands giving the asserts    =========
+<br>#
+<br># time_cool_cd_tfloor.in 
+<br># class dynamics 
+<br># ========================================
+<br># 
+</kbd><p>
+Test time-dependent cooling for a fixed elapsed time (see 'stop time'
+command above).
 </p><hr><kbd><h2>time_cool_cd_noaccu.in</h2>  </kbd><h2><I>constant density cooling cloud
 </I></h2><kbd><br>title constant density cooling cloud
 <br>#
@@ -15250,6 +15406,51 @@ In this sim, no accumulation is performed (see 'set cumulative' above).  The
 final line fluxes are those of the last iteration.
 This sim is meant simply to exercise the 'set cumulative off' command, so a
 full run to low temperatures is deemed unnecessary.
+</p><hr><kbd><h2>time_cool_cd_tfloor.in</h2>  </kbd><h2><I>constant density cloud cooling to temperature floor
+</I></h2><kbd><br>title constant density cloud cooling to temperature floor
+<br>#
+<br># commands controlling continuum =========
+<br>coronal 1e5 K init time 
+<br>#
+<br># commands for density & abundances =========
+<br>hden 1e-4 linear
+<br>#
+<br># commands controlling geometry  =========
+<br>set dr 0 
+<br>set nend 1
+<br>stop zone 1
+<br>#
+<br># other commands for details     =========
+<br># number of time steps
+<br>iterate 300
+<br>stop time when temperature falls below 1e4 K
+<br>cosmic rays background
+<br>#
+<br># commands controlling output    =========
+<br>print line faint 2 log
+<br>print line cumulative
+<br>print ages
+<br>set save prefix "time_cool_cd_tfloor"
+<br>save time dependent ".tim" no hash
+<br>save dt ".dt" no hash
+<br>save overview ".ovr" no hash
+<br>save cooling ".col" no hash
+<br>save heating ".het" no hash
+<br>save continuum units Angstroms ".con"
+<br>save cumulative continuum units Angstroms last ".concum"
+<br>#
+<br># commands giving the asserts    =========
+<br>#
+<br># time_cool_cd_tfloor.in 
+<br># class dynamics 
+<br># ========================================
+<br># 
+</kbd><p>
+Test time dependent cooling at constant very low density.
+Cosmic rays inject energy in the gas and prevent it from cooling to the
+intended temperature (1e4K, see 'stop time' command above).
+This sim exercises the automatic detection of a temperature floor, that
+would otherwise lead to a crash.
 </p><hr>
 
 </body>
