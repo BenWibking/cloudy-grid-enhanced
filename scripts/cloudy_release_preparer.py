@@ -255,6 +255,27 @@ def prep_source(cloudy_release):
     print(f"Version numbers in {version_file} updated to")
     print(f" CLD_MAJOR={new_major}, CLD_MINOR={new_minor}, CLD_BETA={new_beta}.")
 
+    # Update the release date to current date in date.h
+    date_file = "date.h"
+    base_year = 2000
+    today = datetime.now()
+    year = today.year - base_year + 100 # So 2025 -> 125
+    month = today.month - 1        # January is 0
+    day = today.day
+    replacement_dates = {
+        r'#define\s+YEAR\t\d+':  f'#define YEAR\t{year}',
+        r'#define\s+MONTH\t\d+': f'#define\tMONTH\t{month}',
+        r'#define\s+DAY\t\d+':   f'#define\tDAY\t{day}'
+    }
+    with open(date_file, 'r', encoding="utf-8") as f:
+        lines = f.read()
+    for pattern, replacement in replacement_dates.items():
+        lines = re.sub(pattern, replacement, lines)
+    with open(date_file, "w", encoding="utf-8") as f:
+        f.write(lines)
+    print(f"Date in {date_file} updated to")
+    print(f" YEAR={year}, MONTH={month}, DATE={day}.")
+
     print("\nSource directory ready for release.\n")
     os.chdir("../")
     with open("cloudy_file_prep_log.txt", 'a', encoding='utf-8') as f:
