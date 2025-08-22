@@ -197,6 +197,42 @@ def update_copyright_year():
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(new_content)
 
+def update_readme(cloudy_release):
+    if "_" in cloudy_release:
+        print("Please review and update README.md in the root directory.")
+        with open("cloudy_file_prep_log.txt", 'a', encoding='utf-8') as f:
+            f.write("readme\n")
+        return
+
+    readme_file = "README.md"
+    new_version = cloudy_release[1:]
+    if "00" in cloudy_release:
+        new_version = new_version.split(".")[0]
+    year_suffix = str(datetime.now().year)[-2:]
+
+    replacements = {
+        r"The current version of Cloudy is C\d+, released in \d{4}.": f"The current version of Cloudy is C{new_version}, released in {datetime.now().year}.",
+        r"\[here\]\(https://gitlab\.nublado\.org/cloudy/cloudy/-/wikis/NewC\d+\)": f"[here](https://gitlab.nublado.org/cloudy/cloudy/-/wikis/NewC{year_suffix})"
+    }
+
+    with open(readme_file, 'r', encoding="utf-8") as f:
+        lines = f.read()
+    for pattern, replacement in replacements.items():
+        lines = re.sub(pattern, replacement, lines)
+    with open(readme_file, "w", encoding="utf-8") as f:
+        f.write(lines)
+
+    print("Please update the bib link to the latest release paper in README.md")
+    readme_update_success = input(" Is the README.md file in the root directory up-to-date (y/n)? ")
+
+    if readme_update_success == "y":
+        with open("cloudy_file_prep_log.txt", 'a', encoding='utf-8') as f:
+            f.write("readme\n")
+    else:
+        print("README.md not ready for release.")
+        return
+
+
 def prep_source(cloudy_release):
     os.chdir("./source/")
 
@@ -658,6 +694,8 @@ def main():
         cloudy_release = input("Enter cloudy release version number (e.g. \'c25.00\'): ")
         with open("./cloudy_file_prep_log.txt", 'r', encoding='utf-8') as f:
             release_log = f.read()
+        if "readme" not in release_log: update_readme(cloudy_release)
+        return
         if "source" not in release_log: prep_source(cloudy_release)
         if "doxygen" not in release_log: prep_doxygen(cloudy_release)
         if "data" not in release_log: prep_data()
@@ -667,7 +705,7 @@ def main():
 
         with open("./cloudy_file_prep_log.txt", 'r', encoding='utf-8') as f:
             release_log = f.read()
-        if all(s in release_log for s in ["source", "doxygen", "data", "tsuite", "docs"]):
+        if all(s in release_log for s in ["readme", "source", "doxygen", "data", "tsuite", "docs"]):
             print("All directories prepped.")
 
             # Define your parameters
