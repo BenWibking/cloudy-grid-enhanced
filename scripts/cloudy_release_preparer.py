@@ -79,7 +79,7 @@ Required packages: doxygen, pyppeteer, pdflatex (script will run through this as
        Exit nublado.org
             >> [CTRL d]
        Copy the doxygen tree to the new subdirectory created in nublado
-            >> rsync -a doxygen/html/ cmgu228@nublado.org:/var/www/webapps/data_area/doxygen/c25.00/
+            >> rsync -a doxygen/html/ <user-name>@nublado.org:/var/www/webapps/data_area/doxygen/c25.00/
 
     6. Copy the release tarball to nublado
        (this script creates one automatically once all directories have been prepped sucessfully)
@@ -695,7 +695,6 @@ def main():
         with open("./cloudy_file_prep_log.txt", 'r', encoding='utf-8') as f:
             release_log = f.read()
         if "readme" not in release_log: update_readme(cloudy_release)
-        return
         if "source" not in release_log: prep_source(cloudy_release)
         if "doxygen" not in release_log: prep_doxygen(cloudy_release)
         if "data" not in release_log: prep_data()
@@ -740,3 +739,6 @@ from pyppeteer import launch
 
 if __name__ == "__main__":
     main()
+
+# TODO: add in a read and update docs/latex/version.tex to the latest version number
+# TODO: some of these steps need to be in master, others only in release. This needs to be disentangled.
