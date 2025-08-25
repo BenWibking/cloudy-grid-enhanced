@@ -1,0 +1,554 @@
+                                             Cloudy (release, def334eb, prerelease)
+                                                         www.nublado.org
+
+                                                  PRNG seed: 0x3bdb5235e95015eb
+
+                       **************************************25Aug22**************************************
+                       *                                                                                 *
+                       * Title Produce report of species labels, data sources, and line wavelengths.     *
+                       * # this runs the smoke test, needed in order to set up the species               *
+                       * test                                                                            *
+                       * # The save command produces a file, LineLablels.txt, which contains             *
+                       * # the set of line labels for the standard Cloudy setup.  This file              *
+                       * # gives the species identification, the line wavelength, and indications        *
+                       * # of how the line was formed, or which database produced it.                    *
+                       * save line labels "LineLabels.txt"                                               *
+                       * # this produces a file, SpeciesLabels.txt, which contains a list of             *
+                       * # all species known to the code and the database used to model it.              *
+                       * save all species labels "SpeciesLabels.txt"                                     *
+                       * # This reports the number of levels and the database used for each species.     *
+                       * # The report is contained in the main output.                                   *
+                       * # The report includes both the spectrum name (for instance, C 4) and the        *
+                       * # species name (in this case C+3)                                               *
+                       * database print                                                                  *
+                       * # Report atomic data and critical densities for all lines                       *
+                       * save line data "LineLabels.ldat"                                                *
+                       *                                                                                 *
+                       ***********************************************************************************
+
+
+
+
+
+ Number of levels in ions treated by iso sequences.
+ ISO   Element  hi-n(l-resolved) #(l-resolved)  n(collapsed)
+ H-like   H       10              55             15 
+ H-like   He      10              55             15 
+ H-like   Li       5              15              2 
+ H-like   Be       5              15              2 
+ H-like   B        5              15              2 
+ H-like   C        5              15             15 
+ H-like   N        5              15             15 
+ H-like   O        5              15             15 
+ H-like   F        5              15              2 
+ H-like   Ne       5              15              5 
+ H-like   Na       5              15              2 
+ H-like   Mg       5              15              5 
+ H-like   Al       5              15              2 
+ H-like   Si       5              15             15 
+ H-like   P        5              15              2 
+ H-like   S        5              15              5 
+ H-like   Cl       5              15              2 
+ H-like   Ar       5              15              2 
+ H-like   K        5              15              2 
+ H-like   Ca       5              15              2 
+ H-like   Sc       5              15              2 
+ H-like   Ti       5              15              2 
+ H-like   V        5              15              2 
+ H-like   Cr       5              15              2 
+ H-like   Mn       5              15              2 
+ H-like   Fe      10              55             15 
+ H-like   Co       5              15              2 
+ H-like   Ni       5              15              2 
+ H-like   Cu       5              15              2 
+ H-like   Zn       5              15              5 
+ He-like  He       6              43             20 
+ He-like  Li       3              13              2 
+ He-like  Be       3              13              2 
+ He-like  B        3              13              2 
+ He-like  C        5              31              5 
+ He-like  N        5              31              5 
+ He-like  O        5              31              5 
+ He-like  F        3              13              2 
+ He-like  Ne       5              31              5 
+ He-like  Na       3              13              2 
+ He-like  Mg       5              31              5 
+ He-like  Al       3              13              2 
+ He-like  Si       5              31              5 
+ He-like  P        3              13              2 
+ He-like  S        5              31              5 
+ He-like  Cl       3              13              2 
+ He-like  Ar       3              13              2 
+ He-like  K        3              13              2 
+ He-like  Ca       3              13              2 
+ He-like  Sc       3              13              2 
+ He-like  Ti       3              13              2 
+ He-like  V        3              13              2 
+ He-like  Cr       3              13              2 
+ He-like  Mn       3              13              2 
+ He-like  Fe       5              31              5 
+ He-like  Co       3              13              2 
+ He-like  Ni       3              13              2 
+ He-like  Cu       3              13              2 
+ He-like  Zn       5              31              5 
+Using LAMDA model NO with 70 levels of 154 available.
+Using LAMDA model CN with 41 levels of 41 available.
+Using LAMDA model NH3 with 22 levels of 22 available.
+Using LAMDA model NH3 with 24 levels of 24 available.
+Using LAMDA model H3O+ with 9 levels of 9 available.
+Using LAMDA model H3O+ with 14 levels of 14 available.
+Using LAMDA model CH3OH with 70 levels of 256 available.
+Using LAMDA model OH with 24 levels of 24 available.
+Using LAMDA model H2CO with 40 levels of 40 available.
+Using LAMDA model H2CO with 41 levels of 41 available.
+Using LAMDA model HNC with 26 levels of 26 available.
+Using LAMDA model HCN with 32 levels of 32 available.
+Using LAMDA model HF with 16 levels of 16 available.
+Using LAMDA model CO with 70 levels of 81 available.
+Using LAMDA model HC3N with 61 levels of 61 available.
+Using LAMDA model HCS+ with 31 levels of 31 available.
+Using LAMDA model O2 with 48 levels of 48 available.
+Using LAMDA model ^13CO with 41 levels of 41 available.
+Using LAMDA model SiO with 41 levels of 41 available.
+Using LAMDA model OCS with 70 levels of 99 available.
+Using LAMDA model N2H+ with 46 levels of 46 available.
+Using LAMDA model HCl with 40 levels of 40 available.
+Using LAMDA model HCO+ with 31 levels of 31 available.
+Using LAMDA model H2O with 45 levels of 45 available.
+Using LAMDA model H2O with 45 levels of 45 available.
+Using LAMDA model SiS with 70 levels of 246 available.
+Using LAMDA model SO2 with 70 levels of 198 available.
+Using LAMDA model SO with 70 levels of 91 available.
+Using LAMDA model SiC2 with 40 levels of 40 available.
+Using LAMDA model CS with 31 levels of 31 available.
+Using LAMDA model C2H with 70 levels of 102 available.
+Using LAMDA model OH+ with 49 levels of 49 available.
+Using LAMDA model CF+ with 11 levels of 11 available.
+Using LAMDA model ArH+ with 12 levels of 12 available.
+Using LAMDA model CH with 32 levels of 32 available.
+Using LAMDA model CH with 32 levels of 32 available.
+Using LAMDA model CH2 with 22 levels of 22 available.
+Using LAMDA model CH2 with 24 levels of 24 available.
+Using LAMDA model TiO with 70 levels of 230 available.
+Using LAMDA model PN with 31 levels of 31 available.
+Using LAMDA model PH3 with 20 levels of 20 available.
+Using LAMDA model PO+ with 20 levels of 20 available.
+Using STOUT spectrum Al 1 (species: Al) with 15 levels of 187 available.
+Using STOUT spectrum Al 3 (species: Al+2) with 15 levels of 161 available.
+Using STOUT spectrum Al 4 (species: Al+3) with 15 levels of 115 available.
+Using STOUT spectrum Al 6 (species: Al+5) with 15 levels of 86 available.
+Using STOUT spectrum Al 8 (species: Al+7) with 15 levels of 590 available.
+Using STOUT spectrum Ar 1 (species: Ar) with 15 levels of 503 available.
+Using STOUT spectrum Ar13 (species: Ar+12) with 15 levels of 590 available.
+Using STOUT spectrum Ar 2 (species: Ar+) with 15 levels of 418 available.
+Using STOUT spectrum Ar 3 (species: Ar+2) with 15 levels of 124 available.
+Using STOUT spectrum Ar 4 (species: Ar+3) with 15 levels of 57 available.
+Using STOUT spectrum Ar 5 (species: Ar+4) with 15 levels of 48 available.
+Using STOUT spectrum Ar 6 (species: Ar+5) with 15 levels of 43 available.
+Using STOUT spectrum B  1 (species: B) with 15 levels of 72 available.
+Using STOUT spectrum B  2 (species: B+) with 15 levels of 125 available.
+Using STOUT spectrum B  3 (species: B+2) with 15 levels of 63 available.
+Using STOUT spectrum Be 1 (species: Be) with 15 levels of 211 available.
+Using STOUT spectrum Be 2 (species: Be+) with 15 levels of 253 available.
+Using STOUT spectrum C  1 (species: C) with 15 levels of 276 available.
+Using STOUT spectrum C  2 (species: C+) with 15 levels of 206 available.
+Using STOUT spectrum C  3 (species: C+2) with 15 levels of 238 available.
+Using STOUT spectrum Ca 1 (species: Ca) with 15 levels of 780 available.
+Using STOUT spectrum Ca15 (species: Ca+14) with 15 levels of 590 available.
+Using STOUT spectrum Ca 3 (species: Ca+2) with 15 levels of 181 available.
+Using STOUT spectrum Ca 4 (species: Ca+3) with 15 levels of 70 available.
+Using STOUT spectrum Ca 6 (species: Ca+5) with 15 levels of 31 available.
+Using STOUT spectrum Cl 1 (species: Cl) with 15 levels of 374 available.
+Using STOUT spectrum Cl12 (species: Cl+11) with 15 levels of 590 available.
+Using STOUT spectrum Cl 5 (species: Cl+4) with 15 levels of 28 available.
+Using STOUT spectrum Cl 6 (species: Cl+5) with 15 levels of 283 available.
+Using STOUT spectrum Cl 7 (species: Cl+6) with 15 levels of 161 available.
+Using STOUT spectrum Cl 8 (species: Cl+7) with 15 levels of 209 available.
+Using STOUT spectrum Cl 9 (species: Cl+8) with 15 levels of 54 available.
+Using STOUT spectrum Co10 (species: Co+9) with 10 levels of 10 available.
+Using STOUT spectrum Co11 (species: Co+10) with 15 levels of 17 available.
+Using STOUT spectrum Co12 (species: Co+11) with 15 levels of 20 available.
+Using STOUT spectrum Co13 (species: Co+12) with 15 levels of 31 available.
+Using STOUT spectrum Co14 (species: Co+13) with 15 levels of 33 available.
+Using STOUT spectrum Co15 (species: Co+14) with 2 levels of 2 available.
+Using STOUT spectrum Co16 (species: Co+15) with 15 levels of 69 available.
+Using STOUT spectrum Co18 (species: Co+17) with 15 levels of 27 available.
+Using STOUT spectrum Co 2 (species: Co+) with 15 levels of 480 available.
+Using STOUT spectrum Co22 (species: Co+21) with 15 levels of 590 available.
+Using STOUT spectrum Co 3 (species: Co+2) with 15 levels of 213 available.
+Using STOUT spectrum Co 8 (species: Co+7) with 15 levels of 72 available.
+Using STOUT spectrum Cr10 (species: Cr+9) with 15 levels of 32 available.
+Using STOUT spectrum Cr11 (species: Cr+10) with 15 levels of 37 available.
+Using STOUT spectrum Cr12 (species: Cr+11) with 15 levels of 62 available.
+Using STOUT spectrum Cr15 (species: Cr+14) with 15 levels of 68 available.
+Using STOUT spectrum Cr19 (species: Cr+18) with 15 levels of 590 available.
+Using STOUT spectrum Cr 2 (species: Cr+) with 15 levels of 733 available.
+Using STOUT spectrum Cr 4 (species: Cr+3) with 15 levels of 154 available.
+Using STOUT spectrum Cr 5 (species: Cr+4) with 15 levels of 46 available.
+Using STOUT spectrum Cu 1 (species: Cu) with 15 levels of 294 available.
+Using STOUT spectrum Cu13 (species: Cu+12) with 7 levels of 7 available.
+Using STOUT spectrum Cu14 (species: Cu+13) with 13 levels of 13 available.
+Using STOUT spectrum Cu15 (species: Cu+14) with 15 levels of 16 available.
+Using STOUT spectrum Cu16 (species: Cu+15) with 15 levels of 40 available.
+Using STOUT spectrum Cu17 (species: Cu+16) with 15 levels of 26 available.
+Using STOUT spectrum Cu18 (species: Cu+17) with 15 levels of 283 available.
+Using STOUT spectrum Cu21 (species: Cu+20) with 15 levels of 51 available.
+Using STOUT spectrum Cu22 (species: Cu+21) with 10 levels of 10 available.
+Using STOUT spectrum Cu23 (species: Cu+22) with 15 levels of 15 available.
+Using STOUT spectrum Cu24 (species: Cu+23) with 15 levels of 590 available.
+Using STOUT spectrum Cu25 (species: Cu+24) with 6 levels of 6 available.
+Using STOUT spectrum F  2 (species: F+) with 7 levels of 7 available.
+Using STOUT spectrum F  3 (species: F+2) with 15 levels of 277 available.
+Using STOUT spectrum F  4 (species: F+3) with 15 levels of 590 available.
+Using STOUT spectrum F  5 (species: F+4) with 5 levels of 5 available.
+Using STOUT spectrum F  6 (species: F+5) with 15 levels of 238 available.
+Using STOUT spectrum F  7 (species: F+6) with 15 levels of 69 available.
+Using STOUT spectrum Fe 1 (species: Fe) with 25 levels of 846 available.
+Using STOUT spectrum Fe 2 (species: Fe+) with 80 levels of 716 available.
+Using STOUT spectrum Fe21 (species: Fe+20) with 25 levels of 620 available.
+Using STOUT spectrum Fe 3 (species: Fe+2) with 70 levels of 322 available.
+Using STOUT spectrum Fe 7 (species: Fe+6) with 25 levels of 189 available.
+Using STOUT spectrum Fe 9 (species: Fe+8) with 25 levels of 865 available.
+Using STOUT spectrum K  1 (species: K) with 15 levels of 230 available.
+Using STOUT spectrum K 10 (species: K+9) with 15 levels of 33 available.
+Using STOUT spectrum K 14 (species: K+13) with 15 levels of 590 available.
+Using STOUT spectrum K  2 (species: K+) with 15 levels of 96 available.
+Using STOUT spectrum K  3 (species: K+2) with 15 levels of 39 available.
+Using STOUT spectrum K  4 (species: K+3) with 15 levels of 37 available.
+Using STOUT spectrum K  7 (species: K+6) with 2 levels of 2 available.
+Using STOUT spectrum K  8 (species: K+7) with 15 levels of 283 available.
+Using STOUT spectrum Li 1 (species: Li) with 15 levels of 181 available.
+Using STOUT spectrum Mg 1 (species: Mg) with 15 levels of 305 available.
+Using STOUT spectrum Mg10 (species: Mg+9) with 15 levels of 204 available.
+Using STOUT spectrum Mg 3 (species: Mg+2) with 15 levels of 111 available.
+Using STOUT spectrum Mg 7 (species: Mg+6) with 15 levels of 590 available.
+Using STOUT spectrum Mn 1 (species: Mn) with 15 levels of 462 available.
+Using STOUT spectrum Mn11 (species: Mn+10) with 15 levels of 43 available.
+Using STOUT spectrum Mn12 (species: Mn+11) with 15 levels of 29 available.
+Using STOUT spectrum Mn13 (species: Mn+12) with 15 levels of 51 available.
+Using STOUT spectrum Mn14 (species: Mn+13) with 15 levels of 283 available.
+Using STOUT spectrum Mn16 (species: Mn+15) with 15 levels of 60 available.
+Using STOUT spectrum Mn 2 (species: Mn+) with 45 levels of 525 available.
+Using STOUT spectrum Mn20 (species: Mn+19) with 15 levels of 590 available.
+Using STOUT spectrum Mn 5 (species: Mn+4) with 15 levels of 84 available.
+Using STOUT spectrum Mn 6 (species: Mn+5) with 15 levels of 115 available.
+Using STOUT spectrum N  1 (species: N) with 50 levels of 366 available.
+Using STOUT spectrum N  4 (species: N+3) with 15 levels of 238 available.
+Using STOUT spectrum N  5 (species: N+4) with 15 levels of 137 available.
+Using STOUT spectrum Na 1 (species: Na) with 15 levels of 141 available.
+Using STOUT spectrum Na 2 (species: Na+) with 15 levels of 136 available.
+Using STOUT spectrum Na 6 (species: Na+5) with 15 levels of 590 available.
+Using STOUT spectrum Ne 1 (species: Ne) with 15 levels of 374 available.
+Using STOUT spectrum Ne 2 (species: Ne+) with 2 levels of 2 available.
+Using STOUT spectrum Ne 3 (species: Ne+2) with 15 levels of 554 available.
+Using STOUT spectrum Ne 5 (species: Ne+4) with 15 levels of 590 available.
+Using STOUT spectrum Ni 1 (species: Ni) with 15 levels of 287 available.
+Using STOUT spectrum Ni11 (species: Ni+10) with 15 levels of 599 available.
+Using STOUT spectrum Ni15 (species: Ni+14) with 15 levels of 483 available.
+Using STOUT spectrum Ni23 (species: Ni+22) with 15 levels of 590 available.
+Using STOUT spectrum Ni 3 (species: Ni+2) with 15 levels of 344 available.
+Using STOUT spectrum Ni 4 (species: Ni+3) with 15 levels of 235 available.
+Using STOUT spectrum Ni 5 (species: Ni+4) with 15 levels of 323 available.
+Using STOUT spectrum Ni 7 (species: Ni+6) with 15 levels of 44 available.
+Using STOUT spectrum Ni 9 (species: Ni+8) with 15 levels of 26 available.
+Using STOUT spectrum O  1 (species: O) with 29 levels of 580 available.
+Using STOUT spectrum O  2 (species: O+) with 15 levels of 275 available.
+Using STOUT spectrum O  3 (species: O+2) with 15 levels of 590 available.
+Using STOUT spectrum O  5 (species: O+4) with 15 levels of 238 available.
+Using STOUT spectrum P  1 (species: P) with 15 levels of 284 available.
+Using STOUT spectrum P 10 (species: P+9) with 15 levels of 590 available.
+Using STOUT spectrum P  2 (species: P+) with 15 levels of 160 available.
+Using STOUT spectrum P  3 (species: P+2) with 8 levels of 8 available.
+Using STOUT spectrum P  4 (species: P+3) with 15 levels of 208 available.
+Using STOUT spectrum P  6 (species: P+5) with 15 levels of 53 available.
+Using STOUT spectrum S  1 (species: S) with 15 levels of 338 available.
+Using STOUT spectrum S 11 (species: S+10) with 15 levels of 590 available.
+Using STOUT spectrum S  2 (species: S+) with 15 levels of 232 available.
+Using STOUT spectrum S  3 (species: S+2) with 15 levels of 53 available.
+Using STOUT spectrum S  5 (species: S+4) with 15 levels of 283 available.
+Using STOUT spectrum Sc 1 (species: Sc) with 15 levels of 373 available.
+Using STOUT spectrum Sc10 (species: Sc+9) with 15 levels of 283 available.
+Using STOUT spectrum Sc11 (species: Sc+10) with 15 levels of 39 available.
+Using STOUT spectrum Sc12 (species: Sc+11) with 15 levels of 55 available.
+Using STOUT spectrum Sc13 (species: Sc+12) with 15 levels of 29 available.
+Using STOUT spectrum Sc14 (species: Sc+13) with 15 levels of 35 available.
+Using STOUT spectrum Sc15 (species: Sc+14) with 15 levels of 28 available.
+Using STOUT spectrum Sc16 (species: Sc+15) with 15 levels of 590 available.
+Using STOUT spectrum Sc17 (species: Sc+16) with 15 levels of 28 available.
+Using STOUT spectrum Sc18 (species: Sc+17) with 15 levels of 16 available.
+Using STOUT spectrum Sc 2 (species: Sc+) with 15 levels of 88 available.
+Using STOUT spectrum Sc 3 (species: Sc+2) with 15 levels of 43 available.
+Using STOUT spectrum Sc 4 (species: Sc+3) with 15 levels of 128 available.
+Using STOUT spectrum Sc 5 (species: Sc+4) with 15 levels of 118 available.
+Using STOUT spectrum Sc 6 (species: Sc+5) with 15 levels of 39 available.
+Using STOUT spectrum Sc 7 (species: Sc+6) with 15 levels of 34 available.
+Using STOUT spectrum Sc 8 (species: Sc+7) with 15 levels of 26 available.
+Using STOUT spectrum Sc 9 (species: Sc+8) with 2 levels of 2 available.
+Using STOUT spectrum Si 1 (species: Si) with 15 levels of 540 available.
+Using STOUT spectrum Si 2 (species: Si+) with 15 levels of 148 available.
+Using STOUT spectrum Si 3 (species: Si+2) with 15 levels of 283 available.
+Using STOUT spectrum Si 4 (species: Si+3) with 15 levels of 54 available.
+Using STOUT spectrum Si 7 (species: Si+6) with 15 levels of 61 available.
+Using STOUT spectrum Si 9 (species: Si+8) with 15 levels of 590 available.
+Using STOUT spectrum Ti10 (species: Ti+9) with 2 levels of 2 available.
+Using STOUT spectrum Ti13 (species: Ti+12) with 15 levels of 69 available.
+Using STOUT spectrum Ti17 (species: Ti+16) with 15 levels of 590 available.
+Using STOUT spectrum Ti 3 (species: Ti+2) with 15 levels of 199 available.
+Using STOUT spectrum Ti 4 (species: Ti+3) with 15 levels of 39 available.
+Using STOUT spectrum Ti 5 (species: Ti+4) with 15 levels of 64 available.
+Using STOUT spectrum Ti 6 (species: Ti+5) with 2 levels of 2 available.
+Using STOUT spectrum Ti 7 (species: Ti+6) with 15 levels of 47 available.
+Using STOUT spectrum Ti 8 (species: Ti+7) with 15 levels of 35 available.
+Using STOUT spectrum Ti 9 (species: Ti+8) with 15 levels of 29 available.
+Using STOUT spectrum V 10 (species: V+9) with 15 levels of 25 available.
+Using STOUT spectrum V 11 (species: V+10) with 2 levels of 2 available.
+Using STOUT spectrum V 12 (species: V+11) with 15 levels of 283 available.
+Using STOUT spectrum V 13 (species: V+12) with 15 levels of 59 available.
+Using STOUT spectrum V 15 (species: V+14) with 2 levels of 2 available.
+Using STOUT spectrum V 16 (species: V+15) with 15 levels of 28 available.
+Using STOUT spectrum V 17 (species: V+16) with 15 levels of 23 available.
+Using STOUT spectrum V 18 (species: V+17) with 15 levels of 590 available.
+Using STOUT spectrum V 19 (species: V+18) with 15 levels of 25 available.
+Using STOUT spectrum V 20 (species: V+19) with 15 levels of 41 available.
+Using STOUT spectrum V 21 (species: V+20) with 15 levels of 43 available.
+Using STOUT spectrum V  4 (species: V+3) with 7 levels of 7 available.
+Using STOUT spectrum V  6 (species: V+5) with 15 levels of 61 available.
+Using STOUT spectrum V  7 (species: V+6) with 2 levels of 2 available.
+Using STOUT spectrum V  8 (species: V+7) with 15 levels of 33 available.
+Using STOUT spectrum V  9 (species: V+8) with 15 levels of 32 available.
+Using STOUT spectrum Zn19 (species: Zn+18) with 15 levels of 283 available.
+Using STOUT spectrum Zn 2 (species: Zn+) with 15 levels of 27 available.
+Using STOUT spectrum Zn25 (species: Zn+24) with 15 levels of 590 available.
+Using STOUT spectrum Zn 4 (species: Zn+3) with 2 levels of 2 available.
+Using CHIANTI spectrum Al10 (species: Al+9) with 15 experimental energy levels of 53 available.
+Using CHIANTI spectrum Al11 (species: Al+10) with 15 experimental energy levels of 43 available.
+Using CHIANTI spectrum Al 2 (species: Al+) with 15 experimental energy levels of 55 available.
+Using CHIANTI spectrum Al 5 (species: Al+4) with 15 experimental energy levels of 108 available.
+Using CHIANTI spectrum Al 7 (species: Al+6) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Al 9 (species: Al+8) with 15 experimental energy levels of 51 available.
+Using CHIANTI spectrum Ar10 (species: Ar+9) with 15 experimental energy levels of 69 available.
+Using CHIANTI spectrum Ar11 (species: Ar+10) with 15 experimental energy levels of 44 available.
+Using CHIANTI spectrum Ar12 (species: Ar+11) with 15 experimental energy levels of 42 available.
+Using CHIANTI spectrum Ar14 (species: Ar+13) with 15 experimental energy levels of 28 available.
+Using CHIANTI spectrum Ar15 (species: Ar+14) with 15 experimental energy levels of 27 available.
+Using CHIANTI spectrum Ar16 (species: Ar+15) with 15 experimental energy levels of 53 available.
+Using CHIANTI spectrum Ar 7 (species: Ar+6) with 15 experimental energy levels of 72 available.
+Using CHIANTI spectrum Ar 8 (species: Ar+7) with 15 experimental energy levels of 30 available.
+Using CHIANTI spectrum Ar 9 (species: Ar+8) with 15 experimental energy levels of 88 available.
+Using CHIANTI spectrum C  4 (species: C+3) with 15 experimental energy levels of 32 available.
+Using CHIANTI spectrum Ca10 (species: Ca+9) with 15 experimental energy levels of 26 available.
+Using CHIANTI spectrum Ca11 (species: Ca+10) with 15 experimental energy levels of 36 available.
+Using CHIANTI spectrum Ca12 (species: Ca+11) with 15 experimental energy levels of 30 available.
+Using CHIANTI spectrum Ca13 (species: Ca+12) with 15 experimental energy levels of 33 available.
+Using CHIANTI spectrum Ca14 (species: Ca+13) with 15 experimental energy levels of 28 available.
+Using CHIANTI spectrum Ca16 (species: Ca+15) with 15 experimental energy levels of 29 available.
+Using CHIANTI spectrum Ca17 (species: Ca+16) with 15 experimental energy levels of 21 available.
+Using CHIANTI spectrum Ca18 (species: Ca+17) with 15 experimental energy levels of 39 available.
+Using CHIANTI spectrum Ca 2 (species: Ca+) with 15 experimental energy levels of 41 available.
+Using CHIANTI spectrum Ca 5 (species: Ca+4) with 5 experimental energy levels of 5 available.
+Using CHIANTI spectrum Ca 7 (species: Ca+6) with 15 experimental energy levels of 22 available.
+Using CHIANTI spectrum Ca 8 (species: Ca+7) with 15 experimental energy levels of 40 available.
+Using CHIANTI spectrum Ca 9 (species: Ca+8) with 15 experimental energy levels of 70 available.
+Using CHIANTI spectrum Cl 2 (species: Cl+) with 5 experimental energy levels of 5 available.
+Using CHIANTI spectrum Cl 3 (species: Cl+2) with 5 experimental energy levels of 5 available.
+Using CHIANTI spectrum Cl 4 (species: Cl+3) with 5 experimental energy levels of 5 available.
+Using CHIANTI spectrum Cl10 (species: Cl+9) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum Cl11 (species: Cl+10) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Cl14 (species: Cl+13) with 15 experimental energy levels of 21 available.
+Using CHIANTI spectrum Co17 (species: Co+16) with 15 experimental energy levels of 29 available.
+Using CHIANTI spectrum Co19 (species: Co+18) with 3 experimental energy levels of 3 available.
+Using CHIANTI spectrum Co20 (species: Co+19) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum Co21 (species: Co+20) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Co23 (species: Co+22) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Co24 (species: Co+23) with 15 experimental energy levels of 33 available.
+Using CHIANTI spectrum Co25 (species: Co+24) with 3 experimental energy levels of 3 available.
+Using CHIANTI spectrum Cr13 (species: Cr+12) with 15 experimental energy levels of 69 available.
+Using CHIANTI spectrum Cr14 (species: Cr+13) with 15 experimental energy levels of 30 available.
+Using CHIANTI spectrum Cr16 (species: Cr+15) with 3 experimental energy levels of 3 available.
+Using CHIANTI spectrum Cr17 (species: Cr+16) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum Cr18 (species: Cr+17) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Cr20 (species: Cr+19) with 15 experimental energy levels of 36 available.
+Using CHIANTI spectrum Cr21 (species: Cr+20) with 15 experimental energy levels of 30 available.
+Using CHIANTI spectrum Cr22 (species: Cr+21) with 15 experimental energy levels of 167 available.
+Using CHIANTI spectrum Cr 7 (species: Cr+6) with 13 experimental energy levels of 13 available.
+Using CHIANTI spectrum Cr 8 (species: Cr+7) with 15 experimental energy levels of 22 available.
+Using CHIANTI spectrum Cr 9 (species: Cr+8) with 15 experimental energy levels of 16 available.
+Using CHIANTI spectrum Fe10 (species: Fe+9) with 33 experimental energy levels of 64 available.
+Using CHIANTI spectrum Fe11 (species: Fe+10) with 33 experimental energy levels of 72 available.
+Using CHIANTI spectrum Fe12 (species: Fe+11) with 33 experimental energy levels of 76 available.
+Using CHIANTI spectrum Fe13 (species: Fe+12) with 33 experimental energy levels of 49 available.
+Using CHIANTI spectrum Fe14 (species: Fe+13) with 33 experimental energy levels of 70 available.
+Using CHIANTI spectrum Fe15 (species: Fe+14) with 33 experimental energy levels of 65 available.
+Using CHIANTI spectrum Fe16 (species: Fe+15) with 33 experimental energy levels of 60 available.
+Using CHIANTI spectrum Fe17 (species: Fe+16) with 33 experimental energy levels of 65 available.
+Using CHIANTI spectrum Fe18 (species: Fe+17) with 33 experimental energy levels of 61 available.
+Using CHIANTI spectrum Fe19 (species: Fe+18) with 33 experimental energy levels of 81 available.
+Using CHIANTI spectrum Fe20 (species: Fe+19) with 33 experimental energy levels of 68 available.
+Using CHIANTI spectrum Fe22 (species: Fe+21) with 33 experimental energy levels of 55 available.
+Using CHIANTI spectrum Fe23 (species: Fe+22) with 33 experimental energy levels of 79 available.
+Using CHIANTI spectrum Fe24 (species: Fe+23) with 33 experimental energy levels of 46 available.
+Using CHIANTI spectrum Fe 4 (species: Fe+3) with 33 experimental energy levels of 37 available.
+Using CHIANTI spectrum Fe 5 (species: Fe+4) with 33 experimental energy levels of 34 available.
+Using CHIANTI spectrum Fe 6 (species: Fe+5) with 33 experimental energy levels of 80 available.
+Using CHIANTI spectrum Fe 8 (species: Fe+7) with 33 experimental energy levels of 54 available.
+Using CHIANTI spectrum K 11 (species: K+10) with 3 experimental energy levels of 3 available.
+Using CHIANTI spectrum K 12 (species: K+11) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum K 13 (species: K+12) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum K 15 (species: K+14) with 15 experimental energy levels of 28 available.
+Using CHIANTI spectrum K 16 (species: K+15) with 15 experimental energy levels of 18 available.
+Using CHIANTI spectrum K 17 (species: K+16) with 15 experimental energy levels of 42 available.
+Using CHIANTI spectrum K  5 (species: K+4) with 5 experimental energy levels of 5 available.
+Using CHIANTI spectrum K  6 (species: K+5) with 5 experimental energy levels of 5 available.
+Using CHIANTI spectrum K  9 (species: K+8) with 15 experimental energy levels of 26 available.
+Using CHIANTI spectrum Mg 2 (species: Mg+) with 15 experimental energy levels of 52 available.
+Using CHIANTI spectrum Mg 4 (species: Mg+3) with 15 experimental energy levels of 105 available.
+Using CHIANTI spectrum Mg 5 (species: Mg+4) with 15 experimental energy levels of 41 available.
+Using CHIANTI spectrum Mg 6 (species: Mg+5) with 15 experimental energy levels of 44 available.
+Using CHIANTI spectrum Mg 8 (species: Mg+7) with 15 experimental energy levels of 64 available.
+Using CHIANTI spectrum Mg 9 (species: Mg+8) with 15 experimental energy levels of 63 available.
+Using CHIANTI spectrum Mn10 (species: Mn+9) with 15 experimental energy levels of 17 available.
+Using CHIANTI spectrum Mn15 (species: Mn+14) with 15 experimental energy levels of 28 available.
+Using CHIANTI spectrum Mn17 (species: Mn+16) with 3 experimental energy levels of 3 available.
+Using CHIANTI spectrum Mn18 (species: Mn+17) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum Mn19 (species: Mn+18) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Mn21 (species: Mn+20) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Mn22 (species: Mn+21) with 15 experimental energy levels of 37 available.
+Using CHIANTI spectrum Mn23 (species: Mn+22) with 3 experimental energy levels of 3 available.
+Using CHIANTI spectrum Mn 8 (species: Mn+7) with 13 experimental energy levels of 13 available.
+Using CHIANTI spectrum Mn 9 (species: Mn+8) with 8 experimental energy levels of 8 available.
+Using CHIANTI spectrum N  2 (species: N+) with 15 experimental energy levels of 58 available.
+Using CHIANTI spectrum N  3 (species: N+2) with 15 experimental energy levels of 84 available.
+Using CHIANTI spectrum Na 3 (species: Na+2) with 15 experimental energy levels of 107 available.
+Using CHIANTI spectrum Na 4 (species: Na+3) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum Na 5 (species: Na+4) with 13 experimental energy levels of 13 available.
+Using CHIANTI spectrum Na 7 (species: Na+6) with 15 experimental energy levels of 88 available.
+Using CHIANTI spectrum Na 8 (species: Na+7) with 15 experimental energy levels of 63 available.
+Using CHIANTI spectrum Na 9 (species: Na+8) with 15 experimental energy levels of 17 available.
+Using CHIANTI spectrum Ne 4 (species: Ne+3) with 15 experimental energy levels of 22 available.
+Using CHIANTI spectrum Ne 6 (species: Ne+5) with 15 experimental energy levels of 88 available.
+Using CHIANTI spectrum Ne 7 (species: Ne+6) with 15 experimental energy levels of 126 available.
+Using CHIANTI spectrum Ne 8 (species: Ne+7) with 15 experimental energy levels of 37 available.
+Using CHIANTI spectrum Ni12 (species: Ni+11) with 15 experimental energy levels of 28 available.
+Using CHIANTI spectrum Ni13 (species: Ni+12) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Ni14 (species: Ni+13) with 15 experimental energy levels of 21 available.
+Using CHIANTI spectrum Ni16 (species: Ni+15) with 15 experimental energy levels of 30 available.
+Using CHIANTI spectrum Ni17 (species: Ni+16) with 15 experimental energy levels of 53 available.
+Using CHIANTI spectrum Ni18 (species: Ni+17) with 15 experimental energy levels of 28 available.
+Using CHIANTI spectrum Ni19 (species: Ni+18) with 15 experimental energy levels of 49 available.
+Using CHIANTI spectrum Ni 2 (species: Ni+) with 15 experimental energy levels of 17 available.
+Using CHIANTI spectrum Ni20 (species: Ni+19) with 15 experimental energy levels of 56 available.
+Using CHIANTI spectrum Ni21 (species: Ni+20) with 15 experimental energy levels of 30 available.
+Using CHIANTI spectrum Ni22 (species: Ni+21) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Ni24 (species: Ni+23) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Ni25 (species: Ni+24) with 15 experimental energy levels of 35 available.
+Using CHIANTI spectrum Ni26 (species: Ni+25) with 15 experimental energy levels of 19 available.
+Using CHIANTI spectrum O  4 (species: O+3) with 15 experimental energy levels of 133 available.
+Using CHIANTI spectrum O  6 (species: O+5) with 15 experimental energy levels of 68 available.
+Using CHIANTI spectrum P 11 (species: P+10) with 15 experimental energy levels of 37 available.
+Using CHIANTI spectrum P 12 (species: P+11) with 15 experimental energy levels of 40 available.
+Using CHIANTI spectrum P 13 (species: P+12) with 15 experimental energy levels of 16 available.
+Using CHIANTI spectrum P  5 (species: P+4) with 15 experimental energy levels of 32 available.
+Using CHIANTI spectrum P  7 (species: P+6) with 3 experimental energy levels of 3 available.
+Using CHIANTI spectrum P  8 (species: P+7) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum P  9 (species: P+8) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum S 10 (species: S+9) with 15 experimental energy levels of 72 available.
+Using CHIANTI spectrum S 12 (species: S+11) with 15 experimental energy levels of 44 available.
+Using CHIANTI spectrum S 13 (species: S+12) with 15 experimental energy levels of 39 available.
+Using CHIANTI spectrum S 14 (species: S+13) with 15 experimental energy levels of 20 available.
+Using CHIANTI spectrum S  4 (species: S+3) with 15 experimental energy levels of 52 available.
+Using CHIANTI spectrum S  6 (species: S+5) with 15 experimental energy levels of 56 available.
+Using CHIANTI spectrum S  7 (species: S+6) with 15 experimental energy levels of 95 available.
+Using CHIANTI spectrum S  8 (species: S+7) with 15 experimental energy levels of 76 available.
+Using CHIANTI spectrum S  9 (species: S+8) with 15 experimental energy levels of 75 available.
+Using CHIANTI spectrum Si10 (species: Si+9) with 15 experimental energy levels of 55 available.
+Using CHIANTI spectrum Si11 (species: Si+10) with 15 experimental energy levels of 133 available.
+Using CHIANTI spectrum Si12 (species: Si+11) with 15 experimental energy levels of 17 available.
+Using CHIANTI spectrum Si 5 (species: Si+4) with 15 experimental energy levels of 91 available.
+Using CHIANTI spectrum Si 6 (species: Si+5) with 15 experimental energy levels of 43 available.
+Using CHIANTI spectrum Si 8 (species: Si+7) with 15 experimental energy levels of 48 available.
+Using CHIANTI spectrum Ti11 (species: Ti+10) with 15 experimental energy levels of 76 available.
+Using CHIANTI spectrum Ti12 (species: Ti+11) with 15 experimental energy levels of 52 available.
+Using CHIANTI spectrum Ti14 (species: Ti+13) with 3 experimental energy levels of 3 available.
+Using CHIANTI spectrum Ti15 (species: Ti+14) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum Ti16 (species: Ti+15) with 15 experimental energy levels of 24 available.
+Using CHIANTI spectrum Ti18 (species: Ti+17) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Ti19 (species: Ti+18) with 15 experimental energy levels of 38 available.
+Using CHIANTI spectrum Ti20 (species: Ti+19) with 15 experimental energy levels of 18 available.
+Using CHIANTI spectrum Zn20 (species: Zn+19) with 15 experimental energy levels of 24 available.
+Using CHIANTI spectrum Zn23 (species: Zn+22) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum Zn24 (species: Zn+23) with 15 experimental energy levels of 15 available.
+Using CHIANTI spectrum Zn27 (species: Zn+26) with 10 experimental energy levels of 10 available.
+Using CHIANTI spectrum Zn28 (species: Zn+27) with 15 experimental energy levels of 19 available.
+Spectrum Ar 2 (species: Ar+) trimmed to 12 levels (original 15) to have positive Aul.
+Spectrum Ar 3 (species: Ar+2) trimmed to 8 levels (original 15) to have positive Aul.
+Spectrum Ar 4 (species: Ar+3) trimmed to 8 levels (original 15) to have positive Aul.
+Spectrum Ar 5 (species: Ar+4) trimmed to 9 levels (original 15) to have positive Aul.
+Spectrum Ar 6 (species: Ar+5) trimmed to 7 levels (original 15) to have positive Aul.
+Spectrum Ca 3 (species: Ca+2) trimmed to 14 levels (original 15) to have positive Aul.
+Spectrum Ca 4 (species: Ca+3) trimmed to 3 levels (original 15) to have positive Aul.
+Spectrum Ca 6 (species: Ca+5) trimmed to 8 levels (original 15) to have positive Aul.
+Spectrum Cl 5 (species: Cl+4) trimmed to 14 levels (original 15) to have positive Aul.
+Spectrum Cl 9 (species: Cl+8) trimmed to 3 levels (original 15) to have positive Aul.
+Spectrum Co10 (species: Co+9) trimmed to 7 levels (original 10) to have positive Aul.
+Spectrum Co11 (species: Co+10) trimmed to 8 levels (original 15) to have positive Aul.
+Spectrum Co14 (species: Co+13) trimmed to 8 levels (original 15) to have positive Aul.
+Spectrum Co18 (species: Co+17) trimmed to 13 levels (original 15) to have positive Aul.
+Spectrum Cr10 (species: Cr+9) trimmed to 10 levels (original 15) to have positive Aul.
+Spectrum Cr11 (species: Cr+10) trimmed to 12 levels (original 15) to have positive Aul.
+Spectrum Cr15 (species: Cr+14) trimmed to 8 levels (original 15) to have positive Aul.
+Spectrum Cr 2 (species: Cr+) trimmed to 6 levels (original 15) to have positive Aul.
+Spectrum Cu 1 (species: Cu) trimmed to 12 levels (original 15) to have positive Aul.
+Spectrum Cu13 (species: Cu+12) trimmed to 2 levels (original 7) to have positive Aul.
+Spectrum Cu14 (species: Cu+13) trimmed to 5 levels (original 13) to have positive Aul.
+Spectrum Cu15 (species: Cu+14) trimmed to 5 levels (original 15) to have positive Aul.
+Spectrum Cu16 (species: Cu+15) trimmed to 5 levels (original 15) to have positive Aul.
+Spectrum Cu17 (species: Cu+16) trimmed to 2 levels (original 15) to have positive Aul.
+Spectrum Cu21 (species: Cu+20) trimmed to 2 levels (original 15) to have positive Aul.
+Spectrum Cu22 (species: Cu+21) trimmed to 4 levels (original 10) to have positive Aul.
+Spectrum Cu23 (species: Cu+22) trimmed to 3 levels (original 15) to have positive Aul.
+Spectrum Cu25 (species: Cu+24) trimmed to 2 levels (original 6) to have positive Aul.
+Spectrum F  3 (species: F+2) trimmed to 5 levels (original 15) to have positive Aul.
+Spectrum F  5 (species: F+4) trimmed to 2 levels (original 5) to have positive Aul.
+Spectrum F  7 (species: F+6) trimmed to 11 levels (original 15) to have positive Aul.
+Spectrum K  4 (species: K+3) trimmed to 14 levels (original 15) to have positive Aul.
+Spectrum Mn11 (species: Mn+10) trimmed to 10 levels (original 15) to have positive Aul.
+Spectrum Mn12 (species: Mn+11) trimmed to 11 levels (original 15) to have positive Aul.
+Spectrum Ni 3 (species: Ni+2) trimmed to 9 levels (original 15) to have positive Aul.
+Spectrum P  3 (species: P+2) trimmed to 7 levels (original 8) to have positive Aul.
+Spectrum P  6 (species: P+5) trimmed to 5 levels (original 15) to have positive Aul.
+Spectrum Sc 1 (species: Sc) trimmed to 14 levels (original 15) to have positive Aul.
+Spectrum Sc12 (species: Sc+11) trimmed to 5 levels (original 15) to have positive Aul.
+Spectrum Sc13 (species: Sc+12) trimmed to 12 levels (original 15) to have positive Aul.
+Spectrum Sc 4 (species: Sc+3) trimmed to 14 levels (original 15) to have positive Aul.
+Spectrum Sc 5 (species: Sc+4) trimmed to 14 levels (original 15) to have positive Aul.
+Spectrum Sc 6 (species: Sc+5) trimmed to 5 levels (original 15) to have positive Aul.
+Spectrum Sc 7 (species: Sc+6) trimmed to 10 levels (original 15) to have positive Aul.
+Spectrum Sc 8 (species: Sc+7) trimmed to 11 levels (original 15) to have positive Aul.
+Spectrum Ti13 (species: Ti+12) trimmed to 8 levels (original 15) to have positive Aul.
+Spectrum Ti 7 (species: Ti+6) trimmed to 9 levels (original 15) to have positive Aul.
+Spectrum Ti 8 (species: Ti+7) trimmed to 10 levels (original 15) to have positive Aul.
+Spectrum Ti 9 (species: Ti+8) trimmed to 12 levels (original 15) to have positive Aul.
+Spectrum V 10 (species: V+9) trimmed to 11 levels (original 15) to have positive Aul.
+Spectrum V  9 (species: V+8) trimmed to 10 levels (original 15) to have positive Aul.
+           9244CellPeak1.00E+00   Lo 3.04e-09=  29.98m   Hi-Con:7.13E+06 Ryd   E(hi):7.35E+06Ryd     E(hi):     100.00 MeV
+           I(nu>1ryd):   2.2974   Average nu:3.035E+00   I( X-ray):   1.4758   I(BalC):   1.8018     Phi(BalmrC):  12.7646
+           phi(1.0-1.8):12.1733   phi(1.8-4.0): 12.066   phi(4.0-20): 11.528   phi(20--):  9.788     Ion pht flx:2.998E+12
+           I(gam ray):   1.1903   phi(gam r):   7.5825   I(Infred):   2.0158   Alf(ox):  -1.4088     Total inten:   2.5628
+           U(1.0----):1.000E-02   U(4.0----):1.146E-03   T(En-Den):3.563E+01   T(Comp):1.323E+07     nuJnu(912A):6.338E+01
+           Occ(FarIR):3.324E-04   Occ(H n=6):2.238E-09   Occ(1Ryd):2.923E-15   Occ(4R):1.495E-17     Occ (Nu-hi):0.000E+00
+           Tbr(FarIR):1.598E-07   Tbr(H n=6):9.803E-06   Tbr(1Ryd):4.614E-10   Tbr(4R):9.460E-12     Tbr (Nu-hi):0.000E+00
+  
+                                                  Gas Phase Chemical Composition
+        H :  0.0000  He: -1.0000  Li: -8.6904  Be:-10.5800  B : -9.1198  C : -3.4498  N : -4.0301  O : -3.1302  F : -7.5200
+        Ne: -3.9318  Na: -5.6861  Mg: -4.4202  Al: -5.5302  Si: -4.4498  P : -6.4283  S : -4.7905  Cl: -6.7258  Ar: -5.4001
+        K : -6.8697  Ca: -5.6402  Sc: -8.8013  Ti: -6.9586  V : -7.9788  Cr: -6.3152  Mn: -6.4660  Fe: -4.4895  Co: -7.0799
+                                               Ni: -5.7545  Cu: -7.7282  Zn: -7.3449
+ 
+ saving line data, then stopping
+
+ The code is left in a disturbed state after creating the SAVE LINE DATA file.
+ No calculation is actually performed, only the SAVE LINE DATA file is produced.
+ Remove the SAVE LINE DATA command to do the calculation.
+
+ ChkMonitorend is ok.
+ [Stop in SaveLineData at save_linedata.cpp:242, Cloudy exited OK]
