@@ -13,6 +13,6 @@
 /* month, January is 0, December is 11 */
 #define	MONTH	7
 /* day is correct */
-#define	DAY	22
+#define	DAY	25
 
 #endif /* DATE_H_ */
