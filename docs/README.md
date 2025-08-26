@@ -30,7 +30,7 @@ CompileAll.pl hazy1
 
 To check on compile-time errors do
 ```
-grep underfined */*.log
+grep undefined */*.log
 ```
 in the latex directory.
 
