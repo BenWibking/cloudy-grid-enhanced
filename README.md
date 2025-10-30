@@ -1,3 +1,10 @@
+# Modified version of Cloudy
+
+This version of Cloudy has been modified with various enhancements to produce
+cooling tables for simulations under the assumption of ionization equilibrium.
+
+The original Cloudy README follows below.
+
 # Cloudy
 
 Cloudy is an _ab initio_ spectral synthesis code designed to model a wide range
