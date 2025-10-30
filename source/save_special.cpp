@@ -28,7 +28,7 @@ void SaveSpecial(FILE* ioPUN ,
 
 		fprintf(ioPUN,"# Final mean properties\n");
 		fprintf(ioPUN,"MeanMolecularWeight\t");
-		PrintE82(ioPUN , wmean);
+		fprintf(ioPUN,"%.6f", wmean);
 		fprintf(ioPUN,"\n");
 
 	}
