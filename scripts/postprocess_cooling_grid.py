@@ -42,7 +42,6 @@ class CoolingGridProcessor:
         hden_idx, temp_idx = self._identify_parameter_columns(param_names)
         mmw_map = self._load_mean_molecular_weights()
         exec_times = self._collect_execution_times()
-        log_warnings = self._collect_log_warnings()
 
         records: Dict[float, List[Tuple[float, float, float, float, float, float]]] = defaultdict(list)
         failed_details: List[Tuple[int, float, float, str]] = []
@@ -86,6 +85,8 @@ class CoolingGridProcessor:
             )
 
         self._write_output(records)
+        warned_indices = [idx for idx, _, _, _ in warned_details]
+        log_warnings = self._collect_log_warnings(warned_indices, grid_points)
         warn_summary = self._aggregate_warnings(log_warnings, warned_details)
 
         self._write_statistics(exec_times, warn_summary, warned_details, failed_details)
@@ -202,17 +203,107 @@ class CoolingGridProcessor:
                 times.extend(float(val) for val in match)
         return times
 
-    def _collect_log_warnings(self) -> Dict[int, List[str]]:
+    def _collect_log_warnings(
+        self, warned_indices: Iterable[int], grid_points: List[GridPoint]
+    ) -> Dict[int, List[str]]:
         warnings: Dict[int, List[str]] = defaultdict(list)
-        warn_pattern = re.compile(r"^ WARNING.*", re.MULTILINE)
+        warned_index_list = list(dict.fromkeys(warned_indices))
+        warn_line_pattern = re.compile(
+            r"^\s*(?:WARNING|CAUTION|Caution|PROBLEM|Problem|BOTCHED|Botched)\b.*",
+            re.MULTILINE,
+        )
+        ignore_phrases = ("Cautions are present", "Warnings are present")
+
         for out_file in self._candidate_output_files():
-            text = out_file.read_text()
-            matches = warn_pattern.findall(text)
+            text = out_file.read_text(errors="replace")
+            matches = warn_line_pattern.findall(text)
             if not matches:
                 continue
             idx_match = re.match(r"grid(\d{9})_", out_file.name)
-            idx = int(idx_match.group(1)) if idx_match else -1
-            warnings[idx].extend(line.strip() for line in matches)
+            target_indices = (
+                [int(idx_match.group(1))]
+                if idx_match
+                else (warned_index_list if warned_index_list else [-1])
+            )
+            for raw in matches:
+                message = _normalize_warning_message(raw)
+                if any(phrase.lower() in message.lower() for phrase in ignore_phrases):
+                    continue
+                for idx in target_indices:
+                    if message not in warnings[idx]:
+                        warnings[idx].append(message)
+
+        summary_warnings = self._collect_summary_warnings(
+            warned_index_list, grid_points, warn_line_pattern, ignore_phrases
+        )
+        for idx, messages in summary_warnings.items():
+            for message in messages:
+                if message not in warnings[idx]:
+                    warnings[idx].append(message)
+
+        return warnings
+
+    def _collect_summary_warnings(
+        self,
+        warned_indices: List[int],
+        grid_points: List[GridPoint],
+        warn_line_pattern: re.Pattern[str],
+        ignore_phrases: Iterable[str],
+    ) -> Dict[int, List[str]]:
+        warnings: Dict[int, List[str]] = defaultdict(list)
+        warned_index_set = set(warned_indices)
+
+        for summary_file in Path(".").glob(self.summary_pattern):
+            idx = int(summary_file.name[4:13])
+            if warned_index_set and idx not in warned_index_set:
+                continue
+            text = summary_file.read_text(errors="replace")
+            for raw in warn_line_pattern.findall(text):
+                message = _normalize_warning_message(raw)
+                if any(phrase.lower() in message.lower() for phrase in ignore_phrases):
+                    continue
+                if message not in warnings[idx]:
+                    warnings[idx].append(message)
+
+        if self.summary_path.exists():
+            text = self.summary_path.read_text(errors="replace")
+            blocks = re.split(r"(?m)^#\s*Special\.\s*$", text)
+            if blocks and not blocks[0].strip():
+                blocks = blocks[1:]
+            sorted_points = sorted(grid_points, key=lambda gp: gp.index)
+            if blocks and len(blocks) >= len(sorted_points):
+                block_iter = blocks
+            else:
+                block_iter = []
+
+            if block_iter:
+                for point, block in zip(sorted_points, block_iter):
+                    if warned_index_set and point.index not in warned_index_set:
+                        continue
+                    for raw in warn_line_pattern.findall(block):
+                        message = _normalize_warning_message(raw)
+                        if any(
+                            phrase.lower() in message.lower()
+                            for phrase in ignore_phrases
+                        ):
+                            continue
+                        if message not in warnings[point.index]:
+                            warnings[point.index].append(message)
+            else:
+                matches = warn_line_pattern.findall(text)
+                if matches:
+                    targets = warned_index_set if warned_index_set else {-1}
+                    for raw in matches:
+                        message = _normalize_warning_message(raw)
+                        if any(
+                            phrase.lower() in message.lower()
+                            for phrase in ignore_phrases
+                        ):
+                            continue
+                        for idx in targets:
+                            if message not in warnings[idx]:
+                                warnings[idx].append(message)
+
         return warnings
 
     def _write_output(
@@ -414,6 +505,10 @@ def _format_range(min_val: float, max_val: float) -> str:
     if math.isinf(min_val) or math.isinf(max_val):
         return "unknown"
     return f"{min_val:.3f}-{max_val:.3f}"
+
+
+def _normalize_warning_message(message: str) -> str:
+    return re.sub(r"\s+", " ", message.strip())
 
 
 def main() -> None:
