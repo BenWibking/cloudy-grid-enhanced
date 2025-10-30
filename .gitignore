@@ -1,3 +1,7 @@
+*.grd
+*.txt
+*.in
+*.out
 .*
 !.gitignore
 *.o
