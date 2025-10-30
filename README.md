@@ -3,6 +3,45 @@
 This version of Cloudy has been modified with various enhancements to produce
 cooling tables for simulations under the assumption of ionization equilibrium.
 
+## Example: isrf_ism cooling grid workflow
+
+1. Build the solver if `cloudy.exe` is not present:
+
+    ```bash
+    make -C source -j4
+    ```
+
+2. Run the grid calculation from the repository root. This reads the native Cloudy
+   input and writes `grid*_isrf_ism_*.txt` plus `isrf_ism_grid.grd`/`isrf_ism_summary.txt`
+   in-place:
+
+    ```bash
+    ./source/cloudy.exe < isrf_ism_cooling_grid.in
+    ```
+
+3. Post-process the raw grid outputs into CIAOLoop-style ASCII tables and a stats
+   summary (files land in `converted_tables/` by default):
+
+    ```bash
+    python3 scripts/postprocess_cooling_grid.py --prefix isrf_ism --output-dir converted_tables
+    ```
+
+4. Convert the ASCII tables into a single HDF5 cooling table. The converter infers
+   the thermodynamic grid from the `.in` file; point it at the directory created in
+   the previous step:
+
+    ```bash
+    python3 scripts/convert_cooling_grid_to_hdf5.py \
+        isrf_ism_cooling_grid.in \
+        converted_tables/isrf_ism.h5 \
+        --data-dir converted_tables \
+        --prefix isrf_ism
+    ```
+
+The resulting `converted_tables/isrf_ism.h5` collects the temperature, heating,
+cooling, and mean molecular weight arrays in big-endian double precision. You
+can inspect it with `h5dump` or load it directly in Python via `h5py`.
+
 The original Cloudy README follows below.
 
 # Cloudy
