@@ -16,7 +16,7 @@ cooling tables for simulations under the assumption of ionization equilibrium.
    in-place:
 
     ```bash
-    ./source/cloudy.exe < isrf_ism_cooling_grid.in
+    ./source/cloudy.exe -r isrf_ism_cooling_grid
     ```
 
 3. Post-process the raw grid outputs into CIAOLoop-style ASCII tables and a stats
