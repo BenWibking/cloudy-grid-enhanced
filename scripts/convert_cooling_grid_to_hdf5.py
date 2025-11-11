@@ -60,6 +60,7 @@ def loadMap(
     heat: List[float] = []
     cool: List[float] = []
     mmw: List[float] = []
+    electron_density: List[float] = []
 
     with open(mapFile, "r", encoding="utf-8") as handle:
         for raw_line in handle:
@@ -71,6 +72,10 @@ def loadMap(
             heat.append(float(parts[1]))
             cool.append(float(parts[2]))
             mmw.append(float(parts[3]))
+            if len(parts) >= 5:
+                electron_density.append(float(parts[4]))
+            else:
+                electron_density.append(math.nan)
 
     def new_empty_grid(my_dims: List[int]) -> np.ndarray:
         empty = np.empty(shape=my_dims, dtype=float)
@@ -84,16 +89,19 @@ def loadMap(
         gridData.append(new_empty_grid(my_dims))
         gridData.append(new_empty_grid(my_dims))
         gridData.append(new_empty_grid(my_dims))
+        gridData.append(new_empty_grid(my_dims))
 
     grid_idx = np.searchsorted(grid_temp, temp)
 
     heat_arr = np.asarray(heat, dtype=float)
     cool_arr = np.asarray(cool, dtype=float)
     mmw_arr = np.asarray(mmw, dtype=float)
+    ne_arr = np.asarray(electron_density, dtype=float)
 
     gridData[1][tuple(indices)][grid_idx] = heat_arr
     gridData[2][tuple(indices)][grid_idx] = cool_arr
     gridData[3][tuple(indices)][grid_idx] = mmw_arr
+    gridData[4][tuple(indices)][grid_idx] = ne_arr
 
 
 def _is_comment(line: str) -> bool:
@@ -264,7 +272,7 @@ def convert_cooling_from_in(
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with h5py.File(output_file, "w") as output:
-        names = ["Temperature", "Heating", "Cooling", "MMW"]
+        names = ["Temperature", "Heating", "Cooling", "MMW", "ElectronDensity"]
         for i, data in enumerate(grid_data):
             dataset = output.create_dataset(names[i], data=data, dtype=">f8")
             dataset.attrs["Dimension"] = np.array(data.shape, dtype=">i8")

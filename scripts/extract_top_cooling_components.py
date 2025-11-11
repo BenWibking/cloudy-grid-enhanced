@@ -20,6 +20,18 @@ class CoolingComponent:
     fraction: float
 
 
+@dataclass
+class CoolingRecord:
+    path: Path
+    temperature: float
+    cooling_rate: float
+    hydrogen_density: float
+    components: List[CoolingComponent]
+    line_total: float
+    free_free_total: float
+    compton_total: float
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -67,6 +79,15 @@ def parse_args() -> argparse.Namespace:
         default=Path("top_cooling_components.csv"),
         help="Output CSV path (default: ./top_cooling_components.csv).",
     )
+    parser.add_argument(
+        "--totals-output",
+        type=Path,
+        default=Path("cooling_component_totals.csv"),
+        help=(
+            "Output CSV path containing per-model totals for line, free-free, "
+            "and Compton cooling (default: ./cooling_component_totals.csv)."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -89,7 +110,48 @@ def read_data_line(path: Path) -> str:
     raise ValueError(f"No data rows found in {path}")
 
 
-def parse_cooling_components(path: Path) -> Tuple[float, List[CoolingComponent]]:
+def physical_conditions_path(cooling_path: Path) -> Path:
+    candidate = cooling_path.with_name(
+        cooling_path.name.replace("_cooling", "_physical_conditions")
+    )
+    if not candidate.exists():
+        raise FileNotFoundError(
+            f"Physical conditions file '{candidate.name}' missing for '{cooling_path.name}'"
+        )
+    return candidate
+
+
+def read_hydrogen_density(path: Path) -> float:
+    last_line: str | None = None
+    with path.open("r", encoding="ascii", errors="ignore") as handle:
+        for line in handle:
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            last_line = stripped
+    if last_line is None:
+        raise ValueError(f"No data rows found in {path}")
+    columns = last_line.split()
+    if len(columns) < 3:
+        raise ValueError(
+            f"Unexpected layout in {path}: need >=3 columns, got '{last_line}'"
+        )
+    try:
+        return float(columns[2])
+    except ValueError as exc:
+        raise ValueError(f"Could not parse hydrogen density in {path}") from exc
+
+
+def classify_component(label: str) -> str:
+    normalized = label.lower()
+    if normalized.startswith("ff"):
+        return "free_free"
+    if normalized.startswith("comp"):
+        return "compton"
+    return "line"
+
+
+def parse_cooling_components(path: Path) -> CoolingRecord:
     line = read_data_line(path)
     columns = line.split("\t")
     if len(columns) < 6:
@@ -97,14 +159,20 @@ def parse_cooling_components(path: Path) -> Tuple[float, List[CoolingComponent]]
 
     try:
         temperature = float(columns[1])
+        cooling_rate = float(columns[3])
     except ValueError as exc:
-        raise ValueError(f"Could not parse temperature in {path}") from exc
+        raise ValueError(f"Could not parse primary columns in {path}") from exc
+
+    hydrogen_density = read_hydrogen_density(physical_conditions_path(path))
 
     tail = columns[5:]
     if len(tail) % 2 == 1:
         tail = tail[:-1]
 
     components: List[CoolingComponent] = []
+    line_total = 0.0
+    free_free_total = 0.0
+    compton_total = 0.0
     for raw_label, frac_str in zip(tail[0::2], tail[1::2]):
         label = raw_label.strip()
         fraction_text = frac_str.strip()
@@ -126,11 +194,30 @@ def parse_cooling_components(path: Path) -> Tuple[float, List[CoolingComponent]]
             wavelength = None
             comp_label = label
         components.append(CoolingComponent(comp_label, wavelength, fraction))
-    return temperature, components
+
+        if fraction > 0.0:
+            category = classify_component(comp_label)
+            if category == "free_free":
+                free_free_total += fraction
+            elif category == "compton":
+                compton_total += fraction
+            else:
+                line_total += fraction
+
+    return CoolingRecord(
+        path=path,
+        temperature=temperature,
+        cooling_rate=cooling_rate,
+        hydrogen_density=hydrogen_density,
+        components=components,
+        line_total=line_total,
+        free_free_total=free_free_total,
+        compton_total=compton_total,
+    )
 
 
 def aggregate_components(
-    files: Sequence[Path],
+    records: Sequence[CoolingRecord],
     *,
     round_digits: int,
     top_k: int,
@@ -142,12 +229,11 @@ def aggregate_components(
     )
     temp_samples: Dict[float, List[float]] = defaultdict(list)
 
-    for path in files:
-        temperature, components = parse_cooling_components(path)
-        temp_key = round(temperature, round_digits)
-        temp_samples[temp_key].append(temperature)
+    for record in records:
+        temp_key = round(record.temperature, round_digits)
+        temp_samples[temp_key].append(record.temperature)
         bucket = grouped[temp_key]
-        for component in components:
+        for component in record.components:
             if component.fraction <= 0.0:
                 continue
             bucket[(component.label, component.wavelength)].append(component.fraction)
@@ -183,21 +269,41 @@ def aggregate_components(
     return rows
 
 
-def write_csv(path: Path, rows: Sequence[Dict[str, float | int | str | None]]) -> None:
+def build_total_rows(records: Sequence[CoolingRecord]) -> List[Dict[str, float | str]]:
+    rows: List[Dict[str, float | str]] = []
+    for record in records:
+        if record.temperature <= 0.0:
+            raise ValueError(
+                f"Non-positive temperature encountered in {record.path}: {record.temperature}"
+            )
+        line_rate = record.line_total * record.cooling_rate
+        free_free_rate = record.free_free_total * record.cooling_rate
+        compton_rate = record.compton_total * record.cooling_rate
+
+        rows.append(
+            {
+                "temperature_K": record.temperature,
+                "hydrogen_density": record.hydrogen_density,
+                "total_line_cooling_fraction": record.line_total,
+                "total_free_free_fraction": record.free_free_total,
+                "total_compton_fraction": record.compton_total,
+                "total_line_cooling_rate": line_rate,
+                "total_free_free_cooling_rate": free_free_rate,
+                "total_compton_cooling_rate": compton_rate,
+            }
+        )
+    return rows
+
+
+def write_csv(
+    path: Path,
+    rows: Sequence[Dict[str, float | int | str | None]],
+    fieldnames: Sequence[str],
+) -> None:
     if not rows:
-        raise RuntimeError("No cooling components survived filtering; nothing to write.")
+        raise RuntimeError(f"No rows to write to {path}")
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    fieldnames = [
-        "temperature_K",
-        "log10_temperature",
-        "models_at_temperature",
-        "component_rank",
-        "component_label",
-        "wavelength",
-        "fraction_statistic",
-        "component_occurrences",
-    ]
     with path.open("w", newline="", encoding="ascii") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
@@ -218,14 +324,39 @@ def main() -> None:
     args = parse_args()
     files = find_cooling_files(args.grid_dir, args.pattern)
     stat_fn = statistic_from_name(args.statistic)
+    records = [parse_cooling_components(path) for path in files]
     rows = aggregate_components(
-        files,
+        records,
         round_digits=args.round_digits,
         top_k=args.top,
         statistic=stat_fn,
         min_fraction=args.min_fraction,
     )
-    write_csv(args.output, rows)
+    totals_rows = build_total_rows(records)
+
+    top_components_fieldnames = [
+        "temperature_K",
+        "log10_temperature",
+        "models_at_temperature",
+        "component_rank",
+        "component_label",
+        "wavelength",
+        "fraction_statistic",
+        "component_occurrences",
+    ]
+    totals_fieldnames = [
+        "temperature_K",
+        "hydrogen_density",
+        "total_line_cooling_fraction",
+        "total_free_free_fraction",
+        "total_compton_fraction",
+        "total_line_cooling_rate",
+        "total_free_free_cooling_rate",
+        "total_compton_cooling_rate",
+    ]
+
+    write_csv(args.output, rows, top_components_fieldnames)
+    write_csv(args.totals_output, totals_rows, totals_fieldnames)
 
 
 if __name__ == "__main__":

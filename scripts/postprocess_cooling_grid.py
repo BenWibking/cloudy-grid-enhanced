@@ -41,9 +41,12 @@ class CoolingGridProcessor:
 
         hden_idx, temp_idx = self._identify_parameter_columns(param_names)
         mmw_map = self._load_mean_molecular_weights()
+        electron_density_map = self._load_electron_densities()
         exec_times = self._collect_execution_times()
 
-        records: Dict[float, List[Tuple[float, float, float, float, float, float]]] = defaultdict(list)
+        records: Dict[
+            float, List[Tuple[float, float, float, float, float, float, float]]
+        ] = defaultdict(list)
         failed_details: List[Tuple[int, float, float, str]] = []
         warned_details: List[Tuple[int, float, float, str]] = []
 
@@ -74,6 +77,12 @@ class CoolingGridProcessor:
                     f"Mean molecular weight not found for grid index {point.index}"
                 )
 
+            electron_density = electron_density_map.get(point.index)
+            if electron_density is None:
+                raise RuntimeError(
+                    f"Electron density not found for grid index {point.index}"
+                )
+
             n_h = 10.0 ** logn
             scale_factor = n_h * n_h
             heating_scaled = heating / scale_factor
@@ -81,7 +90,15 @@ class CoolingGridProcessor:
             te_linear = 10.0 ** logt
 
             records[round(logn, 6)].append(
-                (logn, logt, te_linear, heating_scaled, cooling_scaled, mmw)
+                (
+                    logn,
+                    logt,
+                    te_linear,
+                    heating_scaled,
+                    cooling_scaled,
+                    mmw,
+                    electron_density,
+                )
             )
 
         self._write_output(records)
@@ -187,6 +204,40 @@ class CoolingGridProcessor:
                 "No mean molecular weight data found; expected save special output"
             )
         return mmw_map
+
+    def _load_electron_densities(self) -> Dict[int, float]:
+        ne_map: Dict[int, float] = {}
+        pattern = f"grid?????????_{self.prefix}_physical_conditions.txt"
+
+        for phys_file in Path(".").glob(pattern):
+            idx = int(phys_file.name[4:13])
+            ne_value = self._parse_electron_density(phys_file)
+            ne_map[idx] = ne_value
+
+        if not ne_map:
+            raise FileNotFoundError(
+                "No physical conditions files found; expected to read electron densities"
+            )
+        return ne_map
+
+    def _parse_electron_density(self, path: Path) -> float:
+        last_data_line: str | None = None
+        with path.open("r", encoding="utf-8") as handle:
+            for raw_line in handle:
+                line = raw_line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                last_data_line = line
+
+        if last_data_line is None:
+            raise RuntimeError(f"No data rows found in physical conditions file '{path}'")
+
+        columns = last_data_line.split()
+        if len(columns) < 4:
+            raise RuntimeError(
+                f"Unexpected format in physical conditions file '{path}': '{last_data_line}'"
+            )
+        return float(columns[3])
 
     def _candidate_output_files(self) -> List[Path]:
         files = list(Path(".").glob(self.output_pattern))
@@ -308,7 +359,9 @@ class CoolingGridProcessor:
 
     def _write_output(
         self,
-        records: Dict[float, List[Tuple[float, float, float, float, float, float]]],
+        records: Dict[
+            float, List[Tuple[float, float, float, float, float, float, float]]
+        ],
     ) -> None:
         sorted_densities = sorted(records.items(), key=lambda item: item[0])
         timestamp = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
@@ -326,12 +379,13 @@ class CoolingGridProcessor:
                 handle.write("# Te [K]\n")
                 handle.write("# Heating [erg s^-1 cm^3]\n")
                 handle.write("# Cooling [erg s^-1 cm^3]\n")
-                handle.write("# Mean Molecular Weight [amu]\n#\n")
-                handle.write("#Te\t\tHeating\t\tCooling\t\tMMW\n")
+                handle.write("# Mean Molecular Weight [amu]\n")
+                handle.write("# Electron Density [cm^-3]\n#\n")
+                handle.write("#Te\t\tHeating\t\tCooling\t\tMMW\t\tn_e\n")
 
-                for _, _, te, heating, cooling, mmw in rows:
+                for _, _, te, heating, cooling, mmw, ne in rows:
                     handle.write(
-                        f"{te:.6e}\t{heating:.7e}\t{cooling:.7e}\t{mmw:.6f}\n"
+                        f"{te:.6e}\t{heating:.7e}\t{cooling:.7e}\t{mmw:.6f}\t{ne:.6e}\n"
                     )
 
     def _write_statistics(
